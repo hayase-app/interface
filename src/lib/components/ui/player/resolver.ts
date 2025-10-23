@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import anitomyscript from 'anitomyscript'
 // import Debug from 'debug'
 
@@ -165,16 +164,22 @@ const AnimeResolver = new class AnimeResolver {
   getCacheKeyForTitle (obj: AnitomyResult): string {
     let key = obj.anime_title[0] ?? ''
     if (obj.anime_year.length) key += obj.anime_year[0]
+    if (obj.anime_season.length) key += `S${obj.anime_season[0]}`
     return key
   }
 
-  alternativeTitles (title: string): string[] {
+  alternativeTitles (obj: AnitomyResult): string[] {
+    const title = obj.anime_title[0] ?? ''
     const titles = new Set<string>()
 
     let modified = title
     // preemptively change S2 into Season 2 or 2nd Season, otherwise this will have accuracy issues
     const seasonMatch = title.match(/ S(\d+)/)
-    if (seasonMatch) {
+    if (obj.anime_season[0] && Number(obj.anime_season[0]) > 1) {
+      modified = title + ` ${Number(obj.anime_season[0])}${postfix[Number(obj.anime_season[0])] ?? 'th'} Season`
+      titles.add(modified)
+      titles.add(title + ` Season ${Number(obj.anime_season[0])}`)
+    } else if (seasonMatch) {
       if (Number(seasonMatch[1]) === 1) { // if this is S1, remove the " S1" or " S01"
         modified = title.replace(/ S(\d+)/, '')
         titles.add(modified)
@@ -211,7 +216,7 @@ const AnimeResolver = new class AnimeResolver {
     if (!parseObjects.length) return
     const titleObjects = parseObjects.map(obj => {
       const key = this.getCacheKeyForTitle(obj)
-      const titleObjects: Array<{key: string, title: string, year?: string, isAdult: boolean}> = this.alternativeTitles(obj.anime_title[0] ?? '').map(title => ({ title, year: obj.anime_year[0], key, isAdult: false }))
+      const titleObjects = this.alternativeTitles(obj).map(title => ({ title, year: obj.anime_year[0], key, isAdult: false }))
       // @ts-expect-error cba fixing this for now, but this is correct
       titleObjects.push({ ...titleObjects.at(-1), isAdult: true })
       return titleObjects
