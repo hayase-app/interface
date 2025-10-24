@@ -5,7 +5,11 @@
 </p>
 <h1 align="center"><b>Hayase</b></h1>
 
-<h4 align="center"><b>Stream anime torrents instantly, real-time with no waiting for downloads to finish! 🍿</b></h4>
+<h4 align="center"><b>A bring-your-own-content torrent streaming client for anime 🍿</b></h4>
+
+
+> [!WARNING]  
+> Hayase does not provide, host, or link to any content sources. Users must supply their own torrents.</strong>
 
 <p align="center">
   <a href="https://hayase.watch/#about">About</a> •
@@ -24,21 +28,23 @@
 
 https://github.com/user-attachments/assets/bbbe2966-b773-4ebb-9d69-08248ae77ae4
 
-<p align="center">Formerly known as Miru.</p>
-
 ## ✨ About
 
-**Hayase** is a modern app for streaming anime torrents in real-time, with no waiting for downloads to finish.
+**Hayase** is a bring-your-own-content torrent streaming client designed for anime enthusiasts. It provides the technology to stream torrents in real-time, with no waiting for downloads to finish.
 
-It is meant to feel look, work and perform like a premium streaming service, but with all the benefits of both streaming and torrenting, like file downloads, higher download speeds, better video quality, instant access to new releases, and features you won’t find on typical streaming sites.
+> [!IMPORTANT]
+> Hayase is purely a torrent client and media player. It does not provide, index, host, or link to any content sources, torrent files, or unofficial repositories. Users are fully responsible for sourcing their own content legally and in compliance with their local laws.
+
+The app is designed to look, work and perform like a premium streaming service, but with all the benefits you control: file downloads, higher download speeds, better video quality, and advanced playback features.
 
 ## 🌟 Highlights
 
-* 📚 **Anime list integration:** Sync with AniList, Kitsu, ~~MAL~~, or use local storage.
-* ⚡ **Instant torrent streaming:** Watch as you download, with extension support for custom sources.
-* 📴 **Offline viewing:** Enjoy already-downloaded torrents anytime.
+* 📚 **Anime list integration:** Sync with AniList, Kitsu, MAL, or use local storage.
+* ⚡ **Instant torrent streaming:** Watch as you download.
+* 📴 **Offline viewing:** Enjoy already-downloaded content anytime.
 * 🎬 **Advanced video player:** Full support for all subtitle formats, softcoded and external tracks, and more.
 * 👥 **Social features:** Connect with friends, join discussions, and watch together.
+* 🔒 **No content provided:** You maintain full control and responsibility for your content sources, no takedowns, no dissapearances.
 
 ***
 
@@ -102,15 +108,17 @@ It is meant to feel look, work and perform like a premium streaming service, but
 
 ### 🧲 Torrents
 
-* Stream torrents instantly, no waiting for full downloads.
+* Stream your own torrents instantly, no waiting for full downloads.
 * Download only what you need for playback.
 * Choose your downloads folder and set speed/connection limits.
-* Support for custom extensions, sources, and trackers.
+* Support for custom extensions and trackers (you provide the sources).
 * Specify download/upload speeds, ports and connections.
 * Support for most popular BEP's.
 * Persist torrents, cache progress, and rescan instantly.
 * View detailed torrent and peer info.
 * Batch downloads.
+
+**Note:** Hayase does not provide any torrent sources, indexes, or repositories. All content must be supplied by the user.
 
 <p align="center">
   <img src='https://raw.githubusercontent.com/hayase-app/website/main/static/modal.webp' width='400px'></img>
