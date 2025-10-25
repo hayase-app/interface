@@ -12,3 +12,8 @@ pnpm run dev // to develop
 pnpm run build // to build
 pnpm run sync && pnpm run lint && pnpm run gql:check && pnpm run check // to test
 ```
+
+<div align="center">
+> [!IMPORTANT]
+> The developer(s) of this application does not have any affiliation with the content providers available, and this application hosts zero content.
+</div>
