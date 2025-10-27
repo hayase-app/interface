@@ -1,4 +1,3 @@
-import anitomyscript, { type AnitomyResult } from 'anitomyscript'
 import Debug from 'debug'
 import { get } from 'svelte/store'
 import { toast } from 'svelte-sonner'
@@ -11,10 +10,12 @@ import { settings, type videoResolutions } from '../settings'
 import { storage } from './storage'
 
 import type { EpisodesResponse, Titles, Episode } from '../anizip/types'
+import type { AnitomyResult } from 'anitomyscript'
 import type { TorrentResult } from 'hayase-extensions'
 
 import { dev } from '$app/environment'
 import { options as extensionOptions, saved } from '$lib/modules/extensions'
+import { anitomyscript } from '$lib/utils'
 
 const exclusions = ['DTS', 'TrueHD']
 

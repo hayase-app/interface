@@ -1,9 +1,21 @@
+import as from 'anitomyscript'
 import { type ClassValue, clsx } from 'clsx'
 import { readable } from 'simple-store-svelte'
 import { cubicOut } from 'svelte/easing'
 import { twMerge } from 'tailwind-merge'
 
 import type { TransitionConfig } from 'svelte/transition'
+
+export function anitomyscript (input: string[]) {
+  const fixed = input.map(name => {
+    if (!name.includes(' ')) {
+      return name.replace(/s(\d{2})e(\d{2})\.([A-z])/i, 'S$1E$2 $3')
+    }
+    return name
+  })
+
+  return as(fixed)
+}
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
