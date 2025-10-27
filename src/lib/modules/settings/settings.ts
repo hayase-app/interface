@@ -8,11 +8,24 @@ import SUPPORTS from './supports'
 
 import { defaults } from '.'
 
+import { dev } from '$app/environment'
+
 const _debug = Debug('ui:settings')
 
 export const settings = persisted('settings', defaults, { beforeRead: value => ({ ...defaults, ...value }) })
 
 export const debug = persisted('debug-key', '')
+
+const alID = dev ? '26159' : '3461'
+const malID = 'd93b624a92e431a9b6dfe7a66c0c5bbb'
+export const anilistClientID = persisted('anilist-client-id', alID, {
+  beforeWrite: v => v || alID,
+  beforeRead: v => v || alID
+})
+export const malClientID = persisted('mal-client-id', malID, {
+  beforeWrite: v => v || malID,
+  beforeRead: v => v || malID
+})
 
 export const nsfw = derived(settings, $settings => ($settings.showHentai ? null : ['Hentai']) as ['Hentai'] | null)
 

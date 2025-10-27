@@ -19,6 +19,7 @@
   import malclient from '$lib/modules/auth/mal'
   import native from '$lib/modules/native'
   import { click } from '$lib/modules/navigate'
+  import { anilistClientID, malClientID } from '$lib/modules/settings'
 
   const alviewer = client.client.viewer
 
@@ -217,5 +218,13 @@
         <Label for='local-sync-switch' class='cursor-pointer'>Enable Sync</Label>
       </div>
     </div>
+  </div>
+  <div class='flex items-center scale-parent rounded-md self-baseline bg-neutral-900 w-[410px] max-w-full'>
+    <div class='shrink-0 pointer-events-none text-sm leading-5 text-center w-32'>Anilist Client ID</div>
+    <Input type='text' bind:value={$anilistClientID} class='border-0 no-scale bg-neutral-950 rounded-l-none' />
+  </div>
+  <div class='flex items-center scale-parent rounded-md self-baseline bg-neutral-900 w-[410px]  max-w-full'>
+    <div class='shrink-0 pointer-events-none text-sm leading-5 text-center w-32'>MAL Client ID</div>
+    <Input type='text' bind:value={$malClientID} class='border-0 no-scale bg-neutral-950 rounded-l-none' />
   </div>
 </div>

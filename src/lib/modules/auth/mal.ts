@@ -1,5 +1,5 @@
 import Debug from 'debug'
-import { writable } from 'simple-store-svelte'
+import { writable, derived as _derived } from 'simple-store-svelte'
 import { derived, get, readable } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
 import { toast } from 'svelte-sonner'
@@ -7,7 +7,7 @@ import { toast } from 'svelte-sonner'
 import { client, type Media } from '../anilist'
 import { mappings, mappingsByMalId } from '../anizip'
 import native from '../native'
-import { SUPPORTS } from '../settings'
+import { malClientID, SUPPORTS } from '../settings'
 
 import type { Entry, FullMediaList, UserFrag } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
@@ -102,7 +102,7 @@ const ENDPOINTS = {
   API_ANIME: 'https://api.myanimelist.net/v2/anime'
 } as const
 
-const clientID = 'd93b624a92e431a9b6dfe7a66c0c5bbb'
+const clientID = _derived(malClientID, $malClientID => $malClientID)
 
 export default new class MALSync {
   auth = persisted<MALOAuth | undefined>('malAuth', undefined)
@@ -271,7 +271,7 @@ export default new class MALSync {
 
     const redirect = dev ? 'http://localhost:7344/authorize' : 'https://hayase.app/authorize'
 
-    const { code } = await native.authMAL(`${ENDPOINTS.API_AUTHORIZE}?response_type=code&client_id=${clientID}&state=${state}&code_challenge=${challenge}&code_challenge_method=plain&redirect_uri=${redirect}`)
+    const { code } = await native.authMAL(`${ENDPOINTS.API_AUTHORIZE}?response_type=code&client_id=${clientID.value}&state=${state}&code_challenge=${challenge}&code_challenge_method=plain&redirect_uri=${redirect}`)
 
     const data = await this._post<MALOAuth>(
       ENDPOINTS.API_OAUTH,

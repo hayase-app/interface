@@ -130,7 +130,8 @@
   minZoom={0}
   maxZoom={1.2}
   {nodeTypes}
-  elementsSelectable={false}>
+  elementsSelectable={false}
+  class='!overflow-clip'>
   <Background bgColor='black' />
   <Controls showLock={false} orientation='horizontal'>
     <ControlButton on:click={expand}>

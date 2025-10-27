@@ -3,8 +3,10 @@ import { offlineExchange } from '@urql/exchange-graphcache'
 import { Client, fetchExchange } from '@urql/svelte'
 import Bottleneck from 'bottleneck'
 import Debug from 'debug'
-import { writable as _writable } from 'simple-store-svelte'
+import { derived, writable } from 'simple-store-svelte'
 import { toast } from 'svelte-sonner'
+
+import { anilistClientID } from '../settings'
 
 import gql from './gql'
 import { CommentFrag, CustomLists, type Entry, FullMedia, FullMediaList, ThreadFrag, type ToggleFavourite, UserLists, Viewer } from './queries'
@@ -14,7 +16,6 @@ import { makeDefaultStorage } from './storage'
 
 import type { ResultOf } from 'gql.tada'
 
-import { dev } from '$app/environment'
 import native from '$lib/modules/native'
 import { safeLocalStorage, sleep } from '$lib/utils'
 
@@ -46,6 +47,8 @@ storagePromise.promise.finally(() => {
   debug('Graphcache storage initialized')
 })
 
+const clientID = derived(anilistClientID, $anilistClientID => $anilistClientID)
+
 export default new class URQLClient extends Client {
   limiter = new Bottleneck({
     reservoir: 90,
@@ -70,7 +73,7 @@ export default new class URQLClient extends Client {
 
   async token () {
     debug('Requesting Anilist token')
-    const res = await native.authAL(`https://anilist.co/api/v2/oauth/authorize?client_id=${dev ? 26159 : 3461}&response_type=token`)
+    const res = await native.authAL(`https://anilist.co/api/v2/oauth/authorize?client_id=${clientID.value}&response_type=token`)
     const token = res.access_token
     const expires = '' + (Date.now() + (parseInt(res.expires_in) * 1000))
     this.viewer.value = { viewer: this.viewer.value?.viewer ?? null, token, expires }
@@ -107,7 +110,7 @@ export default new class URQLClient extends Client {
     return sec
   }
 
-  viewer = _writable<ViewerData | undefined>(safeLocalStorage('ALViewer'))
+  viewer = writable<ViewerData | undefined>(safeLocalStorage('ALViewer'))
 
   constructor () {
     super({
