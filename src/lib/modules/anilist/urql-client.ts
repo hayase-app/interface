@@ -3,7 +3,8 @@ import { offlineExchange } from '@urql/exchange-graphcache'
 import { Client, fetchExchange } from '@urql/svelte'
 import Bottleneck from 'bottleneck'
 import Debug from 'debug'
-import { derived, writable } from 'simple-store-svelte'
+import { writable } from 'simple-store-svelte'
+import { get } from 'svelte/store'
 import { toast } from 'svelte-sonner'
 
 import { anilistClientID } from '../settings'
@@ -47,8 +48,6 @@ storagePromise.promise.finally(() => {
   debug('Graphcache storage initialized')
 })
 
-const clientID = derived(anilistClientID, $anilistClientID => $anilistClientID)
-
 export default new class URQLClient extends Client {
   limiter = new Bottleneck({
     reservoir: 90,
@@ -73,7 +72,7 @@ export default new class URQLClient extends Client {
 
   async token () {
     debug('Requesting Anilist token')
-    const res = await native.authAL(`https://anilist.co/api/v2/oauth/authorize?client_id=${clientID.value}&response_type=token`)
+    const res = await native.authAL(`https://anilist.co/api/v2/oauth/authorize?client_id=${get(anilistClientID)}&response_type=token`)
     const token = res.access_token
     const expires = '' + (Date.now() + (parseInt(res.expires_in) * 1000))
     this.viewer.value = { viewer: this.viewer.value?.viewer ?? null, token, expires }
