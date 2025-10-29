@@ -40,12 +40,12 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
     }
   }
 
-  const resolved = videoFiles.length === 1 ? [{ episode: list.episode, parseObject: (await anitomyscript([videoFiles[0]!.name]))[0]!, media: list.media, failed: false }] : await AnimeResolver.resolveFileAnime(videoFiles.map(file => file.name))
+  const resolved = videoFiles.length === 1 ? [{ episode: list.episode, parseObject: (await anitomyscript([videoFiles[0]!.name]))[0]!, media: list.media, failed: false, fileName: videoFiles[0]!.name }] : await AnimeResolver.resolveFileAnime(videoFiles.map(file => file.name))
 
   let resolvedFiles: ResolvedFile[] = videoFiles.map(file => {
     return {
       ...file,
-      metadata: resolved.find(({ parseObject }) => file.name.includes(parseObject.file_name[0]!))
+      metadata: resolved.find(({ fileName }) => file.name === fileName)
     }
   }).filter(file => file.metadata && !TYPE_EXCLUSIONS.includes(file.metadata.parseObject.anime_type[0]?.toUpperCase() ?? '')) as ResolvedFile[] // assertion because of file metadata
 
@@ -234,9 +234,9 @@ const AnimeResolver = new class AnimeResolver {
   }
 
   // TODO: anidb aka true episodes need to be mapped to anilist episodes a bit better, shit like mushoku offsets caused by episode 0's in between seasons
-  async resolveFileAnime (fileName: string[]) {
-    if (!fileName.length) return []
-    const parseObjs = await anitomyscript(fileName)
+  async resolveFileAnime (fileNames: string[]) {
+    if (!fileNames.length) return []
+    const parseObjs = await anitomyscript(fileNames)
 
     const uniq: Record<string, AnitomyResult> = {}
     for (const obj of parseObjs) {
@@ -248,7 +248,8 @@ const AnimeResolver = new class AnimeResolver {
     await this.findAnimesByTitle(Object.values(uniq))
 
     const fileAnimes = []
-    for (const parseObj of parseObjs) {
+    for (let i = 0; i < parseObjs.length; ++i) {
+      const parseObj = parseObjs[i]!
       let failed = false
       let episode
       const id = this.animeNameCache[this.getCacheKeyForTitle(parseObj)]
@@ -314,6 +315,7 @@ const AnimeResolver = new class AnimeResolver {
       fileAnimes.push({
         episode: episode ?? Number(parseObj.episode_number[0]),
         parseObject: parseObj,
+        fileName: fileNames[i]!,
         media,
         failed
       })
