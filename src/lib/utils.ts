@@ -9,7 +9,7 @@ import type { TransitionConfig } from 'svelte/transition'
 export function anitomyscript (input: string[]) {
   const fixed = input.map(name => {
     if (!name.includes(' ')) {
-      return name.replace(/s(\d{2})e(\d{2})\.([A-z])/i, 'S$1E$2 $3')
+      return name.replace(/s(\d{2})e(\d{2})\.([A-z])\./i, 'S$1E$2 $3 ')
     }
     return name
   })
