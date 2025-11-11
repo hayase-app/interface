@@ -22,9 +22,9 @@
 </script>
 
 {#if $bannerSrc}
-  <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black banner', className)}>
+  <div class={cn('object-cover w-full absolute top-0 left-0 h-full overflow-hidden pointer-events-none banner', className)}>
     {#key $bannerSrc.id}
-      <Banner media={$bannerSrc} class='min-w-[100vw] w-screen h-[23rem] object-cover {$hideBanner ? 'opacity-10' : 'opacity-100'} transition-opacity duration-500 banner-gr relative' />
+      <Banner media={$bannerSrc} class='min-w-[100vw] w-full h-[23rem] object-cover {$hideBanner ? 'opacity-10' : 'opacity-100'} transition-opacity duration-500 banner-gr relative' />
     {/key}
   </div>
 {/if}

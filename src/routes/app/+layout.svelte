@@ -49,12 +49,13 @@
 
 <svelte:window on:dragover|preventDefault on:drop={handleTransfer} on:paste={handleTransfer} />
 
-<BannerImage class='absolute top-0 left-0 -z-[1]' />
 <SearchModal />
-<div class='flex flex-row grow h-full overflow-clip group/fullscreen min-h-0' id='episodeListTarget'>
+<div class='flex flex-row grow h-full overflow-clip group/fullscreen min-h-0 md:backdrop-blur-[100px]' id='episodeListTarget'>
   <Sidebar>
     <Sidebarlist />
   </Sidebar>
-  <Player />
-  <slot />
+  <div class='bg-black md:rounded-lg flex flex-col min-w-0 min-h-0 w-full md:mt-8 md:mb-2.5 md:mr-2.5 overflow-clip shadow relative' style:--tw-shadow='0 0 16px color-mix(in oklab, color-mix(in oklab, #000 50%, transparent) 100%, transparent)'>
+    <Player />
+    <slot />
+  </div>
 </div>

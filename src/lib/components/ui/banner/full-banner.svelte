@@ -2,10 +2,11 @@
   import { onDestroy } from 'svelte'
 
   import { BookmarkButton, FavoriteButton, PlayButton } from '../button/extra'
+  import { Load } from '../img'
 
   import { bannerSrc } from './banner-image.svelte'
 
-  import { desc, duration, format, season, title, type Media } from '$lib/modules/anilist'
+  import { cover, desc, duration, format, season, title, type Media } from '$lib/modules/anilist'
   import { of } from '$lib/modules/auth'
   import { click } from '$lib/modules/navigate'
   export let mediaList: Array<Media | null>
@@ -64,8 +65,9 @@
   }
 </script>
 
-<div class='pl-5 pb-5 justify-end flex flex-col h-full max-w-full'>
+<div class='pl-5 pb-5 justify-end flex flex-col h-full max-w-full relative'>
   {#key current}
+    <Load src={cover(current)} alt={title(current)} class='absolute top-0 left-0 w-full h-full object-cover' />
     <a class='text-white font-black text-4xl line-clamp-1 w-[900px] max-w-full leading-tight fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
       {title(current)}
     </a>

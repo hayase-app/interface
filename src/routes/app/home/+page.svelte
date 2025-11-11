@@ -94,7 +94,7 @@
   })
 </script>
 
-<div class='grow h-full min-w-0 -ml-14 pl-14 overflow-y-scroll' use:dragScroll on:scroll={handleScroll}>
+<div class='grow h-full min-w-0 -ml-14 pl-14 md:pl-16 overflow-y-scroll' use:dragScroll on:scroll={handleScroll}>
   <Banner />
   {#each $sectionQueries as { title, query, variables }, i (i)}
     <div class='flex px-4 pt-5 items-end cursor-pointer text-muted-foreground'>
