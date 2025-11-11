@@ -267,7 +267,7 @@
         </div>
       {/if}
       {#if pressed || $breakpoints.md}
-        <div class='flex md:flex-wrap overflow-y-auto' use:dragScroll>
+        <div class='flex md:flex-wrap overflow-y-auto w-full' use:dragScroll>
           <div class='hidden md:grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
             <div class='text-xl font-bold mb-1 ml-1'>
               Title
