@@ -18,7 +18,7 @@
   import * as Dialog from '$lib/components/ui/dialog'
   import { Load } from '$lib/components/ui/img'
   import { Profile } from '$lib/components/ui/profile'
-  import { cover, desc, duration, format, season, status, title } from '$lib/modules/anilist'
+  import { cover, desc, duration, format, season, status, title, getBGColorForRating } from '$lib/modules/anilist'
   import { authAggregator, of } from '$lib/modules/auth'
   import native from '$lib/modules/native'
   import { dragScroll } from '$lib/modules/navigate'
@@ -49,12 +49,6 @@
   function handleScroll (e: Event) {
     const target = e.target as HTMLDivElement
     hideBanner.value = target.scrollTop > 100
-  }
-
-  function getColorForRating (rating: number) {
-    if (rating >= 75) return 'bg-green-700 select:bg-green-800'
-    if (rating >= 65) return 'bg-orange-400 select:bg-orange-500'
-    return 'bg-red-400 select:bg-red-500'
   }
 
   $: mediaId = media.id
@@ -103,7 +97,7 @@
               </Button>
             {/if}
             {#if media.averageScore}
-              <Button class='rounded px-3.5 font-bold text-contrast h-6 py-0 text-base {getColorForRating(media.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+              <Button class='rounded px-3.5 font-bold text-contrast h-6 py-0 text-base {getBGColorForRating(media.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
                 {media.averageScore}%
               </Button>
             {/if}

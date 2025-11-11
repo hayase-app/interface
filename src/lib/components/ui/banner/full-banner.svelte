@@ -1,13 +1,16 @@
 <script lang='ts'>
   import { onDestroy } from 'svelte'
 
+  import { Button } from '../button'
   import { BookmarkButton, FavoriteButton, PlayButton } from '../button/extra'
 
   import { bannerSrc } from './banner-image.svelte'
 
-  import { desc, duration, format, season, title, type Media } from '$lib/modules/anilist'
+  import { goto } from '$app/navigation'
+  import { desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
   import { of } from '$lib/modules/auth'
   import { click } from '$lib/modules/navigate'
+  import { colors } from '$lib/utils'
   export let mediaList: Array<Media | null>
 
   function shuffle <T extends unknown[]> (array: T): T {
@@ -62,50 +65,64 @@
   function tabindex (node: HTMLElement) {
     node.tabIndex = -1
   }
+
+  $: ({ r, g, b } = colors(current.coverImage?.color ?? undefined))
 </script>
 
-<div class='pl-5 pb-5 justify-end flex flex-col h-full max-w-full'>
-  {#key current}
-    <a class='text-white font-black text-4xl line-clamp-1 w-[900px] max-w-full leading-tight fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
+<div class='md:pl-5 pb-2 grid grid-cols-1 md:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
+  <div class='w-full flex flex-col items-center text-center md:items-start md:text-left'>
+    <a class='text-white font-black text-3xl md:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
       {title(current)}
     </a>
-    <div class='details text-white capitalize pt-3 pb-2 flex w-[600px] max-w-full text-xs fade-in'>
-      <span class='text-nowrap flex items-center'>
-        {format(current)}
-      </span>
-      <span class='text-nowrap flex items-center'>
+    <div class='flex gap-2 items-center md:self-start pt-4 flex-nowrap overflow-clip max-w-full md:place-content-start py-4 font-bold'>
+      <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/5 text-sm inline-flex items-center'>
         {of(current) ?? duration(current) ?? 'N/A'}
-      </span>
-      <span class='text-nowrap flex items-center'>
-        {season(current)}
-      </span>
+      </div>
+      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
+        {format(current)}
+      </Button>
+      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
+        {status(current)}
+      </Button>
+      {#if season(current)}
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
+          {season(current)}
+        </Button>
+      {/if}
+      {#if current.averageScore}
+        <Button class='select:!text-primary h-7 text-nowrap bg-primary/5 font-bold {getTextColorForRating(current.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+          {current.averageScore}%
+        </Button>
+      {/if}
     </div>
-    <div class='text-muted-foreground line-clamp-2 w-[600px] max-w-full text-sm fade-in'>
+    <div class='flex flex-row w-[280px] max-w-full'>
+      <PlayButton media={current} size='default' class='grow bg-custom select:!bg-custom-600 text-contrast mr-2' />
+      <FavoriteButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
+      <BookmarkButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
+    </div>
+  </div>
+  <div class='flex flex-col self-end md:items-end items-center pr-5 w-full min-w-0'>
+    <div class='text-muted-foreground/80 line-clamp-2 md:line-clamp-3 text-balance max-w-[90%] md:max-w-[75%] text-xs md:text-sm fade-in pt-3'>
       {desc(current)}
     </div>
-    <div class='details text-white text-capitalize py-3 flex w-[600px] max-w-full text-xs fade-in'>
+    <div class='hidden md:flex gap-2 items-center md:self-end pt-4 flex-nowrap overflow-clip max-w-full md:place-content-end'>
       {#each current.genres ?? [] as genre (genre)}
-        <span class='text-nowrap flex items-center'>
+        <Button variant='ghost' class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 font-bold' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
           {genre}
-        </span>
+        </Button>
       {/each}
     </div>
-    <div class='flex flex-row pb-2 w-[230px] max-w-full'>
-      <PlayButton media={current} class='grow' />
-      <FavoriteButton media={current} class='ml-2' />
-      <BookmarkButton media={current} class='ml-2' />
-    </div>
-  {/key}
-  <div class='flex'>
-    {#each shuffled as media (media.id)}
-      {@const active = current === media}
-      <div class='pt-2 pb-1' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
-        <div class='bg-neutral-800 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
-          <div class='progress-content h-full transform-gpu w-full' class:bg-white={active} />
-        </div>
-      </div>
-    {/each}
   </div>
+</div>
+<div class='flex w-full justify-center flex-nowrap overflow-clip' style:--custom={current.coverImage?.color ?? '#fff'}>
+  {#each shuffled as media (media.id)}
+    {@const active = current === media}
+    <div class='pt-2 pb-4' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
+      <div class='bg-neutral-800 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
+        <div class='progress-content h-full transform-gpu w-full' class:bg-custom={active} />
+      </div>
+    </div>
+  {/each}
 </div>
 
 <style>

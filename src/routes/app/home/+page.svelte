@@ -77,7 +77,7 @@
 
   function handleScroll (e: Event) {
     const target = e.target as HTMLDivElement
-    hideBanner.value = target.scrollTop > 150
+    hideBanner.value = target.scrollTop > 100
   }
 
   hideBanner.value = false

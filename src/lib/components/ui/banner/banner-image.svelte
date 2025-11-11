@@ -15,17 +15,19 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
+  import { page } from '$app/stores'
+
   type $$Props = HTMLAttributes<HTMLImageElement>
 
   let className: $$Props['class'] = ''
   export { className as class } // TODO: needs nice animations, should update to coverimage on mobile width
+
+  $: isBig = $page.route.id === '/app/home'
 </script>
 
 {#if $bannerSrc}
   <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black banner', className)}>
-    {#key $bannerSrc.id}
-      <Banner media={$bannerSrc} class='min-w-[100vw] w-screen h-[23rem] object-cover {$hideBanner ? 'opacity-10' : 'opacity-100'} transition-opacity duration-500 banner-gr relative' />
-    {/key}
+    <Banner media={$bannerSrc} class='min-w-[100vw] w-screen {isBig ? 'h-[70vh] md:h-[80vh]' : 'h-[23rem]' } object-cover {$hideBanner ? 'opacity-10' : 'opacity-70'} transition-opacity duration-500 banner-gr relative' />
   </div>
 {/if}
 
@@ -42,7 +44,7 @@
     content: '';
     position: absolute;
     left: 0 ; top: 0;
-    width: 100%; height: 23rem;
+    width: 100%; height: 80vh;
     z-index: 0;
     background: rgba(0, 0, 0, .4);
   }

@@ -19,7 +19,7 @@
     <div class='w-[calc(100%-3.5rem)] left-[3.5rem] top-0 z-[2000] flex navbar absolute h-8'>
       <div class='w-full {fullscreenElement ? 'custom-not-draggable' : 'custom-draggable'}' on:contextmenu|preventDefault />
       {#if platform !== 'macOS'}
-        <div class='window-controls custom-not-draggable flex text-white backdrop-blur'>
+        <div class='window-controls custom-not-draggable flex text-white'>
           <button class='max-button flex items-center justify-center h-8 w-[46px]' use:click={native.minimise} use:tabindex>
             <svg class='svg-controls w-3 h-3' role='img' viewBox='0 0 12 12'><rect fill='currentColor' height='1' width='10' x='1' y='6' />
           </button>
@@ -46,9 +46,6 @@
     inset: 0 auto auto 0;
     transform-origin: 100% 0;
     transform: translate(-29.3%) rotate(-45deg);
-  }
-  .window-controls {
-    background: rgba(24, 24, 24, 0.1);
   }
   .window-controls button:hover {
     background: rgba(128, 128, 128, 0.2);

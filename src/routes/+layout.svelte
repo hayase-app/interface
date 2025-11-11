@@ -18,11 +18,6 @@
 
   let root: HTMLDivElement
 
-  let updateProgress = 0
-
-  native.updateProgress(progress => {
-    updateProgress = progress
-  })
   native.errors(error => {
     toast.error('Torrent Process Error!', { description: error?.stack ?? error?.message })
     console.error(error)
@@ -52,7 +47,7 @@
   <meta name='viewport' content='width=device-width, initial-scale={SUPPORTS.isAndroidTV ? $settings.uiScale / devicePixelRatio : SUPPORTS.isAndroid ? $settings.uiScale : 1}, maximum-scale=2, user-scalable=0, viewport-fit=cover' />
 </svelte:head>
 
-<div class={cn('w-full h-full flex flex-col backface-hidden bg-black relative overflow-clip [border-image:linear-gradient(to_bottom,white_var(--progress),#2dcf58_var(--progress))_1] preserve-3d', !SUPPORTS.isAndroid && 'md:border-l-2')} bind:this={root} id='root' style:--progress='{100 - updateProgress}%'>
+<div class={cn('w-full h-full flex flex-col backface-hidden bg-black relative overflow-clip')} bind:this={root} id='root'>
   <ProgressBar zIndex={100} bind:complete {displayThresholdMs} />
   <Toaster position='top-right' expand={true} />
 

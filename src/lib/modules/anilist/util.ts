@@ -147,3 +147,15 @@ export const lastYear = date.getFullYear() - (lastSeason === 'FALL' ? 1 : 0)
 export function dedupeAiring (media: ResultOf<typeof ScheduleMedia>) {
   return [...media.aired?.n ?? [], ...media.notaired?.n ?? []].filter((v, i, a) => v != null && a.findIndex(s => s?.e === v.e) === i) as Array<{ a: number, e: number }>
 }
+
+export function getBGColorForRating (rating: number) {
+  if (rating >= 75) return 'bg-green-700 select:bg-green-800'
+  if (rating >= 65) return 'bg-orange-400 select:bg-orange-500'
+  return 'bg-red-400 select:bg-red-500'
+}
+
+export function getTextColorForRating (rating: number) {
+  if (rating >= 75) return 'text-green-700'
+  if (rating >= 65) return 'text-orange-400'
+  return 'text-red-500'
+}
