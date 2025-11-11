@@ -102,7 +102,7 @@
     </div>
   </div>
   <div class='flex flex-col self-end md:items-end items-center pr-5 w-full min-w-0'>
-    <div class='text-muted-foreground/80 line-clamp-2 md:line-clamp-3 text-balance max-w-[90%] md:max-w-[75%] text-xs md:text-sm fade-in pt-3'>
+    <div class='text-muted-foreground/80 line-clamp-2 md:line-clamp-3 text-balance max-w-[90%] md:max-w-[75%] text-xs md:text-sm md:text-right fade-in pt-3'>
       {desc(current)}
     </div>
     <div class='hidden md:flex gap-2 items-center md:self-end pt-4 flex-nowrap overflow-clip max-w-full md:place-content-end'>
