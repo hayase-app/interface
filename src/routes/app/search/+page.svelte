@@ -233,83 +233,116 @@
 </script>
 
 <div class='flex flex-col h-full overflow-y-auto overflow-x-clip -ml-14 pl-14 z-20 min-w-0 grow pointer-events-none' use:dragScroll use:infiniteScroll>
-  <div class='sticky top-0 z-20 px-2 sm:px-10 pointer-events-auto shrink-0 overflow-clip bg-black'>
-    <div class='flex flex-wrap pt-5'>
-      <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
-        <div class='text-xl font-bold mb-1 ml-1'>
-          Title
-        </div>
-        <div class='flex items-center scale-parent relative'>
-          <Input
-            class='pl-9 border-0 bg-background select:bg-accent select:text-accent-foreground shadow-sm no-scale placeholder:opacity-50 capitalize'
-            placeholder='Any'
-            id='animeName' type='text'
-            autocomplete='on'
-            on:input={updateText}
-            bind:value={inputText} />
-          <MagnifyingGlass class='h-4 w-4 shrink-0 opacity-50 absolute left-3 text-muted-foreground z-10 pointer-events-none' />
-        </div>
-      </div>
-      <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
-        <div class='text-xl font-bold mb-1 ml-1'>
-          Genres
-        </div>
-        <ComboBox items={genres} multiple={true} bind:value={search.genres} class='w-full' />
-      </div>
-      <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
-        <div class='text-xl font-bold mb-1 ml-1'>
-          Year
-        </div>
-        <ComboBox items={years} bind:value={search.years} class='w-full' />
-      </div>
-      <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
-        <div class='text-xl font-bold mb-1 ml-1'>
-          Season
-        </div>
-        <ComboBox items={seasons} bind:value={search.seasons} class='w-full' />
-      </div>
-      <div class='grid items-center p-2 min-w-44 flex-1'>
-        <div class='text-xl font-bold mb-1 ml-1'>
-          Formats
-        </div>
-        <ComboBox items={formats} multiple={true} bind:value={search.formats} class='w-full' />
-      </div>
-      {#if pressed || $breakpoints.md}
-        <div class='grid items-center p-2 min-w-44 flex-1'>
+  <div class='sticky top-0 z-20 px-2 sm:px-10 pointer-events-auto shrink-0 overflow-clip bg-black pt-5'>
+    <div class='flex flex-wrap'>
+      {#if !$breakpoints.md}
+        <div class='grid items-center min-w-0 flex-1 p-2'>
           <div class='text-xl font-bold mb-1 ml-1'>
-            Status
+            Title
           </div>
-          <ComboBox items={status} multiple={true} bind:value={search.status} class='w-full' />
+          <div class='flex items-center scale-parent relative'>
+            <Input
+              class='pl-9 border-0 bg-background select:bg-accent select:text-accent-foreground shadow-sm no-scale placeholder:opacity-50 capitalize'
+              placeholder='Any'
+              id='animeName' type='text'
+              autocomplete='on'
+              on:input={updateText}
+              bind:value={inputText} />
+            <MagnifyingGlass class='h-4 w-4 shrink-0 opacity-50 absolute left-3 text-muted-foreground z-10 pointer-events-none' />
+          </div>
         </div>
-        <div class='grid items-center p-2 min-w-44 flex-1'>
-          <div class='text-xl font-bold mb-1 ml-1'>
-            Sort
-          </div>
-          <ComboBox items={sort} bind:value={search.sort} class='w-full' placeholder='Accuracy' />
+        <div class='w-auto p-2 gap-4 flex items-end'>
+          <Button variant='outline' size='icon' class='border-0 animated-icon'>
+            <label for='search-image' class='contents'>
+              <FileImage class='h-4 w-full cursor-pointer' />
+            </label>
+            <input type='file' class='hidden' id='search-image' accept='image/*' on:input|preventDefault|stopPropagation={imagePicker} />
+          </Button>
+          <Button variant='outline' size='icon' on:click={clear} class='md:flex hidden border-0 animated-icon'>
+            <Trash class={cn('size-4', empty(search) ? 'text-muted-foreground opacity-50' : 'text-blue-400')} />
+          </Button>
+          <Toggle variant='outline' size='icon' class='border-0 md:hidden animated-icon' bind:pressed>
+            <Bolt size={18} />
+          </Toggle>
         </div>
-        {#if $viewer?.viewer?.id}
-          <div class='grid items-center p-2 min-w-36 flex-1'>
-            <div class='text-xl font-bold mb-1 ml-1 text-nowrap'>
-              My List
-            </div>
-            <ComboBox items={onlist} bind:value={search.onList} class='w-full' placeholder='List' />
-          </div>
-        {/if}
       {/if}
-      <div class='w-auto p-2 gap-4 flex items-end'>
-        <Button variant='outline' size='icon' class='border-0 animated-icon'>
-          <label for='search-image' class='contents'>
-            <FileImage class='h-4 w-full cursor-pointer' />
-          </label>
-          <input type='file' class='hidden' id='search-image' accept='image/*' on:input|preventDefault|stopPropagation={imagePicker} />
-        </Button>
-        <Button variant='outline' size='icon' on:click={clear} class='border-0 animated-icon'>
-          <Trash class={cn('size-4', empty(search) ? 'text-muted-foreground opacity-50' : 'text-blue-400')} />
-        </Button>
-        <Toggle variant='outline' size='icon' class='border-0 md:hidden animated-icon' bind:pressed>
-          <Bolt size={18} />
-        </Toggle>
-      </div>
+      {#if pressed || $breakpoints.md}
+        <div class='flex md:flex-wrap overflow-y-auto' use:dragScroll>
+          <div class='hidden md:grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Title
+            </div>
+            <div class='flex items-center scale-parent relative'>
+              <Input
+                class='pl-9 border-0 bg-background select:bg-accent select:text-accent-foreground shadow-sm no-scale placeholder:opacity-50 capitalize'
+                placeholder='Any'
+                id='animeName' type='text'
+                autocomplete='on'
+                on:input={updateText}
+                bind:value={inputText} />
+              <MagnifyingGlass class='h-4 w-4 shrink-0 opacity-50 absolute left-3 text-muted-foreground z-10 pointer-events-none' />
+            </div>
+          </div>
+          <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Genres
+            </div>
+            <ComboBox items={genres} multiple={true} bind:value={search.genres} class='w-full' />
+          </div>
+          <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Year
+            </div>
+            <ComboBox items={years} bind:value={search.years} class='w-full' />
+          </div>
+          <div class='grid items-center min-w-44 flex-1 md:basis-auto md:w-1/4 p-2'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Season
+            </div>
+            <ComboBox items={seasons} bind:value={search.seasons} class='w-full' />
+          </div>
+          <div class='grid items-center p-2 min-w-44 flex-1'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Formats
+            </div>
+            <ComboBox items={formats} multiple={true} bind:value={search.formats} class='w-full' />
+          </div>
+          <div class='grid items-center p-2 min-w-44 flex-1'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Status
+            </div>
+            <ComboBox items={status} multiple={true} bind:value={search.status} class='w-full' />
+          </div>
+          <div class='grid items-center p-2 min-w-44 flex-1'>
+            <div class='text-xl font-bold mb-1 ml-1'>
+              Sort
+            </div>
+            <ComboBox items={sort} bind:value={search.sort} class='w-full' placeholder='Accuracy' />
+          </div>
+          {#if $viewer?.viewer?.id}
+            <div class='grid items-center p-2 min-w-36 flex-1'>
+              <div class='text-xl font-bold mb-1 ml-1 text-nowrap'>
+                My List
+              </div>
+              <ComboBox items={onlist} bind:value={search.onList} class='w-full' placeholder='List' />
+            </div>
+          {/if}
+          <div class='w-auto p-2 gap-4 md:flex items-end hidden'>
+            <Button variant='outline' size='icon' class='border-0 animated-icon'>
+              <label for='search-image' class='contents'>
+                <FileImage class='h-4 w-full cursor-pointer' />
+              </label>
+              <input type='file' class='hidden' id='search-image' accept='image/*' on:input|preventDefault|stopPropagation={imagePicker} />
+            </Button>
+            <Button variant='outline' size='icon' on:click={clear} class='md:flex hidden border-0 animated-icon'>
+              <Trash class={cn('size-4', empty(search) ? 'text-muted-foreground opacity-50' : 'text-blue-400')} />
+            </Button>
+            <Toggle variant='outline' size='icon' class='border-0 md:hidden animated-icon' bind:pressed>
+              <Bolt size={18} />
+            </Toggle>
+          </div>
+        </div>
+      {/if}
     </div>
     <div class='flex flex-row flex-wrap mt-2 min-h-9 pb-1 px-1'>
       {#each list(search) as item (item)}
