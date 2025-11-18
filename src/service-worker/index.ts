@@ -1,7 +1,7 @@
 import { clientsClaim, skipWaiting } from 'workbox-core'
 import { cleanupOutdatedCaches, precacheAndRoute, PrecacheFallbackPlugin } from 'workbox-precaching'
 import { registerRoute, Route } from 'workbox-routing'
-import { NetworkOnly } from 'workbox-strategies'
+import { NetworkFirst } from 'workbox-strategies'
 
 import { build, files, prerendered, version } from '$service-worker'
 
@@ -13,5 +13,5 @@ clientsClaim()
 skipWaiting()
 
 registerRoute(new Route(({ request }) => request.mode === 'navigate',
-  new NetworkOnly({ plugins: [new PrecacheFallbackPlugin({ fallbackURL })] })
+  new NetworkFirst({ plugins: [new PrecacheFallbackPlugin({ fallbackURL })] })
 ))
