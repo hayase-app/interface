@@ -4,7 +4,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
 
   import { banner, cover, title, type Media } from '$lib/modules/anilist'
-  import { episodes } from '$lib/modules/anizip'
+  import { episodesCached } from '$lib/modules/anizip'
   import { breakpoints } from '$lib/utils'
 
   export let media: Media
@@ -30,7 +30,7 @@
 </script>
 
 {#if $breakpoints.md}
-  {#await episodes(media.id) then metadata}
+  {#await episodesCached(media.id) then metadata}
     {@const banner = metadata?.images?.find(i => i.coverType === 'Fanart')?.url}
     {@const cover = metadata?.images?.find(i => i.coverType === 'Poster')?.url}
     {@const fallback = banner || cover}

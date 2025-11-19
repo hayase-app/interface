@@ -9,6 +9,19 @@ const debug = Debug('ui:anizip')
 // const episodes = safefetch<EpisodesResponse>(`https://hayase.ani.zip/v1/episodes?anilist_id=${params.id}`)
 // const mappings = safefetch<MappingsResponse>(fetch, `https://hayase.ani.zip/v1/mappings?anilist_id=${params.id}`)
 
+// LAAAAAAAZY, the banner code should probably be a lot better than it is!
+let lastEpisodes = { id: 0, data: null as Promise<EpisodesResponse | null> | null }
+export async function episodesCached (id: number) {
+  debug('fetching cached episodes for id', id)
+  if (lastEpisodes.id === id && lastEpisodes.data) {
+    debug('returning cached episodes for id', id)
+    return await lastEpisodes.data
+  }
+  const data = safefetch<EpisodesResponse>(fetch, `https://hayase.ani.zip/v1/episodes?anilist_id=${id}`)
+  lastEpisodes = { id, data }
+  return await data
+}
+
 export async function episodes (id: number, _fetch = fetch) {
   debug('fetching episodes for id', id)
   return await safefetch<EpisodesResponse>(_fetch, `https://hayase.ani.zip/v1/episodes?anilist_id=${id}`)
