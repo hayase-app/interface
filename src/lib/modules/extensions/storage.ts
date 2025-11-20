@@ -186,6 +186,7 @@ export const storage = new class Storage {
     const updateURLs = new Set<string>(configs.map(({ update }) => update).filter(e => e != null))
 
     const values = await Promise.all([...updateURLs].map(url => safejson<ExtensionConfig[]>(url)))
+    if (!values.filter(e => e).length) return
     const newconfig: Record<string, ExtensionConfig> = Object.fromEntries((values.flat().filter(f => this._validateConfig(f) && ids.includes(f!.id)) as ExtensionConfig[]).map((config) => [config.id, config]))
 
     const toDelete = ids.filter(id => newconfig[id]?.version !== config[id]!.version)
