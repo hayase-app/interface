@@ -48,7 +48,7 @@
 {#if !SUPPORTS.isAndroid}
   <Wrapper let:platform>
     {@const isMac = platform === 'macOS'}
-    <div class='w-full top-0 z-[2000] flex justify-between absolute h-8'>
+    <div class='w-full top-0 z-[2000] flex justify-between {draggable} absolute h-8'>
       <div class='ml-1.5 flex gap-1.5 items-center {draggable} {isMac ? '!ml-12' : ''}'>
         <Button size='icon-sm' variant='ghost' disabled={!hasPrevious} class='p-1 shrink-0 not-draggable text-white' on:click={previous}>
           <ArrowLeft strokeWidth='1.2' class='size-5' />
