@@ -282,6 +282,10 @@ details,
   height: 4px !important;
 }
 
+.text-shadow-lg {
+  text-shadow: 0px 1px 2px var(--tw-text-shadow-color, #0000001a), 0px 3px 2px var(--tw-text-shadow-color, #0000001a), 0px 4px 8px var(--tw-text-shadow-color, #0000001a);
+}
+
 /* animated SVG icons */
 .animated-icon:not(:hover):not(:focus-visible):not(:active) .target-animated-icon {
   animation: none !important;

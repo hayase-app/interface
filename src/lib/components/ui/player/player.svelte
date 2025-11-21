@@ -830,7 +830,7 @@
         <div class='flex flex-col gap-2 text-left cursor-pointer'>
           <EpisodesModal portal={wrapper} {mediaInfo} />
         </div>
-        <div class='flex flex-col gap-2 grow-0 items-end self-end'>
+        <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg'>
           <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, chapters) || ''}</div>
           <div class='ml-auto self-end text-sm leading-none font-light text-nowrap'>{toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}</div>
         </div>
