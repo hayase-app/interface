@@ -73,22 +73,20 @@
 
 <div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
   <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left'>
-    {#await episodesCached(current.id)}
-      <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
+    <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
+      {#await episodesCached(current.id)}
         {title(current)}
-      </a>
-    {:then metadata}
-      {@const src = metadata?.images?.find(i => i.coverType === 'Clearlogo')?.url}
-      {#if src}
-        <a class='w-[900px] max-w-[85%] fade-in flex justify-center lg:justify-start cursor-pointer' href='/app/anime/{current.id}'>
-          <Load {src} alt={title(current)} class='drop-shadow-lg w-[30rem]' />
-        </a>
-      {:else}
-        <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
+      {:then metadata}
+        {@const src = metadata?.images?.find(i => i.coverType === 'Clearlogo')?.url}
+        {#if src}
+          <a class='w-full flex justify-center lg:justify-start'>
+            <Load {src} alt={title(current)} class='drop-shadow-lg w-[30rem]' />
+          </a>
+        {:else}
           {title(current)}
-        </a>
-      {/if}
-    {/await}
+        {/if}
+      {/await}
+    </a>
     <div class='flex gap-2 items-center lg:self-start pt-4 flex-nowrap max-w-full lg:place-content-start py-4 font-bold'>
       <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/5 text-sm inline-flex items-center'>
         {of(current) ?? duration(current) ?? 'N/A'}
@@ -117,7 +115,7 @@
     </div>
   </div>
   <div class='flex flex-col self-end lg:items-end items-center lg:pr-5 w-full min-w-0'>
-    <div class='text-muted-foreground/80 line-clamp-2 lg:line-clamp-3 text-balance max-w-[90%] lg:max-w-[75%] text-xs lg:text-sm text-center lg:text-right fade-in pt-3'>
+    <div class='text-white/70 line-clamp-2 lg:line-clamp-3 text-balance max-w-[90%] lg:max-w-[75%] text-xs lg:text-sm text-center lg:text-right fade-in pt-3 text-shadow-lg'>
       {desc(current)}
     </div>
     <div class='hidden lg:flex gap-2 items-center lg:self-end pt-4 flex-nowrap max-w-full lg:place-content-end'>
@@ -133,7 +131,7 @@
   {#each shuffled as media (media.id)}
     {@const active = current === media}
     <div class='pt-2 pb-4' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
-      <div class='bg-neutral-800 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
+      <div class='bg-white/20 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
         <div class='progress-content h-full transform-gpu w-full' class:bg-custom={active} />
       </div>
     </div>

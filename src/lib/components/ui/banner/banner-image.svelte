@@ -23,29 +23,23 @@
   export { className as class } // TODO: needs nice animations, should update to coverimage on mobile width
 
   $: isBig = $page.route.id === '/app/home'
+
+  $: debounced = $bannerSrc
 </script>
 
-{#if $bannerSrc}
-  <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black banner', className)}>
-    <Banner media={$bannerSrc} class='min-w-[100vw] w-screen {isBig ? 'h-[70vh] md:h-[80vh]' : 'h-[23rem]' } object-cover {$hideBanner ? 'opacity-10' : 'opacity-70'} transition-opacity duration-500 banner-gr relative' />
+{#if debounced}
+  <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black', className)}>
+    <Banner media={debounced} class='min-w-[100vw] w-screen {isBig ? 'h-[70vh] md:h-screen banner-gr-1' : 'h-[23rem] banner-gr-1' } object-cover {$hideBanner ? 'opacity-5' : 'opacity-100'} transition-opacity duration-500 relative banner-gr' />
   </div>
 {/if}
 
 <style>
-  :global(div.banner-gr::after) {
+  :global(.banner-gr::after) {
     content: '';
     position: absolute;
     left: 0 ; bottom: 0;
     width: 100%;
-    height: 300px;
-    background: linear-gradient(1turn, rgb(3, 3, 3) 8.98%, rgba(0, 0, 0, 0) 100%);
-  }
-  .banner::after {
-    content: '';
-    position: absolute;
-    left: 0 ; top: 0;
-    width: 100%; height: 80vh;
-    z-index: 0;
-    background: rgba(0, 0, 0, .4);
+    height: 100%;
+    background: radial-gradient(75% 65% at 59.18% 34.97%, rgba(0, 0, 0, 0.16) 30.56%, rgba(0, 0, 0, 1) 100%)
   }
 </style>

@@ -27,10 +27,12 @@
       img.src = `https://i.ytimg.com/vi/${media.trailer?.id}/${sizes[sizeAttempt++]}.jpg`
     }
   }
+
+  $: id = media.id
 </script>
 
 {#if $breakpoints.md}
-  {#await episodesCached(media.id) then metadata}
+  {#await episodesCached(id) then metadata}
     {@const banner = metadata?.images?.find(i => i.coverType === 'Fanart')?.url}
     {@const cover = metadata?.images?.find(i => i.coverType === 'Poster')?.url}
     {@const fallback = banner || cover}
