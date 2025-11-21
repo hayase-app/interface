@@ -16,6 +16,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
 
   import { page } from '$app/stores'
+  import { breakpoints } from '$lib/utils'
 
   type $$Props = HTMLAttributes<HTMLImageElement>
 
@@ -29,7 +30,7 @@
 
 {#if debounced}
   <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black', className)}>
-    <Banner media={debounced} class='min-w-[100vw] w-screen {isBig ? 'h-[70vh] md:h-screen banner-gr-1' : 'h-[23rem] banner-gr-1' } object-cover {$hideBanner ? 'opacity-5' : 'opacity-100'} transition-opacity duration-500 relative banner-gr' />
+    <Banner media={debounced} class='min-w-[100vw] w-screen {isBig ? 'h-[80vh] md:h-[90vh]' : 'h-[23rem]' } banner-gr-1 {$breakpoints.md ? '' : 'banner-gr-sm'} object-cover {$hideBanner ? 'opacity-5' : 'opacity-100'} transition-opacity duration-500 relative banner-gr' />
   </div>
 {/if}
 
@@ -41,5 +42,9 @@
     width: 100%;
     height: 100%;
     background: radial-gradient(75% 65% at 59.18% 34.97%, rgba(0, 0, 0, 0.16) 30.56%, rgba(0, 0, 0, 1) 100%)
+  }
+
+  :global(.banner-gr-sm::after) {
+    background: radial-gradient(75% 65% at 50% 34.97%, rgba(0, 0, 0, 0.16) 30.56%, rgba(0, 0, 0, 1) 100%) !important
   }
 </style>

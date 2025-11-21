@@ -73,7 +73,7 @@
 
 <div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
   <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left'>
-    <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer' href='/app/anime/{current.id}'>
+    <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer text-shadow-lg' href='/app/anime/{current.id}'>
       {#await episodesCached(current.id)}
         {title(current)}
       {:then metadata}
@@ -88,22 +88,22 @@
       {/await}
     </a>
     <div class='flex gap-2 items-center lg:self-start pt-4 flex-nowrap max-w-full lg:place-content-start py-4 font-bold'>
-      <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/5 text-sm inline-flex items-center'>
+      <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/10 text-sm inline-flex items-center'>
         {of(current) ?? duration(current) ?? 'N/A'}
       </div>
-      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 select:!bg-primary/10 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
+      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
         {format(current)}
       </Button>
-      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 select:!bg-primary/10 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
+      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
         {status(current)}
       </Button>
       {#if season(current)}
-        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 select:!bg-primary/10 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
           {season(current)}
         </Button>
       {/if}
       {#if current.averageScore}
-        <Button class='select:!text-primary h-7 text-nowrap bg-primary/5 select:!bg-primary/10 font-bold {getTextColorForRating(current.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+        <Button class='select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold {getTextColorForRating(current.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
           {current.averageScore}%
         </Button>
       {/if}
@@ -120,7 +120,7 @@
     </div>
     <div class='hidden lg:flex gap-2 items-center lg:self-end pt-4 flex-nowrap max-w-full lg:place-content-end'>
       {#each current.genres ?? [] as genre (genre)}
-        <Button variant='ghost' class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/5 select:!bg-primary/10 font-bold' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
+        <Button variant='ghost' class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
           {genre}
         </Button>
       {/each}

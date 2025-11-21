@@ -34,7 +34,7 @@
 <svelte:document bind:visibilityState />
 
 <BannerImage class='absolute top-0 left-0 w-14 -z-10 hidden md:block' />
-<Logo class={cn('mb-3 h-10 object-contain px-2.5 hidden md:block text-white ml-2 cursor-pointer', isMac && 'mt-3')} on:click={() => goto('/app/home/')} />
+<Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-white ml-2 cursor-pointer mt-auto', isMac && 'mt-3')} on:click={() => goto('/app/home/')} />
 {#if SUPPORTS.isAndroidTV}
   <SidebarButton href='/app/player/' class='hidden md:flex py-0'>
     <Play size={16} />
