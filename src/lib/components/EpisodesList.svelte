@@ -1,5 +1,6 @@
 <script lang='ts'>
   import Play from 'lucide-svelte/icons/play'
+  import Star from 'lucide-svelte/icons/star'
 
   import Pagination from './Pagination.svelte'
   import { ChevronLeft, ChevronRight } from './icons/animated'
@@ -49,7 +50,7 @@
 <Pagination count={episodeCount} {perPage} bind:currentPage let:pages let:hasNext let:hasPrev let:range let:setPage siblingCount={1}>
   <div class='overflow-y-auto pt-3 -ml-14 pl-14 -mr-3 pr-3 pointer-events-none -mb-3 pb-3' use:dragScroll>
     <div class='grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(500px,1fr))] place-items-center gap-x-4 gap-y-7 justify-center align-middle pointer-events-auto'>
-      {#each getPage(currentPage, episodeList) as { episode, image, title, summary, airingAt, airdate, filler, length } (episode)}
+      {#each getPage(currentPage, episodeList) as { episode, image, title, summary, airingAt, airdate, filler, length, rating, runtime } (episode)}
         {@const watched = _progress >= episode && !completed}
         {@const target = _progress + 1 === episode}
         <div class={!target ? 'px-3 w-full' : 'contents'}>
@@ -62,9 +63,15 @@
             {#if image}
               <div class='w-52 shrink-0 relative'>
                 <Load src={image} class={cn('object-cover h-full w-full', watched && 'opacity-20')} />
-                {#if length ?? media.duration}
+                {#if length ?? runtime ?? media.duration}
                   <div class='absolute bottom-1 left-1 bg-neutral-900/80 text-secondary-foreground text-[9.6px] px-1 py-0.5 rounded'>
-                    {length ?? media.duration}m
+                    {length ?? runtime ?? media.duration}m
+                  </div>
+                {/if}
+                {#if rating}
+                  <div class='absolute bottom-1 right-1 bg-neutral-900/80 text-secondary-foreground text-[9.6px] px-1 py-0.5 rounded flex'>
+                    <Star class='size-2.5 mt-0.5 mr-1 text-yellow-400' fill='currentColor' />
+                    {rating}
                   </div>
                 {/if}
                 <div class='absolute flex items-center justify-center w-full h-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-200 text-white transition-[background] ease-out top-0'>
