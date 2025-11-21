@@ -294,20 +294,28 @@ class AnilistClient {
         const { node, relationType } = edge
         if (node.type !== 'ANIME' || relationType === 'CHARACTER') continue
         const edgeName = [node.id, media.id].sort((a, b) => a - b).join('-')
-        if (!edges.has(edgeName)) {
-          const isPrequel = relationType === 'PREQUEL'
-          edges.set(edgeName, {
-            id: 'e' + edgeName,
-            source: '' + (isPrequel ? node.id : media.id),
-            target: '' + (isPrequel ? media.id : node.id),
-            data: { ids: [media.id, node.id] },
-            animated: true,
-            label: isPrequel ? 'SEQUEL' : relationType?.replaceAll('_', ' ') ?? ''
-          })
-
-          // @ts-expect-error yeah recursive, last node has different types since it doesnt have relations
-          processEdges(node)
+        const exisingEdge = edges.get(edgeName)
+        if (exisingEdge) {
+          // parent is a very broad term, and realistically shouldnt be used if there are other more specific relations available
+          // such as summary, side story, alternative etc
+          if (exisingEdge.label === 'PARENT') {
+            edges.delete(edgeName)
+          } else {
+            continue
+          }
         }
+        const isPrequel = relationType === 'PREQUEL'
+        edges.set(edgeName, {
+          id: 'e' + edgeName,
+          source: '' + (isPrequel ? node.id : media.id),
+          target: '' + (isPrequel ? media.id : node.id),
+          data: { ids: [media.id, node.id] },
+          animated: true,
+          label: isPrequel ? 'SEQUEL' : relationType?.replaceAll('_', ' ') ?? ''
+        })
+
+        // @ts-expect-error yeah recursive, last node has different types since it doesnt have relations
+        processEdges(node)
       }
     }
 
