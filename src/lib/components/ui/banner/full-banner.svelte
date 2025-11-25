@@ -1,16 +1,18 @@
 <script lang='ts'>
   import { onDestroy } from 'svelte'
 
+  import { Avatars } from '../avatar'
   import { Button } from '../button'
   import { BookmarkButton, FavoriteButton, PlayButton } from '../button/extra'
   import { Load } from '../img'
+  import { Profile } from '../profile'
 
   import { bannerSrc } from './banner-image.svelte'
 
   import { goto } from '$app/navigation'
-  import { desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
+  import { client, desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
   import { episodesCached } from '$lib/modules/anizip'
-  import { of } from '$lib/modules/auth'
+  import { authAggregator, of } from '$lib/modules/auth'
   import { click } from '$lib/modules/navigate'
   import { colors } from '$lib/utils'
   export let mediaList: Array<Media | null>
@@ -34,8 +36,7 @@
 
   const shuffled = shuffleAndFilter(mediaList)
 
-  // WARN: this assertion is incorrect, but the code is safe for it
-  let current = shuffled[0]!
+  let current = shuffled[0]
 
   const initial = bannerSrc.value
 
@@ -51,7 +52,7 @@
 
   function schedule (index: number) {
     return setTimeout(() => {
-      current = shuffled[index % shuffled.length]!
+      current = shuffled[index % shuffled.length]
       timeout = schedule(index + 1)
     }, 15000)
   }
@@ -69,11 +70,37 @@
   }
 
   $: ({ r, g, b } = colors(current?.coverImage?.color ?? undefined))
+
+  const ids = mediaList.map(m => m?.id).filter(e => e) as number[]
+  const following = client.followingMany(ids)
+
+  $: filtered = $following.data?.Page?.mediaList?.filter(ml => ml?.user?.id !== authAggregator.id()) ?? []
+
+  $: usersForCurrent = filtered.filter(f => f?.media?.id === current?.id)
 </script>
 
 {#if current}
+  {#if usersForCurrent.length}
+    <div class='md:pt-14 md:pl-10 p-4 flex space-x-2'>
+      <Avatars>
+        {#each usersForCurrent as ml, i (ml?.user?.id ?? i)}
+          {#if ml?.user}
+            <Profile user={ml.user} class='inline-block size-8 fade-in' />
+          {/if}
+        {/each}
+      </Avatars>
+      <div class='flex flex-col justify-between leading-none font-medium fade-in'>
+        <div class='text-muted-foreground text-xs'>
+          {usersForCurrent[0]?.user?.name ?? ''}
+        </div>
+        <div class='text-sm'>
+          Also Watched This Series
+        </div>
+      </div>
+    </div>
+  {/if}
   <div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
-    <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left'>
+    <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left gap-4'>
       <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer text-shadow-lg' href='/app/anime/{current.id}'>
         {#await episodesCached(current.id)}
           {title(current)}
@@ -88,18 +115,18 @@
           {/if}
         {/await}
       </a>
-      <div class='flex gap-2 items-center lg:self-start pt-4 flex-nowrap max-w-full lg:place-content-start py-4 font-bold'>
+      <div class='hidden sm:block gap-2 items-center lg:self-start flex-nowrap max-w-full lg:place-content-start font-bold'>
         <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/10 text-sm inline-flex items-center'>
           {of(current) ?? duration(current) ?? 'N/A'}
         </div>
-        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current?.format ?? null] } } })}>
           {format(current)}
         </Button>
-        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current?.status ?? null] } } })}>
           {status(current)}
         </Button>
         {#if season(current)}
-          <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
+          <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current?.season ?? null, seasonYear: current?.seasonYear ?? null } } })}>
             {season(current)}
           </Button>
         {/if}
@@ -163,8 +190,5 @@
     align-self: center;
     white-space: normal;
     color: #737373 !important;
-  }
-  .fade-in {
-    animation: fade-in ease .8s;
   }
 </style>

@@ -311,6 +311,25 @@ export const Following = gql(`
   }
 `, [UserFrag])
 
+export const FollowingMany = gql(`
+  query FollowingMany($ids: [Int]!) {
+    Page {
+      mediaList(mediaId_in: $ids, isFollowing: true, sort: UPDATED_TIME_DESC) {
+        id,
+        status,
+        score,
+        progress,
+        media {
+          id
+        },
+        user {
+          ...UserFrag
+        }
+      }
+    }
+  }
+`, [UserFrag])
+
 // AL API is dog, fullmedialist is NULL when queried inside media..., it's possible this can cause cache loops, but there's no other way to do this!!!
 export const Entry = gql(`
   mutation Entry($lists: [String], $id: Int!, $status: MediaListStatus, $progress: Int, $repeat: Int, $score: Int) {
