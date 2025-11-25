@@ -1,5 +1,6 @@
 <script lang='ts'>
   import Heart from 'lucide-svelte/icons/heart'
+  import Newspaper from 'lucide-svelte/icons/newspaper'
   import Play from 'lucide-svelte/icons/play'
 
   import { BannerImage } from '../banner'
@@ -12,6 +13,7 @@
   import Logo from '$lib/components/icons/Logo.svelte'
   import { Home, Search, Calendar, Users, Download, Bolt, LogIn } from '$lib/components/icons/animated'
   import * as Avatar from '$lib/components/ui/avatar'
+  import * as Dialog from '$lib/components/ui/dialog'
   import client from '$lib/modules/auth/client'
   import { lockedState, idleState, activityState } from '$lib/modules/idle'
   import native from '$lib/modules/native'
@@ -34,7 +36,7 @@
 <svelte:document bind:visibilityState />
 
 <BannerImage class='absolute top-0 left-0 w-14 -z-10 hidden md:block' />
-<Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-white ml-2 cursor-pointer mt-auto', isMac && 'mt-3')} on:click={() => goto('/app/home/')} />
+<Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-white ml-2 cursor-pointer', isMac && 'mt-3')} on:click={() => goto('/app/home/')} />
 {#if SUPPORTS.isAndroidTV}
   <SidebarButton href='/app/player/' class='hidden md:flex py-0'>
     <Play size={16} />
@@ -55,9 +57,23 @@
 <!-- <SidebarButton href='/app/chat/' class='animated-icon'>
   <Messages size={18} />
 </SidebarButton> -->
-<SidebarButton href='/app/client/' id='sidebar-client' data-down='#sidebar-donate' class='animated-icon'>
+<SidebarButton href='/app/client/'>
   <Download size={18} />
 </SidebarButton>
+<Dialog.Root portal='#root'>
+  <Dialog.Trigger asChild let:builder>
+    <Button variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class='animated-icon px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none hidden md:flex' builders={[builder]}>
+      <Newspaper size={18} />
+      <span class='inline-flex size-2 top-1 right-1 absolute rounded-full bg-red-500' />
+    </Button>
+  </Dialog.Trigger>
+  <Dialog.Content class='max-w-5xl flex flex-col !w-[500px]'>
+    <Dialog.Title class='font-bold text-2xl'>News</Dialog.Title>
+    <Dialog.Description>
+      Hayase's Discord server is now publicly available!<br /><br />If you want to recieve news and updates about the app you can join via the invite link on the official website.
+    </Dialog.Description>
+  </Dialog.Content>
+</Dialog.Root>
 <Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
   <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_1rem_#fa68b6]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
 </Button>

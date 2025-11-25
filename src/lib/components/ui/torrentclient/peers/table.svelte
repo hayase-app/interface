@@ -28,7 +28,6 @@
       accessor: 'client',
       header: 'Client',
       id: 'client',
-      // TODO: this needs to be its own component
       cell: ({ value }) => value.slice(0, 21)
     }),
     table.column({

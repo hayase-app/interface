@@ -54,7 +54,7 @@ export interface User {
   name: string
   about?: string
   avatar?: {
-    original: string // TODO: maybe this can be done better with speficic sizes?
+    original: string
   }
   coverImage?: {
     original: string

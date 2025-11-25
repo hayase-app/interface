@@ -34,19 +34,19 @@
 
   const shuffled = shuffleAndFilter(mediaList)
 
-  // TODO: this assertion is incorrect!
+  // WARN: this assertion is incorrect, but the code is safe for it
   let current = shuffled[0]!
 
   const initial = bannerSrc.value
 
-  $: bannerSrc.value = current
+  $: if (current) bannerSrc.value = current
 
   onDestroy(() => {
     bannerSrc.value = initial
   })
 
   function currentIndex () {
-    return shuffled.indexOf(current)
+    return current ? shuffled.indexOf(current) : 0
   }
 
   function schedule (index: number) {
@@ -68,75 +68,77 @@
     node.tabIndex = -1
   }
 
-  $: ({ r, g, b } = colors(current.coverImage?.color ?? undefined))
+  $: ({ r, g, b } = colors(current?.coverImage?.color ?? undefined))
 </script>
 
-<div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
-  <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left'>
-    <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer text-shadow-lg' href='/app/anime/{current.id}'>
-      {#await episodesCached(current.id)}
-        {title(current)}
-      {:then metadata}
-        {@const src = metadata?.images?.find(i => i.coverType === 'Clearlogo')?.url}
-        {#if src}
-          <a class='w-full flex justify-center lg:justify-start'>
-            <Load {src} alt={title(current)} class='drop-shadow-lg w-[30rem]' />
-          </a>
-        {:else}
+{#if current}
+  <div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
+    <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left'>
+      <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer text-shadow-lg' href='/app/anime/{current.id}'>
+        {#await episodesCached(current.id)}
           {title(current)}
+        {:then metadata}
+          {@const src = metadata?.images?.find(i => i.coverType === 'Clearlogo')?.url}
+          {#if src}
+            <a class='w-full flex justify-center lg:justify-start'>
+              <Load {src} alt={title(current)} class='drop-shadow-lg w-[30rem]' />
+            </a>
+          {:else}
+            {title(current)}
+          {/if}
+        {/await}
+      </a>
+      <div class='flex gap-2 items-center lg:self-start pt-4 flex-nowrap max-w-full lg:place-content-start py-4 font-bold'>
+        <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/10 text-sm inline-flex items-center'>
+          {of(current) ?? duration(current) ?? 'N/A'}
+        </div>
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
+          {format(current)}
+        </Button>
+        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
+          {status(current)}
+        </Button>
+        {#if season(current)}
+          <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
+            {season(current)}
+          </Button>
         {/if}
-      {/await}
-    </a>
-    <div class='flex gap-2 items-center lg:self-start pt-4 flex-nowrap max-w-full lg:place-content-start py-4 font-bold'>
-      <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/10 text-sm inline-flex items-center'>
-        {of(current) ?? duration(current) ?? 'N/A'}
+        {#if current.averageScore}
+          <Button class='select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold {getTextColorForRating(current.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+            {current.averageScore}%
+          </Button>
+        {/if}
       </div>
-      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { format: [current.format] } } })}>
-        {format(current)}
-      </Button>
-      <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { status: [current.status] } } })}>
-        {status(current)}
-      </Button>
-      {#if season(current)}
-        <Button class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold capitalize' on:click={() => goto('/app/search', { state: { search: { season: current.season, seasonYear: current.seasonYear } } })}>
-          {season(current)}
-        </Button>
-      {/if}
-      {#if current.averageScore}
-        <Button class='select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold {getTextColorForRating(current.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
-          {current.averageScore}%
-        </Button>
-      {/if}
-    </div>
-    <div class='flex flex-row w-[280px] max-w-full'>
-      <PlayButton media={current} size='default' class='grow bg-custom select:!bg-custom-600 text-contrast mr-2' />
-      <FavoriteButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
-      <BookmarkButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
-    </div>
-  </div>
-  <div class='flex flex-col self-end lg:items-end items-center lg:pr-5 w-full min-w-0'>
-    <div class='text-white/70 line-clamp-2 lg:line-clamp-3 text-balance max-w-[90%] lg:max-w-[75%] text-xs lg:text-sm text-center lg:text-right fade-in pt-3 text-shadow-lg'>
-      {desc(current)}
-    </div>
-    <div class='hidden lg:flex gap-2 items-center lg:self-end pt-4 flex-nowrap max-w-full lg:place-content-end'>
-      {#each current.genres ?? [] as genre (genre)}
-        <Button variant='ghost' class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
-          {genre}
-        </Button>
-      {/each}
-    </div>
-  </div>
-</div>
-<div class='flex w-full justify-center flex-nowrap overflow-clip' style:--custom={current.coverImage?.color ?? '#fff'}>
-  {#each shuffled as media (media.id)}
-    {@const active = current === media}
-    <div class='pt-2 pb-4' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
-      <div class='bg-white/20 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
-        <div class='progress-content h-full transform-gpu w-full' class:bg-custom={active} />
+      <div class='flex flex-row w-[280px] max-w-full'>
+        <PlayButton media={current} size='default' class='grow bg-custom select:!bg-custom-600 text-contrast mr-2' />
+        <FavoriteButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
+        <BookmarkButton media={current} class='ml-2 select:!text-custom' variant='ghost' size='icon' />
       </div>
     </div>
-  {/each}
-</div>
+    <div class='flex flex-col self-end lg:items-end items-center lg:pr-5 w-full min-w-0'>
+      <div class='text-white/70 line-clamp-2 lg:line-clamp-3 text-balance max-w-[90%] lg:max-w-[75%] text-xs lg:text-sm text-center lg:text-right fade-in pt-3 text-shadow-lg'>
+        {desc(current)}
+      </div>
+      <div class='hidden lg:flex gap-2 items-center lg:self-end pt-4 flex-nowrap max-w-full lg:place-content-end'>
+        {#each current.genres ?? [] as genre (genre)}
+          <Button variant='ghost' class='!text-custom select:!text-primary h-7 text-nowrap bg-primary/10 select:!bg-primary/15 font-bold' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
+            {genre}
+          </Button>
+        {/each}
+      </div>
+    </div>
+  </div>
+  <div class='flex w-full justify-center flex-nowrap overflow-clip' style:--custom={current.coverImage?.color ?? '#fff'}>
+    {#each shuffled as media (media.id)}
+      {@const active = current === media}
+      <div class='pt-2 pb-4' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
+        <div class='bg-white/20 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
+          <div class='progress-content h-full transform-gpu w-full' class:bg-custom={active} />
+        </div>
+      </div>
+    {/each}
+  </div>
+{/if}
 
 <style>
   .progress-badge {
