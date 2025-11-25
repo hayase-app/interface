@@ -192,7 +192,7 @@
     }
   }
 
-  if ($page.state.image) traceReq($page.state.image)
+  $: if ($page.state.image) traceReq($page.state.image)
 
   async function imagePicker (e: Event) {
     const target = e.target as HTMLInputElement

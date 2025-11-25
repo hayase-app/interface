@@ -88,6 +88,8 @@
   $: exponentialVolume = SUPPORTS.isAndroid ? 1 : $volume ** 3
   let muted = false
 
+  const timeFormat = persisted('timeFormat', 'positive' as 'positive' | 'negative')
+
   // elements
   let fullscreenElement: HTMLElement | null = null
   let video: HTMLVideoElement
@@ -731,6 +733,10 @@
       changeVolume(-0.05 * sign)
     }
   }
+
+  function toggleTimeFormat () {
+    $timeFormat = $timeFormat === 'negative' ? 'positive' : 'negative'
+  }
 </script>
 
 <svelte:document bind:fullscreenElement bind:visibilityState use:holdToFF={'key'} />
@@ -832,7 +838,13 @@
         </div>
         <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg'>
           <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, chapters) || ''}</div>
-          <div class='ml-auto self-end text-sm leading-none font-light text-nowrap'>{toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}</div>
+          <div class='ml-auto self-end text-sm leading-none font-light text-nowrap' use:click={toggleTimeFormat}>
+            {#if $timeFormat === 'positive'}
+              {toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}
+            {:else}
+              -{toTS(safeduration - (seeking ? seekPercent * safeduration / 100 : currentTime))} / {toTS(safeduration)}
+            {/if}
+          </div>
         </div>
       </div>
       <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} {chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
