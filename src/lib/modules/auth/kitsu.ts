@@ -472,6 +472,10 @@ export default new class KitsuSync {
     // )
   }
 
+  followingMany (ids: number[]) {
+    return null
+  }
+
   async entry (variables: VariablesOf<typeof Entry>) {
     debug('updating Kitsu entry for media ID', variables.id, 'with variables', variables)
     const targetMediaId = variables.id

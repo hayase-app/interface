@@ -10,7 +10,7 @@
   import { bannerSrc } from './banner-image.svelte'
 
   import { goto } from '$app/navigation'
-  import { client, desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
+  import { desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
   import { episodesCached } from '$lib/modules/anizip'
   import { authAggregator, of } from '$lib/modules/auth'
   import { click } from '$lib/modules/navigate'
@@ -72,9 +72,9 @@
   $: ({ r, g, b } = colors(current?.coverImage?.color ?? undefined))
 
   const ids = mediaList.map(m => m?.id).filter(e => e) as number[]
-  const following = client.followingMany(ids)
+  const following = authAggregator.followingMany(ids)
 
-  $: filtered = $following.data?.Page?.mediaList?.filter(ml => ml?.user?.id !== authAggregator.id()) ?? []
+  $: filtered = $following?.data?.Page?.mediaList?.filter(ml => ml?.user?.id !== authAggregator.id()) ?? []
 
   $: usersForCurrent = filtered.filter(f => f?.media?.id === current?.id)
 </script>

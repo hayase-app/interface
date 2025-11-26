@@ -94,6 +94,12 @@ export default new class AuthAggregator {
     return null
   }
 
+  followingMany (ids: number[]) {
+    if (this.anilist()) return client.followingMany(ids)
+    if (this.kitsu()) return kitsu.followingMany(ids)
+    return null
+  }
+
   planningIDs = derived([client.planningIDs, kitsu.planningIDs, local.planningIDs, mal.planningIDs], ([$client, $kitsu, $local, $mal]) => {
     if (this.anilist()) return $client
     if (this.kitsu()) return $kitsu
