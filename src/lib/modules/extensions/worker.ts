@@ -1,7 +1,7 @@
 import { finalizer } from 'abslink'
 import { expose } from 'abslink/w3c'
 
-import type { SearchFunction, TorrentSource, NZBorURLSource } from 'hayase-extensions'
+import type { NZBorURLSource, SearchFunction, TorrentSource } from './types'
 
 export default expose({
   mod: null as unknown as Promise<TorrentSource | NZBorURLSource>,

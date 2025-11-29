@@ -183,9 +183,6 @@ importers:
       gql.tada:
         specifier: ^1.8.13
         version: 1.8.13(@gql.tada/svelte-support@1.0.1(svelte@4.2.19)(typescript@5.9.2))(graphql@16.10.0)(typescript@5.9.2)
-      hayase-extensions:
-        specifier: github:hayase-app/extensions
-        version: git+https://github.com/hayase-app/extensions.git#e5523ee6f89e08a62ad73e96d905d8c778279670
       jassub:
         specifier: ^1.8.6
         version: 1.8.6
@@ -1710,10 +1707,6 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
-
-  hayase-extensions@git+https://github.com/hayase-app/extensions.git#e5523ee6f89e08a62ad73e96d905d8c778279670:
-    resolution: {commit: e5523ee6f89e08a62ad73e96d905d8c778279670, repo: https://github.com/hayase-app/extensions.git, type: git}
-    version: 1.0.7
 
   idb-keyval@6.2.2:
     resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
@@ -4559,8 +4552,6 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
-
-  hayase-extensions@git+https://github.com/hayase-app/extensions.git#e5523ee6f89e08a62ad73e96d905d8c778279670: {}
 
   idb-keyval@6.2.2: {}
 

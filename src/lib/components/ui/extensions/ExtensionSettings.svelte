@@ -2,7 +2,7 @@
   // @ts-nocheck i give up with dynamic keys
   import Settings from 'lucide-svelte/icons/settings'
 
-  import type { ExtensionConfig } from 'hayase-extensions'
+  import type { ExtensionConfig } from '$lib/modules/extensions/types'
 
   import { Button } from '$lib/components/ui/button'
   import * as Dialog from '$lib/components/ui/dialog'

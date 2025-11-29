@@ -31,7 +31,6 @@
 		"cmdk-sv": "^0.0.19",
 		"eslint-config-standard-universal": "^1.0.9",
 		"gql.tada": "^1.8.13",
-		"hayase-extensions": "github:hayase-app/extensions",
 		"jassub": "^1.8.6",
 		"jiti": "^2.5.1",
 		"ms": "^2.1.3",

@@ -9,9 +9,9 @@ import { settings, type videoResolutions } from '../settings'
 
 import { storage } from './storage'
 
+import type { TorrentResult } from './types'
 import type { EpisodesResponse, Titles, Episode } from '../anizip/types'
 import type { AnitomyResult } from 'anitomyscript'
-import type { TorrentResult } from 'hayase-extensions'
 
 import { dev } from '$app/environment'
 import { options as extensionOptions, saved } from '$lib/modules/extensions'

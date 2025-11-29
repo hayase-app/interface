@@ -5,9 +5,9 @@
   import Footer, { type Checks } from '../Footer.svelte'
   import Progress from '../Progress.svelte'
 
-  import type { ExtensionConfig } from 'hayase-extensions'
-
   // import { DEFAULT_EXTENSIONS } from '$lib'
+  import type { ExtensionConfig } from '$lib/modules/extensions/types'
+
   import SettingCard from '$lib/components/SettingCard.svelte'
   import { SingleCombo } from '$lib/components/ui/combobox'
   import { Extensions } from '$lib/components/ui/extensions'

@@ -8,8 +8,8 @@ import { toast } from 'svelte-sonner'
 
 import Worker from './worker?worker'
 
+import type { ExtensionConfig } from './types'
 import type extensionLoader from './worker'
-import type { ExtensionConfig } from 'hayase-extensions'
 
 const debug = Debug('ui:extensions')
 

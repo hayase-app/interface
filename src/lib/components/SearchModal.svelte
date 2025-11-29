@@ -8,7 +8,6 @@
   import { Input } from './ui/input'
 
   import type { AnitomyResult } from 'anitomyscript'
-  import type { TorrentResult } from 'hayase-extensions'
 
   import * as Dialog from '$lib/components/ui/dialog'
   import { title } from '$lib/modules/anilist'
@@ -64,6 +63,8 @@
 
   import ProgressButton from './ui/button/progress-button.svelte'
   import { Banner } from './ui/img'
+
+  import type { TorrentResult } from '$lib/modules/extensions/types'
 
   import { beforeNavigate, goto } from '$app/navigation'
   import { searchStore } from '$lib'
