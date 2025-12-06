@@ -57,10 +57,10 @@
 <!-- <SidebarButton href='/app/chat/' class='animated-icon'>
   <Messages size={18} />
 </SidebarButton> -->
-<SidebarButton href='/app/client/'>
+<SidebarButton href='/app/client/' id='sidebar-client' data-down='#sidebar-donate'>
   <Download size={18} />
 </SidebarButton>
-<Dialog.Root portal='#root'>
+<!-- <Dialog.Root portal='#root' >
   <Dialog.Trigger asChild let:builder>
     <Button variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class='animated-icon px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none hidden md:flex' builders={[builder]}>
       <Newspaper size={18} />
@@ -73,7 +73,7 @@
       Hayase's Discord server is now publicly available!<br /><br />If you want to recieve news and updates about the app you can join via the invite link on the official website.
     </Dialog.Description>
   </Dialog.Content>
-</Dialog.Root>
+</Dialog.Root> -->
 <Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
   <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_1rem_#fa68b6]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
 </Button>
