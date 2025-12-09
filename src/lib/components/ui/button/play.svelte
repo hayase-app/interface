@@ -17,7 +17,7 @@
   export let media: Media
   export let size: NonNullable<$$Props['size']> = 'xs'
   function play () {
-    const episode = (progress(media) ?? 0) + 1
+    const episode = list(media) === 'COMPLETED' ? 1 : (progress(media) ?? 0) + 1
     $playEp(media, episode)
   }
 </script>

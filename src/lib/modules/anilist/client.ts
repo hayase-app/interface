@@ -145,6 +145,11 @@ class AnilistClient {
         english,
         native
       },
+      startDate {
+        year,
+        month,
+        day
+      },
       synonyms
     }`
 
@@ -159,7 +164,18 @@ class AnilistClient {
       if (!media.length) continue
       const titleObject = flattenedTitles[Number(variableName.slice(1))]!
       if (searchResults[titleObject.key]) continue
-      searchResults[titleObject.key] = media.map(media => getDistanceFromTitle(media, titleObject.title)).reduce((prev, curr) => prev.lavenshtein <= curr.lavenshtein ? prev : curr).id
+      searchResults[titleObject.key] = media.map(media => getDistanceFromTitle(media, titleObject.title)).reduce((prev, curr) => {
+        if (prev.lavenshtein === curr.lavenshtein) {
+          // tie breaker: earlier release date wins
+          // if no release date on one side, the other wins
+          const prevDate = prev.startDate?.year ? new Date(prev.startDate.year, prev.startDate.month ?? 1, prev.startDate.day ?? 1) : null
+          const currDate = curr.startDate?.year ? new Date(curr.startDate.year, curr.startDate.month ?? 1, curr.startDate.day ?? 1) : null
+          if (prevDate || currDate) {
+            return (prevDate ?? new Date()) <= (currDate ?? new Date()) ? prev : curr
+          }
+        }
+        return prev.lavenshtein <= curr.lavenshtein ? prev : curr
+      }).id
     }
 
     const ids = Object.values(searchResults)
