@@ -19,7 +19,7 @@
   }
 </script>
 
-<div class='contents' on:pointerup on:pointerdown={capture} on:pointerup={release} on:pointercancel={release} bind:this={wrapper} on:keyup>
+<div class='contents' on:pointerup on:pointerdown={capture} on:pointerup={release} on:pointercancel={release} bind:this={wrapper} on:keyup on:keydown>
   <SliderPrimitive.Root
     bind:value
     class={cn('relative flex w-full touch-none select-none items-center', className)}
