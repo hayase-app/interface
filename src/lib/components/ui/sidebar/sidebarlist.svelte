@@ -1,6 +1,5 @@
 <script lang='ts'>
   import Heart from 'lucide-svelte/icons/heart'
-  import Newspaper from 'lucide-svelte/icons/newspaper'
   import Play from 'lucide-svelte/icons/play'
 
   import { BannerImage } from '../banner'
@@ -13,7 +12,6 @@
   import Logo from '$lib/components/icons/Logo.svelte'
   import { Home, Search, Calendar, Users, Download, Bolt, LogIn } from '$lib/components/icons/animated'
   import * as Avatar from '$lib/components/ui/avatar'
-  import * as Dialog from '$lib/components/ui/dialog'
   import client from '$lib/modules/auth/client'
   import { lockedState, idleState, activityState } from '$lib/modules/idle'
   import native from '$lib/modules/native'
