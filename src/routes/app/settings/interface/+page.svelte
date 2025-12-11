@@ -64,7 +64,7 @@
     </SettingCard> -->
   {/if}
   <SettingCard title='UI Scale' description='Change the zoom level of the interface.' let:id>
-    <Slider bind:value min={0.3} max={2.5} step={0.1} class='w-60 shrink-0' on:pointerup={saveScale} />
+    <Slider bind:value min={0.3} max={2.5} step={0.1} class='w-60 shrink-0' on:pointerup={saveScale} on:keyup={saveScale} />
     <div class='text-muted-foreground text-xs'>{Number(value[0]).toFixed(1)}</div>
   </SettingCard>
   <div class='font-weight-bold text-xl font-bold'>Visibility Settings</div>
