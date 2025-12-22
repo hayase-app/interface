@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.187",
+	"version": "6.4.189",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@9.15.5",
@@ -64,7 +64,7 @@
 		"@urql/exchange-retry": "^2.0.0",
 		"@urql/svelte": "^5.0.0",
 		"@xyflow/svelte": "^0.1.36",
-		"abslink": "^1.1.2",
+		"abslink": "^1.1.6",
 		"anitomyscript": "github:thaunknown/anitomyscript",
 		"bittorrent-tracker": "10.0.12",
 		"bottleneck": "^2.19.5",

@@ -51,8 +51,8 @@ importers:
         specifier: ^0.1.36
         version: 0.1.36(svelte@4.2.19)
       abslink:
-        specifier: ^1.1.2
-        version: 1.1.2
+        specifier: ^1.1.6
+        version: 1.1.6
       anitomyscript:
         specifier: github:thaunknown/anitomyscript
         version: https://codeload.github.com/thaunknown/anitomyscript/tar.gz/fc00888d69ba59258167f2fac9e86576b29863b7
@@ -889,8 +889,8 @@ packages:
   '@xyflow/system@0.0.56':
     resolution: {integrity: sha512-Xc3LvEumjJD+CqPqlYkrlszJ4hWQ0DE+r5M4e5WpS/hKT4T6ktAjt7zeMNJ+vvTsXHulGnEoDRA8zbIfB6tPdQ==}
 
-  abslink@1.1.2:
-    resolution: {integrity: sha512-vnuzpBWd09oAdyFmseonzDoyfZtjKN9XuFzoXQUgU0Sme4ksYRwdH9YgOeserpDdtDMq7nd82gnKbTrYQQ3FnQ==}
+  abslink@1.1.6:
+    resolution: {integrity: sha512-8fQgnUoVSgc1IhOrYzdDY+wTDPktbuYjds2LKf9kWYWKwDnHgXU168gdV3sPei7vevFf5m2fPZ6IQSKZkSjHVg==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3558,7 +3558,7 @@ snapshots:
       d3-selection: 3.0.0
       d3-zoom: 3.0.0
 
-  abslink@1.1.2: {}
+  abslink@1.1.6: {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
