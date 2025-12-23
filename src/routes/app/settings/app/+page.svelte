@@ -44,22 +44,44 @@
 
   async function importSettings () {
     try {
-      const imported = JSON.parse(await navigator.clipboard.readText())
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'application/json'
+      input.click()
+      await new Promise((resolve) => {
+        input.onchange = () => resolve(null)
+      })
+      if (!input.files || input.files.length === 0) return
+      const file = input.files[0]!
+      const text = await file.text()
+      const imported = JSON.parse(text)
       $settings = imported
       native.restart()
-    } catch (err) {
+    } catch (error) {
       toast.error('Failed to import settings', {
-        description: 'Failed to import settings from clipboard, make sure the copied data is valid JSON.',
+        description: 'Failed to import settings from file, make sure the selected file is valid JSON.',
         duration: 5000
       })
     }
   }
   function exportSettings () {
-    navigator.clipboard.writeText(JSON.stringify($settings))
-    toast('Copied to clipboard', {
-      description: 'Copied settings to clipboard',
-      duration: 5000
-    })
+    try {
+      const url = URL.createObjectURL(new Blob([JSON.stringify($settings)], { type: 'application/json' }))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'hayase-settings.json'
+      a.click()
+      URL.revokeObjectURL(url)
+      toast.success('Successfully exported settings', {
+        description: 'Downloaded settings to file.',
+        duration: 5000
+      })
+    } catch (error) {
+      toast.error('Failed to export settings', {
+        description: 'Failed to export settings to file.',
+        duration: 5000
+      })
+    }
   }
   async function reset () {
     localStorage.clear()
@@ -96,10 +118,10 @@
   {/if}
   <div class='flex flex-wrap gap-2'>
     <Button on:click={importSettings}>
-      Import Settings From Clipboard
+      Import Settings From File
     </Button>
     <Button on:click={exportSettings}>
-      Export Settings To Clipboard
+      Export Settings To File
     </Button>
     <Button on:click={reset} variant='destructive'>
       Reset EVERYTHING To Default
