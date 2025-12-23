@@ -63,7 +63,9 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
   targetAnimeFiles.sort((a, b) => Number(a.metadata.episode) - Number(b.metadata.episode))
   targetAnimeFiles.sort((a, b) => Number(b.metadata.parseObject.anime_season[0] ?? 1) - Number(a.metadata.parseObject.anime_season[0] ?? 1))
 
-  const targetEpisode = targetAnimeFiles.find(file => file.metadata.episode === list.episode) ?? targetAnimeFiles.find(file => file.metadata.episode === 1) ?? targetAnimeFiles[0]!
+  const targetEpisode = targetAnimeFiles.find(file => file.metadata.episode === list.episode) ?? targetAnimeFiles.find(file => file.metadata.episode === 1) ?? targetAnimeFiles[0] ?? resolvedFiles[0]
+
+  if (!targetEpisode) return
 
   return {
     target: targetEpisode,
