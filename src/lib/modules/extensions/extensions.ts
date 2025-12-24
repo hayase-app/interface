@@ -17,21 +17,27 @@ import { dev } from '$app/environment'
 import { options as extensionOptions, saved } from '$lib/modules/extensions'
 import { anitomyscript } from '$lib/utils'
 
-const exclusions = ['DTS', 'TrueHD']
+const exclusions: string[] = []
 
-const video = document.createElement('video')
+if (!dev) {
+  const formats = [
+    ['video/mp4; codecs="hev1.1.6.L93.B0"', ['HEVC', 'x265', 'H.265']],
+    ['audio/mp4; codecs="ac-3"', ['AC3', 'AC-3']],
+    ['audio/mp4; codecs="dtsc"', ['DTS']],
+    ['audio/mp4; codecs="truehd"', ['TrueHD']]
+  ] as const
 
-if (!dev && !video.canPlayType('video/mp4; codecs="hev1.1.6.L93.B0"')) {
-  exclusions.push('HEVC', 'x265', 'H.265')
+  const video = document.createElement('video')
+  for (const [format, tags] of formats) {
+    if (!video.canPlayType(format)) exclusions.push(...tags)
+  }
+  video.remove()
+
+  if (!('audioTracks' in HTMLVideoElement.prototype)) {
+    exclusions.push('DUAL AUDIO', 'Dual Audio')
+    exclusions.push('MULTI AUDIO', 'Multi Audio')
+  }
 }
-if (!dev && !video.canPlayType('audio/mp4; codecs="ac-3"')) {
-  exclusions.push('AC3', 'AC-3')
-}
-if (!('audioTracks' in HTMLVideoElement.prototype)) {
-  exclusions.push('DUAL AUDIO', 'Dual Audio')
-  exclusions.push('MULTI AUDIO', 'Multi Audio')
-}
-video.remove()
 const debug = Debug('ui:extensions')
 
 export let fillerEpisodes: Record<number, number[] | undefined> = {}

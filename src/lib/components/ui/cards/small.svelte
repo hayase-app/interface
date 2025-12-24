@@ -45,7 +45,7 @@
     <div class='flex text-neutral-500 mt-auto pt-2 justify-between'>
       <div class='flex text-xs font-medium'>
         <CalendarDays class='w-[1rem] h-[1rem] mr-1 -ml-0.5' />
-        {media.seasonYear ?? 'TBA'}
+        {media.seasonYear ?? media.startDate?.year ?? 'TBA'}
       </div>
       <div class='flex text-xs font-medium'>
         {format(media)}

@@ -108,8 +108,8 @@ export function episodes (media: Pick<Media, 'aired' | 'notaired' | 'episodes' |
   return Math.max(upcoming, past, progress)
 }
 
-export function season (media: Pick<Media, 'season' | 'seasonYear'>) {
-  return [media.season?.toLowerCase(), media.seasonYear].filter(s => s).join(' ')
+export function season (media: Pick<Media, 'season' | 'seasonYear' | 'startDate'>) {
+  return [media.season?.toLowerCase() ?? (media.startDate?.month && getSeasonForMonth(media.startDate.month).toLowerCase()), media.seasonYear ?? media.startDate?.year].filter(s => s).join(' ')
 }
 
 export function duration (media: Pick<Media, 'duration'>) {
@@ -136,13 +136,18 @@ export function isSingleEpisode (media: Pick<Media, 'format' | 'title' | 'synony
   return media.episodes === 1 || (isMovie(media) && !media.episodes)
 }
 
+function getSeasonForMonth (month: number) {
+  return ['WINTER', 'SPRING', 'SUMMER', 'FALL'].at(Math.floor((month / 12) * 4) % 4) as 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
+}
+
 const date = new Date()
-export const currentSeason = ['WINTER', 'SPRING', 'SUMMER', 'FALL'][Math.floor((date.getMonth() / 12) * 4) % 4] as 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
+const month = date.getMonth()
+export const currentSeason = getSeasonForMonth(month)
 export const currentYear = date.getFullYear()
-export const nextSeason = ['WINTER', 'SPRING', 'SUMMER', 'FALL'][Math.floor(((date.getMonth() + 3) / 12) * 4) % 4] as 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
-export const nextYear = date.getFullYear() + (nextSeason === 'WINTER' ? 1 : 0)
-export const lastSeason = ['WINTER', 'SPRING', 'SUMMER', 'FALL'].at(Math.floor(((date.getMonth() - 3) / 12) * 4) % 4) as 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
-export const lastYear = date.getFullYear() - (lastSeason === 'FALL' ? 1 : 0)
+export const nextSeason = getSeasonForMonth(month + 3)
+export const nextYear = currentYear + (nextSeason === 'WINTER' ? 1 : 0)
+export const lastSeason = getSeasonForMonth(month - 3)
+export const lastYear = currentYear - (lastSeason === 'FALL' ? 1 : 0)
 
 export function dedupeAiring (media: ResultOf<typeof ScheduleMedia>) {
   return [...media.aired?.n ?? [], ...media.notaired?.n ?? []].filter((v, i, a) => v != null && a.findIndex(s => s?.e === v.e) === i) as Array<{ a: number, e: number }>
