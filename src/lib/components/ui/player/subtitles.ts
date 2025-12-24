@@ -362,7 +362,7 @@ export default class Subtitles {
       MarginV: Number(subtitle.marginV) || 0,
       Effect: subtitle.effect ?? '',
       Text,
-      ReadOrder: 1,
+      ReadOrder: subtitle.readOrder ?? 1,
       Layer: Number(subtitle.layer) || 0,
       _index: subtitleIndex
     }
