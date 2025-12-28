@@ -1,5 +1,10 @@
 <script lang='ts'>
   import { Separator } from '$lib/components/ui/separator'
+
+  const channel = new BroadcastChannel('hayase-auth')
+  channel.postMessage({ hash: location.hash, search: location.search })
+  channel.close()
+  window.close()
 </script>
 
 <div class='w-full h-full flex flex-col grow items-center justify-center gap-9'>

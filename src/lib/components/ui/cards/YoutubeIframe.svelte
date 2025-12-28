@@ -79,6 +79,7 @@
     {/if}
   </div>
   <iframe
+    credentialless
     class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none'
     class:hide
     title='trailer'
@@ -91,6 +92,7 @@
 </div>
 <div class='h-full w-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
   <iframe
+    credentialless
     class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2'
     class:hide
     title='trailer'

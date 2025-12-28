@@ -2,13 +2,26 @@ import { resolve } from 'node:path'
 
 import { sveltekit } from '@sveltejs/kit/vite'
 import license from 'rollup-plugin-license'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import devtoolsJson from 'vite-plugin-devtools-json'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+const viteServerConfig = () => ({
+  name: 'add-headers',
+  configureServer: (server) => {
+    server.middlewares.use((req, res, next) => {
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+      res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless')
+      next()
+    })
+  }
+}) as Plugin
 
 export default defineConfig({
   plugins: [
     sveltekit(),
+    viteServerConfig(),
     license({
       thirdParty: {
         allow: '(MIT OR Apache-2.0 OR ISC OR BSD-3-Clause OR BSD-2-Clause)',

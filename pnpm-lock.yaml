@@ -86,6 +86,9 @@ importers:
       idb-keyval:
         specifier: ^6.2.2
         version: 6.2.2
+      jassub:
+        specifier: ^2.0.7
+        version: 2.0.7
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
@@ -183,9 +186,6 @@ importers:
       gql.tada:
         specifier: ^1.8.13
         version: 1.8.13(@gql.tada/svelte-support@1.0.1(svelte@4.2.19)(typescript@5.9.2))(graphql@16.10.0)(typescript@5.9.2)
-      jassub:
-        specifier: ^1.8.8
-        version: 1.8.8
       jiti:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1876,8 +1876,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jassub@1.8.8:
-    resolution: {integrity: sha512-Vtw27Z0/hN2Tm2Qs4HAR+eONwwSD5ULo/hisPvmiaW9Ya6aFCt7esvWQSZy6nvBASbRyKmpghgeioIPqXGHA0Q==}
+  jassub@2.0.7:
+    resolution: {integrity: sha512-LkzV/R9wdjvPF41hlZXy7j5ASY4dleUMCi3vwnc7q98hWLSQWRMuMtsD4aO/twsl6pZ7uDW7eDOQfMPNWHqvcQ==}
 
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
@@ -4724,8 +4724,9 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jassub@1.8.8:
+  jassub@2.0.7:
     dependencies:
+      abslink: 1.1.6
       rvfc-polyfill: 1.0.7
 
   jiti@1.21.6: {}

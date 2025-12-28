@@ -53,7 +53,7 @@
       .replace(/~!([^]*?)!~/gm, '<details><summary>Spoiler, click to view</summary>$1</details>')
     html = sanitize(marked.parse(html, { async: false }))
       .replace(/\+{3}([^]*?)\+{3}/gm, '<center>$1</center>')
-      .replace(/youtube\s?\(([-_0-9A-Za-z]{10,15})\)/gi, `<iframe style='width: 500px; height: 200px; max-width: 100%; border: none;'title='youtube-embed' allow='autoplay' allowfullscreen
+      .replace(/youtube\s?\(([-_0-9A-Za-z]{10,15})\)/gi, `<iframe credentialless style='width: 500px; height: 200px; max-width: 100%; border: none;'title='youtube-embed' allow='autoplay' allowfullscreen
     src='https://www.youtube-nocookie.com/embed/$1?enablejsapi=1&autoplay=0&controls=1&mute=0&disablekb=1&loop=1&playlist=$1&cc_lang_pref=ja' />`)
       // eslint-disable-next-line no-useless-escape
       .replace(/webmv\s?\(<code>([A-Za-z0-9-._~:\/?#\[\]@!$&()*+,;=%]+)<\/code>\)/gi, "<video muted loop controls><source src='h$1' type='video/webm'>Your browser does not support the video tag.</video>")

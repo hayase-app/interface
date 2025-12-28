@@ -44,6 +44,7 @@ declare global {
   declare namespace svelteHTML {
     interface HTMLAttributes<T> {
       'on:navigate'?: CompositionEventHandler<T>
+      credentialless?: boolean
     }
   }
 

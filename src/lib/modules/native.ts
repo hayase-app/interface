@@ -50,44 +50,46 @@ const dummyFiles = [
 //   dummyPeerInfo.push(makeRandomPeer())
 // }
 
+function makeAuth<T> (popup: Window | null, callback: (data: { hash: string, search: string }) => T | undefined) {
+  return new Promise<T>((resolve, reject) => {
+    if (!popup) return reject(new Error('Failed to open popup'))
+    const destroy = (err: Error) => {
+      channel.close()
+      clearTimeout(timeout)
+      reject(err)
+      popup.close()
+    }
+    const timeout = setTimeout(() => destroy(new Error('Authentication timed out')), 5 * 60 * 1000) // 5 minutes
+    const channel = new BroadcastChannel('hayase-auth')
+    channel.onmessage = ({ data }) => {
+      const res = callback(data)
+      if (!res) return
+      resolve(res)
+      destroy(new Error('Authentication succeeded'))
+    }
+  })
+}
+
 export default Object.assign<Native, Partial<Native>>({
   authAL: (url: string) => {
-    return new Promise<AuthResponse>((resolve, reject) => {
-      const popup = open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582')
-      if (!popup) return reject(new Error('Failed to open popup'))
-      const check = () => {
-        if (popup.closed) return reject(new Error('Popup closed'))
-        try {
-          if (popup.location.hash.startsWith('#access_token=')) {
-            const search = Object.fromEntries(new URLSearchParams(popup.location.hash.replace('#', '?')).entries()) as unknown as AuthResponse
-            resolve(search)
-            popup.close()
-            return
-          }
-        } catch (e) {}
-        setTimeout(check, 100)
+    return makeAuth(
+      open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582'),
+      ({ hash }) => {
+        if (hash.startsWith('#access_token=')) {
+          return Object.fromEntries(new URLSearchParams(hash.replace('#', '?')).entries()) as unknown as AuthResponse
+        }
       }
-      check()
-    })
+    )
   },
   authMAL: (url: string) => {
-    return new Promise<{ code: string, state: string }>((resolve, reject) => {
-      const popup = open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=540,height=782')
-      if (!popup) return reject(new Error('Failed to open popup'))
-      const check = () => {
-        if (popup.closed) return reject(new Error('Popup closed'))
-        try {
-          if (popup.location.search.startsWith('?code=')) {
-            const search = Object.fromEntries(new URLSearchParams(popup.location.search).entries()) as unknown as { code: string, state: string }
-            resolve(search)
-            popup.close()
-            return
-          }
-        } catch (e) {}
-        setTimeout(check, 100)
+    return makeAuth(
+      open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582'),
+      ({ search }) => {
+        if (search.startsWith('?code=')) {
+          return Object.fromEntries(new URLSearchParams(search).entries()) as unknown as { code: string, state: string }
+        }
       }
-      check()
-    })
+    )
   },
   restart: async () => location.reload(),
   openURL: async (url: string) => { open(url) },

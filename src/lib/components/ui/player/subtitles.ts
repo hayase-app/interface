@@ -1,4 +1,4 @@
-import JASSUB, { type ASS_Style as ASSStyle, type ASS_Event as ASSEvent } from 'jassub'
+import JASSUB, { type ASSEvent, type ASSStyle } from 'jassub'
 import { writable } from 'simple-store-svelte'
 import { get } from 'svelte/store'
 
@@ -6,7 +6,7 @@ import type { ResolvedFile } from './resolver'
 import type { TorrentFile } from 'native'
 
 import native from '$lib/modules/native'
-import { type defaults, settings, SUPPORTS } from '$lib/modules/settings'
+import { type defaults, settings } from '$lib/modules/settings'
 import { fontRx, HashMap, subRx, subtitleExtensions, toTS } from '$lib/utils'
 
 const defaultHeader = `[Script Info]
@@ -82,7 +82,7 @@ export default class Subtitles {
   video: HTMLVideoElement
   selected: ResolvedFile
   fonts: string[]
-  renderer: JASSUB | null = null
+  jassub: JASSUB | null = null
   current = writable<number | string>(-1)
   set = get(settings)
 
@@ -108,7 +108,7 @@ export default class Subtitles {
     const fetchAndLoad = async (file: TorrentFile) => {
       const res = await fetch(file.url)
       const blob = await res.blob()
-      this.addSingleSubtitleFile(new File([blob], file.name))
+      await this.addSingleSubtitleFile(new File([blob], file.name))
     }
 
     if (subFiles.length === 1) {
@@ -122,7 +122,7 @@ export default class Subtitles {
       }
     }
 
-    const tracks = native.tracks(this.selected.hash, this.selected.id).then(tracklist => {
+    const tracks = native.tracks(this.selected.hash, this.selected.id).then(async tracklist => {
       for (const track of tracklist) {
         const newtrack = this.track(track.number)
         newtrack.styles.Default = 0
@@ -135,40 +135,40 @@ export default class Subtitles {
           newtrack.styles[styleMatches[i]!.replace('Style:', '').trim()] = i + 1
         }
       }
-      this.initSubtitleRenderer()
+      await this.initSubtitleRenderer()
 
       const tracks = Object.entries(this._tracks.value)
 
       if (tracks.length) {
         if (!this.set.subtitleLanguage) return // if lang set to none dont autoselect
         if (tracks.length === 1) {
-          this.selectCaptions(tracks[0]![0])
+          await this.selectCaptions(tracks[0]![0])
         } else {
           const wantedTrack = tracks.filter(([_, { meta }]) => {
             return (meta.language ?? 'eng') === this.set.subtitleLanguage
           })
           if (wantedTrack.length) {
-            if (wantedTrack.length === 1) return this.selectCaptions(wantedTrack[0]![0])
+            if (wantedTrack.length === 1) return await this.selectCaptions(wantedTrack[0]![0])
 
             const nonForced = wantedTrack.find(([_, { meta }]) => {
               return !meta.name?.toLowerCase().includes('forced')
             }) ?? wantedTrack[0]!
 
-            return this.selectCaptions(nonForced[0])
+            return await this.selectCaptions(nonForced[0])
           }
 
           const englishTrack = tracks.filter(([_, { meta }]) => meta.language == null || meta.language === 'eng')
           if (englishTrack.length) {
-            if (englishTrack.length === 1) return this.selectCaptions(englishTrack[0]![0])
+            if (englishTrack.length === 1) return await this.selectCaptions(englishTrack[0]![0])
 
             const nonForced = englishTrack.find(([_, { meta }]) => {
               return !meta.name?.toLowerCase().includes('forced')
             }) ?? englishTrack[0]!
 
-            return this.selectCaptions(nonForced[0])
+            return await this.selectCaptions(nonForced[0])
           }
 
-          this.selectCaptions(tracks[0]![0])
+          await this.selectCaptions(tracks[0]![0])
         }
       }
     })
@@ -177,9 +177,12 @@ export default class Subtitles {
       await tracks
       const { events, meta, styles } = this.track(trackNumber)
       if (events.has(subtitle)) return
-      const event = this.constructSub(subtitle, meta.type !== 'ass', events.size, '' + (styles[subtitle.style ?? 'Default'] ?? 0))
+      const event = this.constructSub(subtitle, meta.type !== 'ass', events.size, styles[subtitle.style ?? 'Default'] ?? 0)
       events.add(subtitle, event)
-      if (Number(this.current.value) === trackNumber) this.renderer?.createEvent(event)
+      if (Number(this.current.value) === trackNumber) {
+        await this.jassub?.ready
+        this.jassub?.renderer.createEvent(event)
+      }
     }).catch(console.error)
 
     native.attachments(this.selected.hash, this.selected.id).then(attachments => {
@@ -207,10 +210,11 @@ export default class Subtitles {
     }
   }
 
-  addFont (url: string) {
+  async addFont (url: string) {
     if (!this.fonts.includes(url)) {
       this.fonts.push(url)
-      this.renderer?.addFont(url)
+      await this.jassub?.ready
+      await this.jassub?.renderer.addFont(url)
     }
   }
 
@@ -228,7 +232,7 @@ export default class Subtitles {
   }
 
   async addSingleSubtitleFile (file: File) {
-    // lets hope there's no more than 100 subtitle tracks in a file
+    // lets hope there's no more than 1000 subtitle tracks in a file
     const trackNumber = 1000 + Object.keys(this._tracks.value).length
 
     const dot = file.name.lastIndexOf('.')
@@ -253,36 +257,32 @@ export default class Subtitles {
       }
     }
     if (this.current.value === -1) {
-      this.selectCaptions(trackNumber)
-      this.initSubtitleRenderer()
+      await this.initSubtitleRenderer()
+      await this.selectCaptions(trackNumber)
     }
   }
 
-  initSubtitleRenderer () {
-    if (this.renderer) return
+  async initSubtitleRenderer () {
+    if (this.jassub) return
 
-    if (SUPPORTS.isAndroid) JASSUB._hasBitmapBug = true
-    this.renderer = new JASSUB({
+    this.jassub = new JASSUB({
       video: this.video,
       subContent: defaultHeader,
       fonts: this.fonts,
-      offscreenRender: !SUPPORTS.isAndroid,
       maxRenderHeight: parseInt(this.set.subtitleRenderHeight) || 0,
       fallbackFont: 'roboto medium',
-      workerUrl: new URL('jassub/dist/jassub-worker.js', import.meta.url).toString(),
-      wasmUrl: new URL('jassub/dist/jassub-worker.wasm', import.meta.url).toString(),
-      modernWasmUrl: new URL('jassub/dist/jassub-worker-modern.wasm', import.meta.url).toString(),
-      useLocalFonts: this.set.missingFont,
-      dropAllBlur: this.set.disableSubtitleBlur
+      useLocalFonts: this.set.missingFont
     })
 
-    this._applyStyleOverride(this.set.subtitleStyle)
+    await this.jassub.ready
+
+    await this._applyStyleOverride(this.set.subtitleStyle)
   }
 
   lastSubtitleStyle: typeof defaults.subtitleStyle | undefined = undefined
-  _applyStyleOverride (subtitleStyle: typeof defaults.subtitleStyle) {
+  async _applyStyleOverride (subtitleStyle: typeof defaults.subtitleStyle) {
     if (this.lastSubtitleStyle === subtitleStyle) return
-    if (this.renderer) this.lastSubtitleStyle = subtitleStyle
+    if (this.jassub) this.lastSubtitleStyle = subtitleStyle
     if (subtitleStyle !== 'none') {
       const font = OVERRIDE_FONTS[subtitleStyle]
       if (font) this.addFont(font)
@@ -312,9 +312,9 @@ export default class Subtitles {
         Justify: 0,
         ...STYLE_OVERRIDES[subtitleStyle]
       }
-      this.renderer?.styleOverride(overrideStyle)
+      await this.jassub?.renderer.styleOverride(overrideStyle)
     } else {
-      this.renderer?.disableStyleOverride()
+      await this.jassub?.renderer.disableStyleOverride()
     }
   }
 
@@ -334,7 +334,7 @@ export default class Subtitles {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructSub (subtitle: any, isNotAss: boolean, subtitleIndex: number, Style: string) {
+  constructSub (subtitle: any, isNotAss: boolean, subtitleIndex: number, Style: number): ASSEvent {
     let Text = subtitle.text ?? ''
     if (isNotAss) { // converts VTT or other to SSA
       const matches: string[] | null = Text.match(/<[^>]+>/g) // create array of all tags
@@ -362,39 +362,39 @@ export default class Subtitles {
       MarginV: Number(subtitle.marginV) || 0,
       Effect: subtitle.effect ?? '',
       Text,
-      ReadOrder: subtitle.readOrder ?? 1,
-      Layer: Number(subtitle.layer) || 0,
-      _index: subtitleIndex
+      ReadOrder: subtitle.readOrder ?? subtitleIndex,
+      Layer: Number(subtitle.layer) || 0
     }
   }
 
-  selectCaptions (trackNumber: number | string) {
+  async selectCaptions (trackNumber: number | string) {
     this.current.value = trackNumber
 
-    if (!this.renderer) return
+    if (!this.jassub) return
 
+    await this.jassub.ready
     if (trackNumber === -1) {
-      this.renderer.setTrack(defaultHeader)
-      return this.renderer.resize()
+      await this.jassub.renderer.setTrack(defaultHeader)
+      return await this.jassub.resize()
     }
 
     const track = this._tracks.value[trackNumber]
     if (!track) return
 
-    this.renderer.setTrack(track.meta.header.slice(0, -1))
-    for (const subtitle of track.events) this.renderer.createEvent(subtitle)
+    await this.jassub.renderer.setTrack(track.meta.header.slice(0, -1))
+    for (const subtitle of track.events) await this.jassub.renderer.createEvent(subtitle)
     if (LANGUAGE_OVERRIDES[track.meta.language ?? '']) {
       const { name, url } = LANGUAGE_OVERRIDES[track.meta.language ?? '']!
       this.addFont(url)
-      this.renderer.setDefaultFont(name)
+      await this.jassub.renderer.setDefaultFont(name)
     } else {
-      this.renderer.setDefaultFont('roboto medium')
+      await this.jassub.renderer.setDefaultFont('roboto medium')
     }
-    this.renderer.resize()
+    await this.jassub.resize()
   }
 
   destroy () {
-    this.renderer?.destroy()
+    this.jassub?.destroy()
     this.ctrl.abort()
     for (const { events } of Object.values(this._tracks.value)) {
       events.clear()

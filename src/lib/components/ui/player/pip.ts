@@ -52,7 +52,7 @@ export default class PictureInPicture {
   async _on () {
     if (this.element.value) return
     if (!this.video) return
-    if (!this.subtitles?.renderer) {
+    if (!this.subtitles?.jassub) {
       if (!this.deband) return await this.video.requestPictureInPicture()
       return await this._attachListeners(await this.deband.getVideo()).requestPictureInPicture()
     }
@@ -71,15 +71,15 @@ export default class PictureInPicture {
     let loop: number
     canvas.width = this.video.videoWidth
     canvas.height = this.video.videoHeight
-    this.subtitles.renderer.resize(this.video.videoWidth, this.video.videoHeight)
+    this.subtitles.jassub.resize(false, this.video.videoWidth, this.video.videoHeight)
     const renderFrame = (noskip?: number) => {
       if (noskip) this.video!.paused ? video.pause() : video.play()
       context.drawImage(this.deband?.canvas ?? this.video!, 0, 0)
-      if (canvas.width && canvas.height && this.subtitles?.renderer?._canvas) context.drawImage(this.subtitles.renderer._canvas, 0, 0, canvas.width, canvas.height)
+      if (canvas.width && canvas.height && this.subtitles?.jassub?._canvas) context.drawImage(this.subtitles.jassub._canvas, 0, 0, canvas.width, canvas.height)
       loop = this.video!.requestVideoFrameCallback(renderFrame)
     }
     ctrl.signal.addEventListener('abort', () => {
-      this.subtitles?.renderer?.resize()
+      this.subtitles?.jassub?.resize()
       this.video!.cancelVideoFrameCallback(loop)
       canvas.remove()
       video.remove()
@@ -97,7 +97,7 @@ export default class PictureInPicture {
         const { width, height } = window
         if (isNaN(width) || isNaN(height)) return
         if (!isFinite(width) || !isFinite(height)) return
-        this.subtitles?.renderer?.resize(width, height)
+        this.subtitles?.jassub?.resize(false, width, height)
       }, { signal: ctrl.signal })
     } catch (err) {
       const e = err as Error

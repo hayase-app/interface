@@ -111,8 +111,7 @@
     thumbnailer.destroy()
   })
 
-  // @ts-expect-error bad type infer
-  $: if (subtitles?.renderer) subtitles.renderer.timeOffset = Number(subtitleDelay)
+  $: if (subtitles?.jassub) subtitles.jassub.timeOffset = Number(subtitleDelay)
 
   // state
   let seeking = false
