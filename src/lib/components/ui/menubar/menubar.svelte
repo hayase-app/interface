@@ -49,7 +49,7 @@
   <Wrapper let:platform>
     {@const isMac = platform === 'macOS'}
     <div class='w-full top-0 z-[2000] flex justify-between {draggable} absolute h-8'>
-      <div class='flex gap-1.5 items-end ml-14 {isMac ? '!ml-12' : ''}'>
+      <div class='flex gap-1.5 items-end ms-14 {isMac ? '!ms-20' : ''}'>
         <Button size='icon-sm' variant='ghost' disabled={!hasPrevious} class='p-1 shrink-0 custom-not-draggable text-white' tabindex={-1} on:click={previous}>
           <ArrowLeft strokeWidth='1.2' class='size-5' />
         </Button>
