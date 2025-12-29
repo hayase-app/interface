@@ -22,9 +22,6 @@
     </SettingCard>
   {/if}
 
-  <SettingCard let:id title='Fast Subtitle Rendering' description='Disables blur when rendering subtitles reducing lag. Will cause text and subtitle edges to appear sharper and in rare cases might break styling. Use this if you want better rendering speeds without sacrificing accuracy lower the render resolution limit.'>
-    <Switch {id} bind:checked={$settings.disableSubtitleBlur} />
-  </SettingCard>
   <SettingCard title='Subtitle Render Resolution Limit' description="Max resolution to render subtitles at. If your resolution is higher than this setting the subtitles will be upscaled lineary. This will GREATLY improve rendering speeds for complex typesetting for slower devices. It's best to lower this on mobile devices which often have high pixel density where their effective resolution might be ~1440p while having small screens and slow processors.">
     <SingleCombo bind:value={$settings.subtitleRenderHeight} items={subtitleResolutions} class='w-32 shrink-0 border-input border' />
   </SettingCard>
