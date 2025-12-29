@@ -342,3 +342,11 @@ export function scaleBlurFade (node: Element, { duration = 300 } = {}) {
       `
   }
 }
+
+export function transferToFileList (e: { dataTransfer?: DataTransfer | null, clipboardData?: DataTransfer | null } & Event) {
+  const promises = [...(e.dataTransfer ?? e.clipboardData)!.items].map(item => {
+    const type = item.type
+    return new Promise<File | { text: string, type: string }>(resolve => item.kind === 'string' ? item.getAsString(text => resolve({ text, type })) : resolve(item.getAsFile()!))
+  })
+  return Promise.all(promises)
+}

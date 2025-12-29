@@ -41,6 +41,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      path: 'path-esm',
+      'node-fetch': '',
       // thank you bottleneck for importing useless modules
       './RedisConnection': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
       './RedisConnection.js': resolve(import.meta.dirname, 'src/patches/empty.cjs'),

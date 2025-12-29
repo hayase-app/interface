@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.199",
+	"version": "6.4.200",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@9.15.5",
@@ -81,6 +81,8 @@
 		"marked": "^16.2.1",
 		"overtype": "^1.2.3",
 		"p2pt": "github:ThaUnknown/p2pt#modernise",
+		"parse-torrent": "^11.0.19",
+		"path-esm": "^1.0.0",
 		"semver": "^7.7.2",
 		"simple-store-svelte": "^1.0.6",
 		"svelte-headless-table": "^0.18.3",

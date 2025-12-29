@@ -5,7 +5,6 @@
   import { cn } from '$lib/utils'
 
   export let data: { media: RelationTreeMedia, id: number, current?: boolean }
-  export let id: string
   export let targetPosition: Position = Position.Left
   export let sourcePosition: Position = Position.Right
 

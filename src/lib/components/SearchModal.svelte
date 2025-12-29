@@ -14,7 +14,7 @@
   import { extensions } from '$lib/modules/extensions/extensions'
   import { click, dragScroll } from '$lib/modules/navigate'
   import { settings, videoResolutions } from '$lib/modules/settings'
-  import { cn, colors, fastPrettyBytes, since } from '$lib/utils'
+  import { cn, colors, fastPrettyBytes, since, transferToFileList } from '$lib/utils'
 
   const termMapping: Record<string, {text: string, color: string}> = {}
   termMapping['5.1'] = termMapping['5.1CH'] = { text: '5.1', color: '#f67255' }
@@ -168,7 +168,25 @@
   })
 
   $: ({ r, g, b } = colors($searchStore?.media.coverImage?.color ?? undefined))
+
+  async function handleTransfer (e: { dataTransfer?: DataTransfer | null, clipboardData?: DataTransfer | null } & Event) {
+    if ($searchStore) {
+      for (const file of await transferToFileList(e)) {
+        if (file instanceof Blob) {
+          if (file.type === 'application/x-bittorrent' || file.name.endsWith('.torrent')) {
+            server.playFile(new Uint8Array(await file.arrayBuffer()), $searchStore.media, $searchStore.episode)
+            goto('/app/player/')
+            close()
+          }
+        } else if (file.type === 'text/plain') {
+          findTorrentIdentifiers(file.text)
+        }
+      }
+    }
+  }
 </script>
+
+<svelte:window on:drop={handleTransfer} on:paste={handleTransfer} />
 
 <Dialog.Root bind:open onOpenChange={close} portal='#episodeListTarget'>
   <Dialog.Content class='bg-black h-full max-w-5xl w-full max-h-[calc(100%-1rem)] border-b-0 !rounded-b-none mt-2 p-0 items-center flex-col flex lg:rounded-t-xl overflow-clip z-[100] gap-0'>

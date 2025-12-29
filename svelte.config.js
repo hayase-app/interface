@@ -70,7 +70,7 @@ const adapterWithFontPreload = (options = {}) => {
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   onwarn: (warning, handler) => {
-    if (warning.code === 'a11y_media_has_caption') return
+    if (warning.code.includes('a11y')) return
     if (warning.code === 'element_invalid_self_closing_tag') return
     handler?.(warning)
   },

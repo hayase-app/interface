@@ -948,7 +948,7 @@
     background: linear-gradient(to top, oklab(0 0 0 / 0.85) 0%, oklab(0 0 0 / 0.7) 35%, oklab(0 0 0 / 0) 100%);
   }
 
-  .gradient-to-bottom {
+  /* .gradient-to-bottom {
     background: linear-gradient(to bottom, oklab(0 0 0 / 0.85) 0%, oklab(0 0 0 / 0.7) 35%, oklab(0 0 0 / 0) 100%);
-  }
+  } */
 </style>

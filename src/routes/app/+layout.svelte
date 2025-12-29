@@ -6,6 +6,7 @@
   import { Sidebar } from '$lib/components/ui/sidebar'
   import Sidebarlist from '$lib/components/ui/sidebar/sidebarlist.svelte'
   import native from '$lib/modules/native'
+  import { transferToFileList } from '$lib/utils'
 
   const NAVIGATE_TARGETS = {
     schedule: 'schedule',
@@ -25,12 +26,7 @@
   const w2gRx = /hayas.?ee?(?:(?:\.watch)|(?::\/))?\/w2g\/(.+)/
 
   async function handleTransfer (e: { dataTransfer?: DataTransfer | null, clipboardData?: DataTransfer | null } & Event) {
-    const promises = [...(e.dataTransfer ?? e.clipboardData)!.items].map(item => {
-      const type = item.type
-      return new Promise<File | { text: string, type: string }>(resolve => item.kind === 'string' ? item.getAsString(text => resolve({ text, type })) : resolve(item.getAsFile()!))
-    })
-
-    for (const file of await Promise.all(promises)) {
+    for (const file of await transferToFileList(e)) {
       if (file instanceof Blob) {
         if (file.type.startsWith('image') || imageRx.test(file.name)) {
           goto('/app/search', { state: { image: file } })
@@ -40,7 +36,7 @@
           goto('/app/search', { state: { image: file.text } })
         } else if (w2gRx.test(file.text)) {
           const match = file.text.match(w2gRx)
-          if (match?.[1])goto('/app/w2g/' + match[1])
+          if (match?.[1]) goto('/app/w2g/' + match[1])
         }
       }
     }

@@ -183,12 +183,4 @@
       transform: translate3d(0%, var(--tw-translate-y), 0);
     }
   }
-  .details span + span::before {
-    content: '•';
-    padding: 0 .5rem;
-    font-size: .6rem;
-    align-self: center;
-    white-space: normal;
-    color: #737373 !important;
-  }
 </style>

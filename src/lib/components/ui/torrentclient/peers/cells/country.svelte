@@ -14,5 +14,6 @@
       {location.country}
     </div>
   {:catch}
+    ?
   {/await}
 </div>

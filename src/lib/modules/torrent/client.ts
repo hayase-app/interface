@@ -1,4 +1,5 @@
 import Debug from 'debug'
+import parseTorrent from 'parse-torrent'
 import { writable } from 'simple-store-svelte'
 import { get } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
@@ -85,21 +86,30 @@ export const server = new class ServerClient {
     return new Set(await native.cachedTorrents())
   }
 
-  play (id: string, media: Media, episode: number) {
+  play (id: string, media: Media, episode: number, torrent: string | ArrayBufferView = id) {
     if (!media || !id) return
     debug('playing torrent', id, media.id, episode)
     this.last.set({ id, media, episode })
     client.setInitialState(media, episode)
-    this.active.value = this._play(id, media, episode)
+    this.active.value = this._play(id, torrent, media, episode)
     w2globby.value?.mediaChange({ episode, mediaId: media.id, torrent: id })
     return this.active.value
   }
 
-  async _play (id: string, media: Media, episode: number) {
-    const result = { id, media, episode, files: await native.playTorrent(id, media.id, episode) }
+  async playFile (id: ArrayBufferView, media: Media, episode: number) {
+    if (!media || !id) return
+    debug('playing torrent file', id, media.id, episode)
+    const { infoHash } = await (parseTorrent(id) as Promise<{ infoHash: string }>)
+    return await this.play(infoHash, media, episode, id)
+  }
+
+  async _play (id: string, torrent: string | ArrayBufferView, media: Media, episode: number) {
+    const result = { id, media, episode, files: await native.playTorrent(torrent, media.id, episode) }
     debug('torrent play result', result)
+    const hash = result.files[0]!.hash
+    if (get(this.last)?.id === id) this.last.set({ id: hash, media, episode })
     this.downloaded.value = this.cachedSet()
-    this._addNZBs(result.files[0]!.hash)
+    this._addNZBs(hash)
     return result
   }
 
