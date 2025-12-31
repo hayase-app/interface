@@ -438,7 +438,7 @@
     const index = entries.findIndex(([index]) => index === subtitles!.current.value) + offset
     const [id, info] = entries.at(index) ?? [-1, { meta: { name: 'Off', language: 'Eng' } }]
     playAnimation(info.meta.name ?? info.meta.language ?? 'Eng')
-    subtitles.selectCaptions(id)
+    subtitles.current.set(id)
   }
 
   function seekBarKey (event: KeyboardEvent) {
