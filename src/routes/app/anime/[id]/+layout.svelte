@@ -133,7 +133,7 @@
             </Button>
           </Dialog.Trigger>
           <Dialog.Content class='flex justify-center max-h-[80%] h-full max-w-max'>
-            <iframe class='h-full max-w-full aspect-video max-h-full rounded' src={`https://www.youtube-nocookie.com/embed/${media.trailer.id}?autoplay=1`} frameborder='0' allow='autoplay' allowfullscreen title={media.title?.userPreferred ?? ''} />
+            <iframe credentialless class='h-full max-w-full aspect-video max-h-full rounded' src={`https://www.youtube-nocookie.com/embed/${media.trailer.id}?autoplay=1`} frameborder='0' allow='autoplay' allowfullscreen title={media.title?.userPreferred ?? ''} />
           </Dialog.Content>
         </Dialog.Root>
       {/if}
