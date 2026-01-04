@@ -122,6 +122,7 @@ export default class Thumbnailer {
   destroy () {
     this.video.remove()
     this.timeUpdateCtrl.abort()
+    for (const thumbnail of this.thumbnails) URL.revokeObjectURL(thumbnail)
     this.thumbnails = []
   }
 }
