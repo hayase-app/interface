@@ -83,22 +83,22 @@
       dragged = target
       target.classList.add('transparent')
       drag = true
-    }, { signal: ctrl.signal })
+    }, ctrl)
     node.addEventListener('dragend', ({ target: _target }) => {
       const target = _target as HTMLDivElement
       target.classList.remove('transparent')
       drag = false
-    }, { signal: ctrl.signal })
+    }, ctrl)
     node.addEventListener('dragover', (e) => {
       const target = e.target as HTMLDivElement
       e.dataTransfer!.dropEffect = 'move'
       e.preventDefault()
       if (!drag) target.classList.add('transparent')
-    }, { signal: ctrl.signal })
+    }, ctrl)
     node.addEventListener('dragleave', ({ target: _target }) => {
       const target = _target as HTMLDivElement
       if (!drag) target.classList.remove('transparent')
-    }, { signal: ctrl.signal })
+    }, ctrl)
     node.addEventListener('drop', ({ target: _target }) => {
       const target = _target as HTMLDivElement
       target.style.opacity = ''
@@ -112,7 +112,7 @@
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete $binds[targetcode]
       }
-    }, { signal: ctrl.signal })
+    }, ctrl)
 
     return { destroy: () => ctrl.abort() }
   }

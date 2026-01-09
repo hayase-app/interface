@@ -200,7 +200,7 @@ importers:
         version: 2.1.3
       native:
         specifier: github:hayase-app/native
-        version: https://codeload.github.com/hayase-app/native/tar.gz/b2165ca22e84c3f245b98a964a40b2cbbc987aba
+        version: https://codeload.github.com/hayase-app/native/tar.gz/1ac96a5f94961d015519a8ac573740ddebb60b0c
       rollup-plugin-license:
         specifier: ^3.6.0
         version: 3.6.0(picomatch@4.0.3)(rollup@4.40.2)
@@ -2089,8 +2089,8 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
-  native@https://codeload.github.com/hayase-app/native/tar.gz/b2165ca22e84c3f245b98a964a40b2cbbc987aba:
-    resolution: {tarball: https://codeload.github.com/hayase-app/native/tar.gz/b2165ca22e84c3f245b98a964a40b2cbbc987aba}
+  native@https://codeload.github.com/hayase-app/native/tar.gz/1ac96a5f94961d015519a8ac573740ddebb60b0c:
+    resolution: {tarball: https://codeload.github.com/hayase-app/native/tar.gz/1ac96a5f94961d015519a8ac573740ddebb60b0c}
     version: 1.0.0
 
   natural-compare@1.4.0:
@@ -4959,7 +4959,7 @@ snapshots:
 
   nanoid@5.1.5: {}
 
-  native@https://codeload.github.com/hayase-app/native/tar.gz/b2165ca22e84c3f245b98a964a40b2cbbc987aba: {}
+  native@https://codeload.github.com/hayase-app/native/tar.gz/1ac96a5f94961d015519a8ac573740ddebb60b0c: {}
 
   natural-compare@1.4.0: {}
 

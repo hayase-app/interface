@@ -21,7 +21,7 @@
     node.addEventListener('click', e => {
       if (!container || container.contains(e.target as Node)) return
       open = false
-    }, { signal: ctrl.signal })
+    }, ctrl)
 
     return { destroy: () => ctrl.abort() }
   }

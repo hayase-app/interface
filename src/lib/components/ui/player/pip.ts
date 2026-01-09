@@ -21,7 +21,7 @@ export default class PictureInPicture {
 
     window.addEventListener('visibilitychange', () => {
       if (get(settings).playerAutoPiP) this.pip(document.visibilityState !== 'visible' && !this.video?.paused)
-    }, { signal: this.ctrl.signal })
+    }, this.ctrl)
   }
 
   _setElements (video: HTMLVideoElement, subtitles?: Subtitles, deband?: VideoDeband) {
@@ -85,8 +85,8 @@ export default class PictureInPicture {
       video.remove()
     })
 
-    this.ctrl.signal.addEventListener('abort', () => ctrl.abort(), { signal: ctrl.signal })
-    video.addEventListener('leavepictureinpicture', () => ctrl.abort(), { signal: ctrl.signal })
+    this.ctrl.signal.addEventListener('abort', () => ctrl.abort(), ctrl)
+    video.addEventListener('leavepictureinpicture', () => ctrl.abort(), ctrl)
 
     try {
       setTimeout(renderFrame, 10)
@@ -98,7 +98,7 @@ export default class PictureInPicture {
         if (isNaN(width) || isNaN(height)) return
         if (!isFinite(width) || !isFinite(height)) return
         this.subtitles?.jassub?.resize(false, width, height)
-      }, { signal: ctrl.signal })
+      }, ctrl)
     } catch (err) {
       const e = err as Error
       console.warn('Failed To Burn In Subtitles ' + e.stack)

@@ -60,14 +60,14 @@ export function click (node: HTMLElement, cb: (_: Event) => unknown = noop) {
     e.preventDefault()
     navigator.vibrate(15)
     cb(e)
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('keydown', e => {
     if (e.key === 'Enter' && inputType.value === 'dpad') {
       e.stopPropagation()
       e.preventDefault()
       cb(e)
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   return { destroy: () => ctrl.abort() }
 }
@@ -95,7 +95,7 @@ export function hover (node: HTMLElement, [cb = noop, hoverUpdate = noop]: [type
     lastHoverElement?.(false)
     hoverUpdate(true)
     if (inputType.value === 'mouse') lastHoverElement = hoverUpdate
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('click', e => {
     e.stopPropagation()
     if (inputType.value === 'dpad') return
@@ -109,7 +109,7 @@ export function hover (node: HTMLElement, [cb = noop, hoverUpdate = noop]: [type
       lastHoverElement?.(false)
       lastHoverElement = hoverUpdate
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter' && inputType.value === 'dpad') {
       e.stopPropagation()
@@ -124,28 +124,28 @@ export function hover (node: HTMLElement, [cb = noop, hoverUpdate = noop]: [type
         lastHoverElement = hoverUpdate
       }
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('pointerleave', () => {
     if (inputType.value !== 'touch') {
       lastHoverElement?.(false)
       hoverUpdate(false)
       lastHoverElement = null
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('pointermove', (e) => {
     if (inputType.value === 'touch' && Math.abs(e.movementY) > 0) {
       lastHoverElement?.(false)
       hoverUpdate(false)
       lastHoverElement = null
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('drag', () => {
     if (inputType.value === 'mouse') {
       lastHoverElement?.(false)
       hoverUpdate(false)
       lastHoverElement = null
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   return { destroy: () => ctrl.abort() }
 }
@@ -336,10 +336,10 @@ export function dragScroll (node: HTMLElement) {
     y = e.clientY
     deltaX = 0
     deltaY = 0
-  }, { signal: ctrl.signal })
+  }, ctrl)
   node.addEventListener('click', e => {
     isDragging = false
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   node.addEventListener('mousemove', e => {
     if (!isDragging) return true
@@ -351,15 +351,15 @@ export function dragScroll (node: HTMLElement) {
     if (deltaX > 15 || deltaY > 15) {
       e.target?.dispatchEvent(new MouseEvent('drag', { bubbles: true }))
     }
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   node.addEventListener('mouseleave', () => {
     isDragging = false
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   node.addEventListener('mouseup', () => {
     isDragging = false
-  }, { signal: ctrl.signal })
+  }, ctrl)
 
   return { destroy: () => ctrl.abort() }
 }

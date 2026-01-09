@@ -679,19 +679,19 @@
         document.setPointerCapture(event.pointerId)
       }
       startFF()
-    }, { signal: ctrl.signal })
+    }, ctrl)
     document.addEventListener(type + 'up' as 'keyup' | 'pointerup', event => {
       if (isMiniplayer) return
       if ('code' in event && event.code !== 'Space') return
       if ('pointerId' in event) document.releasePointerCapture(event.pointerId)
       endFF()
-    }, { signal: ctrl.signal })
+    }, ctrl)
 
     if (type === 'pointer') {
       document.addEventListener('pointercancel', event => {
         if ('pointerId' in event) document.releasePointerCapture(event.pointerId)
         endFF()
-      }, { signal: ctrl.signal })
+      }, ctrl)
     }
 
     return { destroy: () => ctrl.abort() }

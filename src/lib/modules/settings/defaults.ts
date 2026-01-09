@@ -42,5 +42,6 @@ export default {
   playerSkipFiller: false,
   minimalPlayerUI: false,
   androidStorageType: 'cache',
-  showHentai: false
+  showHentai: false,
+  unsafeWebGPU: false
 }

@@ -218,7 +218,7 @@
           ticking = false
         }
       }
-    }, { signal: ctrl.signal })
+    }, ctrl)
 
     return {
       destroy () {

@@ -48,6 +48,12 @@
     </ToggleGroup.Root>
   </SettingCard>
 
+  {#if !SUPPORTS.isAndroid}
+    <SettingCard let:id title='Enable Unsafe WebGPU' description='Forces unsafe WebGPU for subtitle rendering. This can fix compatibility issues on some systems, but may cause crashes or other instability. Only enable this if you experience issues with subtitle rendering.'>
+      <Switch {id} bind:checked={$settings.unsafeWebGPU} />
+    </SettingCard>
+  {/if}
+
   <div class='font-weight-bold text-xl font-bold'>Language Settings</div>
   <SettingCard title='Preferred Subtitle Language' description="What subtitle language to automatically select when a video is loaded if it exists. This won't find torrents with this language automatically. If not found defaults to English.">
     <SingleCombo bind:value={$settings.subtitleLanguage} items={languageCodes} class='w-36 shrink-0 border-input border' />

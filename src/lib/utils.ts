@@ -51,7 +51,7 @@ export const breakpoints = readable<MediaQuery<typeof mediaQueries>>({}, set => 
   const updateMedia = () => set(calculateMedia(mqls))
   for (const [key, query] of Object.entries(mediaQueries)) {
     mqls[key] = window.matchMedia(query)
-    mqls[key].addEventListener('change', updateMedia, { signal: ctrl.signal })
+    mqls[key].addEventListener('change', updateMedia, ctrl)
   }
   updateMedia()
   return () => ctrl.abort()

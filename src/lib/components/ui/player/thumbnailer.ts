@@ -26,16 +26,16 @@ export default class Thumbnailer {
     }
   }
 
-  timeUpdateCtrl = new AbortController()
+  ctrl = new AbortController()
 
   setVideo (currentVideo: HTMLVideoElement) {
-    this.timeUpdateCtrl.abort()
-    this.timeUpdateCtrl = new AbortController()
+    this.ctrl.abort()
+    this.ctrl = new AbortController()
     currentVideo.addEventListener('timeupdate', () => {
       const index = Math.floor(currentVideo.currentTime / this.interval)
       const thumbnail = this.thumbnails[index]
       if (!thumbnail) this._paintThumbnail(currentVideo, index)
-    }, { signal: this.timeUpdateCtrl.signal })
+    }, this.ctrl)
   }
 
   _nextTask () {
@@ -121,7 +121,7 @@ export default class Thumbnailer {
 
   destroy () {
     this.video.remove()
-    this.timeUpdateCtrl.abort()
+    this.ctrl.abort()
     for (const thumbnail of this.thumbnails) URL.revokeObjectURL(thumbnail)
     this.thumbnails = []
   }

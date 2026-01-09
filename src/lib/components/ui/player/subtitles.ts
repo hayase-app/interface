@@ -193,9 +193,9 @@ export default class Subtitles {
       }
     })
 
-    video.parentElement!.addEventListener('drop', e => this.handleTransfer(e), { signal: this.ctrl.signal })
-    video.parentElement!.addEventListener('paste', e => this.handleTransfer(e), { signal: this.ctrl.signal })
-    video.parentElement!.addEventListener('dragover', e => e.preventDefault(), { signal: this.ctrl.signal })
+    video.parentElement!.addEventListener('drop', e => this.handleTransfer(e), this.ctrl)
+    video.parentElement!.addEventListener('paste', e => this.handleTransfer(e), this.ctrl)
+    video.parentElement!.addEventListener('dragover', e => e.preventDefault(), this.ctrl)
   }
 
   async handleTransfer (e: { dataTransfer?: DataTransfer | null, clipboardData?: DataTransfer | null } & Event) {

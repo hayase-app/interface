@@ -135,6 +135,7 @@ export default Object.assign<Native, Partial<Native>>({
   cachedTorrents: async () => [],
   spawnPlayer: async () => undefined,
   setHideToTray: async () => undefined,
+  setExperimentalGPU: async () => undefined,
   transparency: async () => undefined,
   setZoom: async () => undefined,
   navigate: async () => undefined,
