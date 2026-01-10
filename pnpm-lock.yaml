@@ -87,8 +87,8 @@ importers:
         specifier: ^6.2.2
         version: 6.2.2
       jassub:
-        specifier: ^2.0.12
-        version: 2.0.12
+        specifier: ^2.1.0
+        version: 2.1.0
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
@@ -1917,8 +1917,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jassub@2.0.12:
-    resolution: {integrity: sha512-FPFYKpuZ4O54+8PlfhGHGB8y5M4+qizrVVkSVCiSxhKvXsC9IgjJmjdrJeGfLGadC/pVG6b14RMp2AEUBTurlw==}
+  jassub@2.1.0:
+    resolution: {integrity: sha512-9bLIG8UG4HruZKQxilx1PMJ19lKH6btD0XXqwkciHBE6Ku0ReAexwaHmMTsG/w6dmsmZr1qWB1DuyIl5o8XiWg==}
 
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
@@ -2713,6 +2713,9 @@ packages:
 
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
+
+  throughput@1.0.2:
+    resolution: {integrity: sha512-jvK1ZXuhsggjb3qYQjMiU/AVYYiTeqT5thWvYR2yuy2LGM84P5MSSyAinwHahGsdBYKR9m9HncVR/3f3nFKkxg==}
 
   time-stamp@2.2.0:
     resolution: {integrity: sha512-zxke8goJQpBeEgD82CXABeMh0LSJcj7CXEd0OHOg45HgcofF7pxNwZm9+RknpxpDhwN4gFpySkApKfFYfRQnUA==}
@@ -4820,10 +4823,11 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jassub@2.0.12:
+  jassub@2.1.0:
     dependencies:
       abslink: 1.1.6
       rvfc-polyfill: 1.0.7
+      throughput: 1.0.2
 
   jiti@1.21.6: {}
 
@@ -5673,6 +5677,8 @@ snapshots:
   thenify@3.3.1:
     dependencies:
       any-promise: 1.3.0
+
+  throughput@1.0.2: {}
 
   time-stamp@2.2.0: {}
 
