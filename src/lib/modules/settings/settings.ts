@@ -67,7 +67,6 @@ const idleAnimation = derived(settings, $settings => $settings.idleAnimation)
 const uiScale = derived(settings, $settings => $settings.uiScale)
 const showDetailsInRPC = derived(settings, $settings => $settings.showDetailsInRPC)
 const angle = derived(settings, $settings => $settings.angle)
-const unsafeWebGPU = derived(settings, $settings => $settings.unsafeWebGPU)
 
 const dohSettings = derivedDeep(settings, $settings => ({
   enableDoH: $settings.enableDoH,
@@ -80,7 +79,6 @@ idleAnimation.subscribe(native.transparency)
 uiScale.subscribe(native.setZoom)
 showDetailsInRPC.subscribe(native.toggleDiscordDetails)
 angle.subscribe(native.setAngle)
-unsafeWebGPU.subscribe(native.setExperimentalGPU)
 dohSettings.subscribe(({ enableDoH, doHURL }) => {
   if (SUPPORTS.isAndroid) {
     if (enableDoH) native.setDOH('')
