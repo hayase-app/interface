@@ -90,7 +90,7 @@
   }
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl'>
   <div class='font-weight-bold text-xl font-bold'>Debug Settings</div>
   <SettingCard title='Logging Levels' description='Enable logging of specific parts of the app. These logs are saved to %appdata$/Hayase/logs/main.log or ~/config/Hayase/logs/main.log.'>
     <SingleCombo bind:value={$debug} items={debugOpts} class='w-32 shrink-0 border-input border' />

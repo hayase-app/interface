@@ -42,7 +42,7 @@
   }
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl'>
   {#if !SUPPORTS.isAndroid}
     <div class='font-weight-bold text-xl font-bold'>Rich Pressence Settings</div>
     <SettingCard let:id title='Show Details in Discord Rich Presence' description='Shows currently played anime and episode in Discord rich presence.'>

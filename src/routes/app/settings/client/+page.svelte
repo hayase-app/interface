@@ -26,7 +26,7 @@
   } as const
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl'>
   <div class='font-weight-bold text-xl font-bold'>Security Settings</div>
   {#if !SUPPORTS.isAndroid}
     <SettingCard let:id title='Use DNS Over HTTPS' description='Enables DNS Over HTTPS, useful if your ISP blocks certain domains.'>

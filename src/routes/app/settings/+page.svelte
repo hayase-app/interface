@@ -14,7 +14,7 @@
   }
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl'>
   {#if ('queryLocalFonts' in self)}
     <div class='font-weight-bold text-xl font-bold'>Subtitle Settings</div>
     <SettingCard let:id title='Find Missing Subtitle Fonts' description="Automatically finds and loads fonts that are missing from a video's subtitles, using fonts installed on your OS.">

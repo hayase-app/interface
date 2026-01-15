@@ -9,7 +9,7 @@
   })()
 </script>
 
-<div class='w-full lg:max-w-4xl'>
+<div class='w-full lg:max-w-5xl'>
   <div class='h-60 grid-cols-12 grid px-4 sm:px-0 items-center'>
     <div class='sm:col-span-3 col-span-full hidden sm:flex' />
     <div class='sm:col-span-9 col-span-full d-flex justify-content-center flex-column'>

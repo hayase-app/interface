@@ -70,7 +70,7 @@
   }
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl flex-shrink-0 w-full'>
   <div class='font-weight-bold text-xl font-bold'>Account Settings</div>
   <div>
     <div class='bg-neutral-900 px-6 py-4 rounded-t-md flex flex-row gap-3'>

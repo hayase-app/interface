@@ -40,15 +40,15 @@
 
 <div class='p-3 md:p-10 md:pb-0 pb-0 w-full h-full flex flex-col'>
   <div class='flex justify-center'>
-    <div class='space-y-0.5 lg:max-w-[1180px] w-full'>
+    <div class='space-y-0.5 lg:max-w-[1310px] w-full'>
       <h2 class='text-2xl font-bold'>Settings</h2>
       <p class='text-muted-foreground'>
         Manage your app settings, preferences and accounts.
       </p>
     </div>
   </div>
-  <Separator class='my-3 md:my-6 max-w-[1180px] mx-auto' />
-  <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-scroll justify-center flex-shrink-0'>
+  <Separator class='my-3 md:my-6 max-w-[1310px] mx-auto' />
+  <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-scroll justify-center' use:dragScroll>
     <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0'>
       <SettingsNav {items} />
       <div class='mt-auto text-xs text-muted-foreground px-4 sm:px-2 py-3 md:py-5 flex flex-row lg:flex-col font-light gap-0.5 gap-x-4 flex-wrap'>
@@ -65,7 +65,7 @@
         {/if}
       </div>
     </aside>
-    <div class='pb-40' use:dragScroll>
+    <div class='pb-40 contents'>
       <slot />
     </div>
   </div>

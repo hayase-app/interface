@@ -6,7 +6,7 @@
   import { lookupPreferences, settings, videoResolutions } from '$lib/modules/settings'
 </script>
 
-<div class='space-y-3 pb-10 lg:max-w-4xl'>
+<div class='space-y-3 pb-10 lg:max-w-5xl'>
   <div class='font-weight-bold text-xl font-bold'>Lookup Settings</div>
   <SettingCard title='Torrent Quality' description="What quality to use when trying to find torrents. None might rarely find less results than specific qualities. This doesn't exclude other qualities from being found like 4K or weird DVD resolutions. Non-1080p resolutions might not be available for all shows, or find way less results.">
     <SingleCombo bind:value={$settings.searchQuality} items={videoResolutions} class='w-32 shrink-0 border-input border' />
