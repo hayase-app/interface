@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import createGlobe from 'cobe'
+  import createGlobe, { type Marker } from 'cobe'
 
   import { lookup } from '$lib/modules/geoip'
   import { server } from '$lib/modules/torrent'
@@ -24,10 +24,7 @@
     normalizedSpeed: normalize(peer.speed.down + peer.speed.up, highestSpeed, lowestSpeed)
   }))
 
-  let markers: Record<string, {
-    location: [number, number]
-    size: number
-  } | null>
+  let markers: Record<string, Marker | null>
 
   $: markers = Object.fromEntries(
     normalized.map(({ ip }) => [
@@ -36,7 +33,7 @@
     ])
   )
 
-  function createMarker (ip: string, marker: { location: [number, number], size: number }) {
+  function createMarker (ip: string, marker: Marker) {
     if (ip in markers) {
       markers[ip] = marker
     }
@@ -46,7 +43,7 @@
   const minSize = 0.02
 
   $: {
-    for (const { ip, normalizedSpeed } of normalized) {
+    for (const { ip, normalizedSpeed, seeder } of normalized) {
       lookup(ip).then(({ city, ll }) => {
         if (!city) {
           ll[0] += (Math.random() - 0.5) * 4
@@ -54,7 +51,8 @@
         }
         createMarker(ip, {
           location: ll,
-          size: Math.min(Math.max(normalizedSpeed * maxSize, minSize), maxSize)
+          size: Math.min(Math.max(normalizedSpeed * maxSize, minSize), maxSize),
+          color: seeder ? [0.05, 1, 0] : [0.01, 0.37, 0.94]
         })
       }).catch(() => undefined)
     }
@@ -79,7 +77,7 @@
         mapBrightness: 6,
         opacity: 0.8,
         baseColor: [0.23, 0.23, 0.23],
-        markerColor: [0.05, 1, 0],
+        markerColor: [1, 1, 1],
         glowColor: [0, 0, 0],
         markers: [],
         scale,

@@ -66,8 +66,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       cobe:
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: github:thaunknown/cobe
+        version: https://codeload.github.com/thaunknown/cobe/tar.gz/9687dd14ad06894e28781d170ef9c98aa5d03d9c
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -75,8 +75,8 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1
       doc999tor-fast-geoip:
-        specifier: ^1.1.360
-        version: 1.1.360
+        specifier: ^1.1.399
+        version: 1.1.399
       dompurify:
         specifier: ^3.2.6
         version: 3.2.6
@@ -1142,8 +1142,9 @@ packages:
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.1
 
-  cobe@0.6.3:
-    resolution: {integrity: sha512-WHr7X4o1ym94GZ96h7b1pNemZJacbOzd02dZtnVwuC4oWBaLg96PBmp2rIS1SAhUDhhC/QyS9WEqkpZIs/ZBTg==}
+  cobe@https://codeload.github.com/thaunknown/cobe/tar.gz/9687dd14ad06894e28781d170ef9c98aa5d03d9c:
+    resolution: {tarball: https://codeload.github.com/thaunknown/cobe/tar.gz/9687dd14ad06894e28781d170ef9c98aa5d03d9c}
+    version: 0.6.5
 
   code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
@@ -1330,8 +1331,8 @@ packages:
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
-  doc999tor-fast-geoip@1.1.360:
-    resolution: {integrity: sha512-5RPXXO8zixodVNth643BpHGA5mylc9MJeSAku+gDDwzW2PH1Bla9o+XJk8mllsniIEtQ+zBTh9oGW9v7s6WD2Q==}
+  doc999tor-fast-geoip@1.1.399:
+    resolution: {integrity: sha512-X2+QnypI4SHKcSOd8jVOtHp7H9kwPLm5tG8RGZghJstWTDRAf++VKuB2lsEJ1L4H+FNA1w9GwOt0AxOQO7OgYQ==}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -3913,7 +3914,7 @@ snapshots:
       nanoid: 5.1.5
       svelte: 4.2.19
 
-  cobe@0.6.3:
+  cobe@https://codeload.github.com/thaunknown/cobe/tar.gz/9687dd14ad06894e28781d170ef9c98aa5d03d9c:
     dependencies:
       phenomenon: 1.6.0
 
@@ -4092,7 +4093,7 @@ snapshots:
 
   dlv@1.1.3: {}
 
-  doc999tor-fast-geoip@1.1.360: {}
+  doc999tor-fast-geoip@1.1.399: {}
 
   doctrine@2.1.0:
     dependencies:
