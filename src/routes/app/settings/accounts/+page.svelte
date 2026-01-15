@@ -3,17 +3,21 @@
   import Folder from 'lucide-svelte/icons/folder'
   import MessagesSquare from 'lucide-svelte/icons/messages-square'
 
+  import SettingCard from '$lib/components/SettingCard.svelte'
   import Anilist from '$lib/components/icons/Anilist.svelte'
   import Kitsu from '$lib/components/icons/Kitsu.svelte'
   import MyAnimeList from '$lib/components/icons/MyAnimeList.svelte'
+  import { Bolt } from '$lib/components/icons/animated'
   import * as Avatar from '$lib/components/ui/avatar'
   import { Button } from '$lib/components/ui/button'
+  import { SingleCombo } from '$lib/components/ui/combobox'
   import * as Dialog from '$lib/components/ui/dialog'
   import Input from '$lib/components/ui/input/input.svelte'
   import { Label } from '$lib/components/ui/label'
   import { Switch } from '$lib/components/ui/switch'
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { client } from '$lib/modules/anilist'
+  import { UpdateUser } from '$lib/modules/anilist/queries'
   import { authAggregator } from '$lib/modules/auth'
   import ksclient from '$lib/modules/auth/kitsu'
   import malclient from '$lib/modules/auth/mal'
@@ -37,6 +41,33 @@
 
   let kitsuLogin = ''
   let kitsuPassword = ''
+
+  const titleTypes = {
+    ROMAJI: 'Romaji (Shingeki no Kyojin)',
+    ENGLISH: 'English (Attack on Titan)',
+    NATIVE: 'Native (進撃の巨人)',
+    ROMAJI_STYLISED: 'Romaji Stylised',
+    ENGLISH_STYLISED: 'English Stylised',
+    NATIVE_STYLISED: 'Native Stylised'
+  } as const
+
+  const alViewer = client.client.viewer
+
+  async function updateLanguage (language: string) {
+    try {
+      await client.client.mutation(UpdateUser, { language: language as keyof typeof titleTypes })
+    } catch (e) {
+      console.error('Failed to update language', e)
+    }
+  }
+
+  async function updateAdult (adult: boolean) {
+    try {
+      await client.client.mutation(UpdateUser, { adult })
+    } catch (e) {
+      console.error('Failed to update NSFT setting', e)
+    }
+  }
 </script>
 
 <div class='space-y-3 pb-10 lg:max-w-4xl'>
@@ -64,11 +95,32 @@
       <Anilist class='size-6 ml-auto' />
     </div>
     <div class='bg-neutral-950 px-6 py-4 rounded-b-md flex justify-between'>
-      {#if anilist?.viewer?.id}
-        <Button variant='secondary' on:click={() => client.client.logout()}>Logout</Button>
-      {:else}
-        <Button variant='secondary' on:click={() => client.client.auth()}>Login</Button>
-      {/if}
+      <div class='flex items-center gap-2'>
+        {#if anilist?.viewer?.id}
+          <Button variant='secondary' on:click={() => client.client.logout()}>Logout</Button>
+        {:else}
+          <Button variant='secondary' on:click={() => client.client.auth()}>Login</Button>
+        {/if}
+        <Dialog.Root portal='#root'>
+          <Dialog.Trigger let:builder asChild>
+            <Button builders={[builder]} variant='ghost' size='icon' class='animated-icon'><Bolt size={18} /></Button>
+          </Dialog.Trigger>
+          <Dialog.Content class='max-w-4xl w-full bg-black'>
+            <Dialog.Header>
+              <Dialog.Title class='font-weight-bold font-bold'>AniList Settings</Dialog.Title>
+            </Dialog.Header>
+            <SettingCard title='Title Language' description='What language should anime titles be displayed in.' let:id>
+              <SingleCombo value={$alViewer?.viewer?.options?.titleLanguage || 'ROMAJI'} items={titleTypes} class='w-60 shrink-0 border-input border' disabled={!$alViewer} onSelected={updateLanguage} />
+            </SettingCard>
+            <SettingCard let:id title='18+ Content' description='Shows/Hides ALL 18+ content when logged into AniList. This includes lists, recommendations, search results, relations and more.'>
+              <Switch {id} disabled={!$alViewer} checked={!!$alViewer?.viewer?.options?.displayAdultContent} onCheckedChange={updateAdult} />
+            </SettingCard>
+            <SettingCard title='Client ID' description='The Client ID used for AniList authentication and API access. Change this if you want to use your own, or if the default one stops working.' let:id>
+              <Input type='number' class='w-32' {id} placeholder='AniList Client ID' bind:value={$anilistClientID} />
+            </SettingCard>
+          </Dialog.Content>
+        </Dialog.Root>
+      </div>
       <div class='flex items-center gap-4'>
         <Tooltip.Root>
           <Tooltip.Trigger>
@@ -179,11 +231,26 @@
       <MyAnimeList class='size-6 ml-auto' />
     </div>
     <div class='bg-neutral-950 px-6 py-4 rounded-b-md flex justify-between'>
-      {#if mal?.id}
-        <Button variant='secondary' on:click={() => malclient.logout()}>Logout</Button>
-      {:else}
-        <Button variant='secondary' on:click={() => malclient.login()}>Login</Button>
-      {/if}
+      <div class='flex items-center gap-2'>
+        {#if mal?.id}
+          <Button variant='secondary' on:click={() => malclient.logout()}>Logout</Button>
+        {:else}
+          <Button variant='secondary' on:click={() => malclient.login()}>Login</Button>
+        {/if}
+        <Dialog.Root portal='#root'>
+          <Dialog.Trigger let:builder asChild>
+            <Button builders={[builder]} variant='ghost' size='icon' class='animated-icon'><Bolt size={18} /></Button>
+          </Dialog.Trigger>
+          <Dialog.Content class='max-w-4xl w-full bg-black'>
+            <Dialog.Header>
+              <Dialog.Title class='font-weight-bold font-bold'>MyAnimeList Settings</Dialog.Title>
+            </Dialog.Header>
+            <SettingCard title='Client ID' description='The Client ID used for MyAnimeList authentication and API access. Change this if you want to use your own, or if the default one stops working.' let:id>
+              <Input type='text' class='w-96' {id} placeholder='MyAnimeList Client ID' bind:value={$malClientID} />
+            </SettingCard>
+          </Dialog.Content>
+        </Dialog.Root>
+      </div>
       <div class='flex gap-2 items-center'>
         <Switch hideState={true} id='mal-sync-switch' bind:checked={$syncSettings.mal} />
         <Label for='mal-sync-switch' class='cursor-pointer'>Enable Sync</Label>
@@ -218,13 +285,5 @@
         <Label for='local-sync-switch' class='cursor-pointer'>Enable Sync</Label>
       </div>
     </div>
-  </div>
-  <div class='flex items-center scale-parent rounded-md self-baseline bg-neutral-900 w-[410px] max-w-full'>
-    <div class='shrink-0 pointer-events-none text-sm leading-5 text-center w-32'>Anilist Client ID</div>
-    <Input type='text' bind:value={$anilistClientID} class='border-0 no-scale bg-neutral-950 rounded-l-none' />
-  </div>
-  <div class='flex items-center scale-parent rounded-md self-baseline bg-neutral-900 w-[410px]  max-w-full'>
-    <div class='shrink-0 pointer-events-none text-sm leading-5 text-center w-32'>MAL Client ID</div>
-    <Input type='text' bind:value={$malClientID} class='border-0 no-scale bg-neutral-950 rounded-l-none' />
   </div>
 </div>

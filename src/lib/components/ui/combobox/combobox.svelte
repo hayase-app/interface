@@ -63,6 +63,8 @@
     }
   }
 
+  export let disabled = false
+
   let className = ''
   export { className as class }
 </script>
@@ -74,6 +76,7 @@
       variant='outline'
       role='combobox'
       aria-expanded={open}
+      {disabled}
       class={cn('justify-between border-0 min-w-0', className)}>
       <div class='w-full text-ellipsis overflow-hidden text-left' class:text-muted-foreground={!value.length} class:opacity-50={!value.length}>
         {#key value}

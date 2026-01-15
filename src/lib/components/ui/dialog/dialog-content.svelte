@@ -29,9 +29,9 @@
   >
     <slot />
     <DialogPrimitive.Close
-      class='ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-sm transition-opacity select:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none'
+      class='ring-offset-background focus:ring-ring data-[state=open]:bg-accent/70 data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-sm transition-opacity select:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none'
     >
-      <Cross2 class='size-5' />
+      <Cross2 class='size-4' />
       <span class='sr-only'>Close</span>
     </DialogPrimitive.Close>
   </DialogPrimitive.Content>

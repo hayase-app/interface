@@ -188,6 +188,10 @@ export const Viewer = gql(`
         animeList {
           customLists
         }
+      },
+      options {
+        titleLanguage,
+        displayAdultContent
       }
     }
   }
@@ -227,9 +231,9 @@ export const UserLists = gql(`
   }
 `, [FullMediaList])
 
-export const CustomLists = gql(`
-  mutation CustomLists($lists: [String]) {
-    UpdateUser(animeListOptions: { customLists: $lists }) {
+export const UpdateUser = gql(`
+  mutation UpdateUser($lists: [String], $adult: Boolean, $language: UserTitleLanguage) {
+    UpdateUser(animeListOptions: { customLists: $lists }, displayAdultContent: $adult, titleLanguage: $language) {
       id
     }
   }

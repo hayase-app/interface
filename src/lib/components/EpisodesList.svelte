@@ -11,10 +11,12 @@
 
   import type { EpisodesResponse } from '$lib/modules/anizip/types'
 
+  import Logo from '$lib/components/icons/Logo.svelte'
   import { episodes as _episodes, notes, type Media } from '$lib/modules/anilist'
   import { authAggregator, list, progress } from '$lib/modules/auth'
   import { makeEpisodeList } from '$lib/modules/extensions'
   import { click, dragScroll } from '$lib/modules/navigate'
+  import { settings, SUPPORTS } from '$lib/modules/settings'
   import { liveAnimeProgress } from '$lib/modules/watchProgress'
   import { breakpoints, cn, since } from '$lib/utils'
 
@@ -53,6 +55,7 @@
       {#each getPage(currentPage, episodeList) as { episode, image, title, summary, airingAt, airdate, filler, length, rating, runtime } (episode)}
         {@const watched = _progress >= episode && !completed}
         {@const target = _progress + 1 === episode}
+        {@const spoiler = !watched && !target && $settings.hideSpoilers}
         <div class={!target ? 'px-3 w-full' : 'contents'}>
           <div use:click={() => play(episode)}
             class={cn(
@@ -61,8 +64,11 @@
               filler && '!ring-yellow-400 ring-1'
             )}>
             {#if image}
-              <div class='w-52 shrink-0 relative'>
-                <Load src={image} class={cn('object-cover h-full w-full', watched && 'opacity-20')} />
+              <div class='w-52 shrink-0 relative overflow-clip'>
+                <Load src={image} class={cn('object-cover h-full w-full', watched && 'opacity-20', spoiler && (SUPPORTS.isUnderPowered ? 'hidden' : 'blur-[6px]'))} />
+                {#if spoiler && SUPPORTS.isUnderPowered}
+                  <Logo class='absolute size-8 text-neutral-600 inset-0 m-auto' />
+                {/if}
                 {#if length ?? runtime ?? media.duration}
                   <div class='absolute bottom-1 left-1 bg-neutral-900/80 text-secondary-foreground text-[9.6px] px-1 py-0.5 rounded'>
                     {length ?? runtime ?? media.duration}m
@@ -90,8 +96,16 @@
                   <div class='h-0.5 overflow-hidden bg-custom shrink-0' style:width={$watchProgress.progress + '%'} />
                 </div>
               {/if}
-              <div class='text-[9.6px] text-muted-foreground overflow-hidden'>
-                {notes(summary ?? '')}
+              <div class='text-[9.6px] text-muted-foreground overflow-hidden {spoiler && !SUPPORTS.isUnderPowered && 'blur-[6px]'}'>
+                {#if spoiler && SUPPORTS.isUnderPowered}
+                  <div class='flex flex-col gap-2 pt-1'>
+                    <div class='bg-primary/5 size-full rounded h-1.5 w-60' />
+                    <div class='bg-primary/5 size-full rounded h-1.5 w-48' />
+                    <div class='bg-primary/5 size-full rounded h-1.5 w-24' />
+                  </div>
+                {:else}
+                  {notes(summary ?? '')}
+                {/if}
               </div>
               <div class='flex w-full justify-between mt-auto'>
                 {#if airingAt ?? airdate}

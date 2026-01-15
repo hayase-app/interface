@@ -10,7 +10,7 @@ import { toast } from 'svelte-sonner'
 import { anilistClientID } from '../settings'
 
 import gql from './gql'
-import { CommentFrag, CustomLists, type Entry, FullMedia, FullMediaList, ThreadFrag, type ToggleFavourite, UserLists, Viewer } from './queries'
+import { CommentFrag, UpdateUser, type Entry, FullMedia, FullMediaList, ThreadFrag, type ToggleFavourite, UserLists, Viewer } from './queries'
 import { refocusExchange } from './refocus'
 import schema from './schema.json' with { type: 'json' }
 import { makeDefaultStorage } from './storage'
@@ -91,7 +91,7 @@ export default new class URQLClient extends Client {
 
     const lists = viewerRes.data.Viewer.mediaListOptions?.animeList?.customLists ?? []
     if (!lists.includes('Watched using Hayase')) {
-      await this.mutation(CustomLists, { lists: [...lists, 'Watched using Hayase'] })
+      await this.mutation(UpdateUser, { lists: [...lists, 'Watched using Hayase'] })
     }
   }
 

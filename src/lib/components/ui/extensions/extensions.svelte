@@ -48,7 +48,7 @@
   <Tabs.Content value='extensions' tabindex={-1}>
     <div class='flex flex-col gap-y-2 justify-center py-3'>
       {#each Object.entries($saved) as [id, config] (id)}
-        <div class='bg-neutral-950 px-4 py-3 rounded-md flex flex-row space-x-3 justify-between w-full border border-border'>
+        <div class='bg-neutral-950 px-4 py-3 rounded-md flex flex-row space-x-3 justify-between w-full'>
           <div class='flex flex-col space-y-3'>
             <div class='flex flex-row space-x-3'>
               <img src={config.icon} alt='ico' class='size-10 rounded-md bg-neutral-900' loading='lazy' decoding='async' />
@@ -106,7 +106,7 @@
     <div class='gap-3 flex py-3 sm:flex-row flex-col'>
       <Tooltip.Root>
         <Tooltip.Trigger class='w-full' tabindex={-1}>
-          <Input class='bg-neutral-950' type='url' placeholder='https://example.com/manifest.json' bind:value={extensionInput} />
+          <Input class='bg-neutral-950 border-none' type='url' placeholder='https://example.com/manifest.json' bind:value={extensionInput} />
         </Tooltip.Trigger>
         <Tooltip.Content class='max-w-full w-52'>
           Destination URL of the extension manifest to import extensions from. This can be a direct URL to a .json file, an npm package prefixed with npm:, a file in a github repository prefixed with gh: or a file with the file: prefix and the code inlined as text.
@@ -127,7 +127,7 @@
     <div class='flex flex-col gap-y-2 justify-center py-3'>
       {#each Object.entries(Object.groupBy(Object.values($saved), saved => saved.update ?? '')) as [id, extensions] (id) }
         {@const url = new URL(id)}
-        <div class='bg-neutral-950 px-4 py-3 rounded-md flex flex-row space-x-3 justify-between items-center w-full border border-border'>
+        <div class='bg-neutral-950 px-4 py-3 rounded-md flex flex-row space-x-3 justify-between items-center w-full'>
           <div class='flex space-x-2 items-center'>
             {#if url.protocol === 'gh:'}
               <Github class='w-5 h-5 text-muted-foreground' />

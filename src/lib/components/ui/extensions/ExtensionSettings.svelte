@@ -1,9 +1,8 @@
 <script lang='ts'>
   // @ts-nocheck i give up with dynamic keys
-  import Settings from 'lucide-svelte/icons/settings'
-
   import type { ExtensionConfig } from '$lib/modules/extensions/types'
 
+  import { Bolt } from '$lib/components/icons/animated'
   import { Button } from '$lib/components/ui/button'
   import * as Dialog from '$lib/components/ui/dialog'
   import { Input } from '$lib/components/ui/input'
@@ -22,12 +21,12 @@
   {#if $exopts[config.id] !== undefined}
     <Dialog.Root portal='#root'>
       <Dialog.Trigger let:builder asChild>
-        <Button builders={[builder]} variant='ghost' size='icon-sm'><Settings size={18} /></Button>
+        <Button builders={[builder]} variant='ghost' size='icon-sm' class='animated-icon'><Bolt size={18} /></Button>
       </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Header>
-          <div class='space-y-4 px-4 sm:px-6'>
-            <div class='font-weight-bold text-xl font-bold'>{config.name} Settings</div>
+          <div class='space-y-4'>
+            <Dialog.Title class='font-weight-bold font-bold'>{config.name} Settings</Dialog.Title>
             {#each Object.entries(config.options ?? {}) as [id, options] (id)}
               {#if options.type === 'string'}
                 <div class='space-y-2'>
@@ -46,7 +45,7 @@
                 </div>
               {/if}
             {/each}
-            <div class='py-3 gap-3 mt-auto flex flex-col sm:flex-row-reverse'>
+            <div class='pt-3 gap-3 mt-auto flex flex-col sm:flex-row-reverse'>
               <Dialog.Close let:builder asChild>
                 <Button variant='secondary' builders={[builder]}>Cancel</Button>
                 <Button variant='destructive' on:click={deleteExtension} builders={[builder]}>Delete Extension</Button>
