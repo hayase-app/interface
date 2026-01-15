@@ -43,7 +43,7 @@
 <Progress />
 
 <div class='space-y-3 lg:max-w-4xl pt-5 h-full overflow-y-auto' use:dragScroll>
-  <SettingCard class='bg-transparent' let:id title='Torrent Download Location' description={`Path to the folder used to store torrents. By default this is the TEMP cache folder, which might lose data when your OS tries to reclaim storage.${SUPPORTS.isAndroid ? '\n\nSD Card saves to the Cards Download folder. If SD Card is not available torrents will automatically be saved to the Phone\'s Downloads folder' : ''}`}>
+  <SettingCard class='bg-transparent' let:id title='Torrent Download Location' description={`Path to the folder used to store torrents. By default this is the OS's TEMP/TMP cache folder, which might lose data when your OS tries to reclaim storage.${SUPPORTS.isAndroid ? '\n\nSD Card saves to the Cards Download folder. If SD Card is not available torrents will automatically be saved to the Phone\'s Downloads folder' : ''}`}>
     <div class='flex'>
       <Input type='url' bind:value={$settings.torrentPath} readonly {id} placeholder='/tmp/webtorrent' class='sm:w-60 bg-background rounded-r-none pointer-events-none' />
       {#if !SUPPORTS.isAndroid}

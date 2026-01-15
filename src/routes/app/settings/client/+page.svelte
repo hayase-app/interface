@@ -42,7 +42,7 @@
   {/if}
 
   <div class='font-weight-bold text-xl font-bold'>Client Settings</div>
-  <SettingCard let:id title='Torrent Download Location' description={`Path to the folder used to store torrents. By default this is the TEMP cache folder, which might lose data when your OS tries to reclaim storage.${SUPPORTS.isAndroid ? '\n\nSD Card saves to the Cards Download folder. If SD Card is not available torrents will automatically be saved to the Phone\'s Downloads folder' : ''}`}>
+  <SettingCard let:id title='Torrent Download Location' description={`Path to the folder used to store torrents. By default this is the OS's TEMP/TMP cache folder, which might lose data when your OS tries to reclaim storage.${SUPPORTS.isAndroid ? '\n\nSD Card saves to the Cards Download folder. If SD Card is not available torrents will automatically be saved to the Phone\'s Downloads folder' : ''}`}>
     <div class='flex'>
       <Input type='url' bind:value={$settings.torrentPath} readonly {id} placeholder='/tmp/webtorrent' class='sm:w-60 bg-background rounded-r-none pointer-events-none' />
       {#if !SUPPORTS.isAndroid}
