@@ -9,7 +9,7 @@
   import { afterNavigate } from '$app/navigation'
   import native from '$lib/modules/native'
   import { click } from '$lib/modules/navigate'
-  import { debug, SUPPORTS } from '$lib/modules/settings'
+  import { debug, settings, SUPPORTS } from '$lib/modules/settings'
 
   function tabindex (node: HTMLElement) {
     node.tabIndex = -1
@@ -49,13 +49,15 @@
   <Wrapper let:platform>
     {@const isMac = platform === 'macOS'}
     <div class='w-full top-0 z-[2000] flex justify-between {draggable} absolute h-8'>
-      <div class='flex gap-1.5 items-end ml-14 {isMac ? '!ml-12' : ''}'>
-        <Button size='icon-sm' variant='ghost' disabled={!hasPrevious} class='p-1 shrink-0 custom-not-draggable text-white' tabindex={-1} on:click={previous}>
-          <ArrowLeft strokeWidth='1.2' class='size-5' />
-        </Button>
-        <Button size='icon-sm' variant='ghost' disabled={!hasNext} class='p-1 shrink-0 custom-not-draggable text-white' tabindex={-1} on:click={next}>
-          <ArrowRight strokeWidth='1.2' class='size-5' />
-        </Button>
+      <div class='flex gap-1.5 items-end ml-14 {isMac ? '!ml-20' : ''}'>
+        {#if $settings.showNavigation}
+          <Button size='icon-sm' variant='ghost' disabled={!hasPrevious} class='p-1 shrink-0 custom-not-draggable text-white' tabindex={-1} on:click={previous}>
+            <ArrowLeft strokeWidth='1.2' class='size-5' />
+          </Button>
+          <Button size='icon-sm' variant='ghost' disabled={!hasNext} class='p-1 shrink-0 custom-not-draggable text-white' tabindex={-1} on:click={next}>
+            <ArrowRight strokeWidth='1.2' class='size-5' />
+          </Button>
+        {/if}
       </div>
       {#if !isMac}
         <div class='window-controls custom-not-draggable flex text-white'>

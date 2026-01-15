@@ -31,6 +31,7 @@ export default {
   hideToTray: false,
   doHURL: 'https://cloudflare-dns.com/dns-query',
   showDetailsInRPC: true,
+  showNavigation: false,
   torrentPath: '',
   angle: 'default' as 'default' | 'd3d11'| 'd3d9' | 'warp' | 'gl' | 'gles' | 'swiftshader' | 'vulkan' | 'metal',
   idleAnimation: native.defaultTransparency(),

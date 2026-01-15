@@ -67,6 +67,9 @@
     <Slider bind:value min={0.3} max={2.5} step={0.1} class='w-60 shrink-0' on:pointerup={saveScale} on:keyup={saveScale} on:keydown={saveScale} />
     <div class='text-muted-foreground text-xs'>{Number(value[0]).toFixed(1)}</div>
   </SettingCard>
+  <SettingCard title='Navigation Buttons' description="Show backwards/forwards navigation buttons for when mouse buttons aren't available." let:id>
+    <Switch {id} bind:checked={$settings.showNavigation} />
+  </SettingCard>
   <div class='font-weight-bold text-xl font-bold'>Visibility Settings</div>
   <SettingCard let:id title='Show Hentai' description='Shows hentai content throughout the app. If disabled all hentai content will be hidden and not shown in search results, but shown if present in your list.'>
     <Switch {id} bind:checked={$settings.showHentai} />
