@@ -48,8 +48,8 @@
     </div>
   </div>
   <Separator class='my-3 md:my-6 max-w-[1310px] mx-auto' />
-  <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-scroll justify-center' use:dragScroll>
-    <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0'>
+  <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-scroll lg:justify-center' use:dragScroll>
+    <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0 w-full bg-black z-20'>
       <SettingsNav {items} />
       <div class='mt-auto text-xs text-muted-foreground px-4 sm:px-2 py-3 md:py-5 flex flex-row lg:flex-col font-light gap-0.5 gap-x-4 flex-wrap'>
         <div>Interface v{version}</div>
@@ -65,8 +65,11 @@
         {/if}
       </div>
     </aside>
-    <div class='pb-40 contents'>
+
+    <div class='space-y-3 w-full pb-10 lg:max-w-5xl'>
       <slot />
+      <!-- I give up, padding just will not work idk why -->
+      <div class='h-4 hidden lg:block' />
     </div>
   </div>
 </div>
