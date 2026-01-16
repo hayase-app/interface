@@ -90,39 +90,39 @@
   }
 </script>
 
-<div class='font-weight-bold text-xl font-bold'>Debug Settings</div>
-<SettingCard title='Logging Levels' description='Enable logging of specific parts of the app. These logs are saved to %appdata$/Hayase/logs/main.log or ~/config/Hayase/logs/main.log.'>
-  <SingleCombo bind:value={$debug} items={debugOpts} class='w-32 shrink-0 border-input border' />
-</SettingCard>
-
-<SettingCard title='App and Device Info' description='Copy app and device debug info and capabilities, such as GPU information, GPU capabilities, version information and settings to clipboard.'>
-  <Button on:click={copyDevice} class='btn btn-primary'>Copy To Clipboard</Button>
-</SettingCard>
-
-{#if !SUPPORTS.isAndroid}
-  <SettingCard title='Log Output' description='Copy debug logs to clipboard. Once you enable a logging level you can use this to quickly copy the created logs to clipboard instead of navigating to the log file in directories.'>
-    <Button on:click={copyLogs} class='btn btn-primary'>Copy To Clipboard</Button>
-  </SettingCard>
-
-  <SettingCard title='Open UI Devtools' description="Open devtools for the UI process, this allows to inspect media playback information, rendering performance and more. DO NOT PASTE ANY CODE IN THERE, YOU'RE LIKELY BEING SCAMMED IF SOMEONE TELLS YOU TO!">
-    <Button on:click={native.openUIDevtools} class='btn btn-primary'>Open Devtools</Button>
-  </SettingCard>
-{/if}
-
 <div class='font-weight-bold text-xl font-bold'>App Settings</div>
 {#if !SUPPORTS.isAndroid}
   <SettingCard let:id title='Hide App To Tray' description='Makes the app hide to tray instead of closing when you close the window. This is useful if you want to keep the torrent client open in the background to seed/leech.'>
     <Switch {id} bind:checked={$settings.hideToTray} />
   </SettingCard>
 {/if}
-<div class='flex flex-wrap gap-2'>
-  <Button on:click={importSettings}>
+<div class='grid grid-cols-1 gap-3 md:grid-cols-3'>
+  <Button on:click={importSettings} class='font-bold'>
     Import Settings From File
   </Button>
-  <Button on:click={exportSettings}>
+  <Button on:click={exportSettings} class='font-bold'>
     Export Settings To File
   </Button>
-  <Button on:click={reset} variant='destructive'>
+  <Button on:click={reset} variant='destructive' class='font-bold'>
     Reset EVERYTHING To Default
   </Button>
 </div>
+
+<div class='font-weight-bold text-xl font-bold'>Debug Settings</div>
+<SettingCard title='Logging Levels' description='Enable logging of specific parts of the app. These logs are saved to %appdata$/Hayase/logs/main.log or ~/config/Hayase/logs/main.log.'>
+  <SingleCombo bind:value={$debug} items={debugOpts} class='w-32 shrink-0 border-input border' />
+</SettingCard>
+
+<SettingCard title='App and Device Info' description='Copy app and device debug info and capabilities, such as GPU information, GPU capabilities, version information and settings to clipboard.'>
+  <Button on:click={copyDevice} class='btn btn-primary font-bold'>Copy To Clipboard</Button>
+</SettingCard>
+
+{#if !SUPPORTS.isAndroid}
+  <SettingCard title='Log Output' description='Copy debug logs to clipboard. Once you enable a logging level you can use this to quickly copy the created logs to clipboard instead of navigating to the log file in directories.'>
+    <Button on:click={copyLogs} class='btn btn-primary font-bold'>Copy To Clipboard</Button>
+  </SettingCard>
+
+  <SettingCard title='Open UI Devtools' description="Open devtools for the UI process, this allows to inspect media playback information, rendering performance and more. DO NOT PASTE ANY CODE IN THERE, YOU'RE LIKELY BEING SCAMMED IF SOMEONE TELLS YOU TO!">
+    <Button on:click={native.openUIDevtools} class='btn btn-primary font-bold'>Open Devtools</Button>
+  </SettingCard>
+{/if}
