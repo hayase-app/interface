@@ -8,7 +8,7 @@
 
   import * as Table from '$lib/components/ui/table'
   import { server } from '$lib/modules/torrent'
-  import { cn, eta, fastPrettyBytes } from '$lib/utils'
+  import { cn, fastPrettyBytes } from '$lib/utils'
 
   const table = createTable(server.peers, {
     sort: addSortBy({ toggleOrder: ['asc', 'desc'] })
@@ -60,12 +60,12 @@
       id: 'uploaded',
       cell: ({ value }) => fastPrettyBytes(value)
     }),
-    table.column({
-      accessor: 'time',
-      header: 'Time',
-      id: 'time',
-      cell: ({ value }) => eta(value)
-    }),
+    // table.column({
+    //   accessor: 'time',
+    //   header: 'Time',
+    //   id: 'time',
+    //   cell: ({ value }) => eta(value)
+    // }),
     table.column({
       accessor: 'ip',
       header: 'Country',

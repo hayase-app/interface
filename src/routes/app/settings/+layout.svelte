@@ -40,14 +40,14 @@
 
 <div class='p-3 md:p-10 md:pb-0 pb-0 w-full h-full flex flex-col'>
   <div class='flex justify-center'>
-    <div class='space-y-0.5 lg:max-w-[1310px] w-full'>
+    <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>Settings</h2>
       <p class='text-muted-foreground'>
         Manage your app settings, preferences and accounts.
       </p>
     </div>
   </div>
-  <Separator class='my-3 md:my-6 max-w-[1310px] mx-auto' />
+  <Separator class='my-3 md:my-6 max-w-[1440px] mx-auto' />
   <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-auto lg:justify-center pb-10 md:pb-0' use:dragScroll>
     <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0 w-full bg-black z-20'>
       <SettingsNav {items} />
@@ -66,7 +66,7 @@
       </div>
     </aside>
 
-    <div class='space-y-3 w-full pb-10 lg:max-w-5xl'>
+    <div class='space-y-3 w-full pb-10 lg:max-w-6xl'>
       <slot />
       <!-- I give up, padding just will not work idk why -->
       <div class='h-4 hidden lg:block' />

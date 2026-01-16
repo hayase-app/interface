@@ -49,14 +49,14 @@
 
 <div class='p-3 md:p-10 md:pb-0 pb-0 w-full h-full flex flex-col min-w-0'>
   <div class='flex justify-center'>
-    <div class='space-y-0.5 lg:max-w-[1310px] w-full'>
+    <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>{overview.title}</h2>
       <p class='text-muted-foreground'>
         {overview.desc}
       </p>
     </div>
   </div>
-  <Separator class='my-3 md:my-6 max-w-[1310px] mx-auto' />
+  <Separator class='my-3 md:my-6 max-w-[1440px] mx-auto' />
   <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-auto lg:justify-center' use:dragScroll>
     <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0 w-full bg-black z-20'>
       <SettingsNav {items} />
@@ -64,7 +64,7 @@
         <div>WebTorrent v2.8.4</div>
       </div>
     </aside>
-    <div class='w-full lg:max-w-5xl flex-grow pb-2'>
+    <div class='w-full lg:max-w-6xl flex-grow pb-2'>
       {#if !SUPPORTS.isUnderPowered}
         <Globe />
       {/if}
