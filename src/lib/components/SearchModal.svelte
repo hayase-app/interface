@@ -68,7 +68,7 @@
 
   import { beforeNavigate, goto } from '$app/navigation'
   import { searchStore } from '$lib'
-  import { saved } from '$lib/modules/extensions'
+  import { savedConfigs } from '$lib/modules/extensions'
   import { server } from '$lib/modules/torrent'
 
   $: open = !!$searchStore?.media
@@ -263,8 +263,8 @@
                       <div class='text-xl font-bold text-nowrap group-select/card:text-custom transition-colors'>{getGroup(result.parseObject)}</div>
                       <div class='ml-auto flex gap-2 self-start'>
                         {#each result.extension as id (id)}
-                          {#if $saved[id]}
-                            <img src={$saved[id].icon} alt={id} class='size-4' title='Provided by {id}' decoding='async' loading='lazy' />
+                          {#if $savedConfigs[id]}
+                            <img src={$savedConfigs[id].icon} alt={id} class='size-4' title='Provided by {id}' decoding='async' loading='lazy' />
                           {/if}
                         {/each}
                       </div>

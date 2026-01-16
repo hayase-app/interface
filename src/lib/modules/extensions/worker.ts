@@ -17,8 +17,13 @@ export default expose({
     return module.default
   },
 
+  async loaded () {
+    await this.mod
+  },
+
   [finalizer] () {
     console.log('destroyed worker')
+    self.close()
   },
 
   async single (...args: Parameters<SearchFunction>): ReturnType<SearchFunction> {

@@ -1,7 +1,7 @@
 import { releaseProxy, type Remote } from 'abslink'
 import { wrap } from 'abslink/w3c'
 import Debug from 'debug'
-import { set, getMany, delMany, del } from 'idb-keyval'
+import { set, getMany } from 'idb-keyval'
 import { get } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
 import { toast } from 'svelte-sonner'
@@ -24,8 +24,8 @@ type ExtensionsOptions = {
 }
 
 // Usage:
-export const saved = persisted<SavedExtensions>('extensions', {})
-export const options = persisted<ExtensionsOptions>('extensionoptions', {})
+export const savedConfigs = persisted<SavedExtensions>('extensions', {})
+export const savedOptions = persisted<ExtensionsOptions>('extensionoptions', {})
 
 // `http${string}` | `gh:${string}` | `npm:${string}`
 // http[s]://[url] -> http[s]://[url]
@@ -78,137 +78,214 @@ const safejs = async (url: string): Promise<string | null> => {
   }
 }
 
-export const storage = new class Storage {
-  modules!: Promise<Record<string, string>>
-  workers: Record<string, Remote<typeof extensionLoader>> = {}
+type ExtensionID = string
+
+class CodeManager {
+  extensions: Map<ExtensionID, Remote<typeof extensionLoader>> = new Map<ExtensionID, Remote<typeof extensionLoader>>()
+
+  async delete (id: ExtensionID) {
+    debug('Deleting extension', id)
+    if (this.extensions.has(id)) {
+      await this.extensions.get(id)![releaseProxy]()
+      this.extensions.delete(id)
+      debug('Extension deleted', id)
+    } else {
+      debug('Extension not found for delete', id)
+    }
+  }
+
+  async initiate (configs: ExtensionConfig[]) {
+    debug('Initiating extensions', configs.map(c => c.id))
+    const configIDs = configs.map(c => c.id)
+
+    const codeList = await getMany<string>(configIDs)
+
+    const workerPromises = configIDs.map((id, index) => {
+      const code = codeList[index]!
+      debug('Loading worker for', id)
+      return this._loadWorker(code, id)
+    })
+
+    await Promise.all(workerPromises)
+    debug('All workers initiated')
+  }
+
+  async downloadScripts (configs: ExtensionConfig[], update = false) {
+    debug('Downloading scripts', configs.map(c => c.id), 'update:', update)
+    const invalidIDs: ExtensionID[] = []
+
+    for (const config of configs) {
+      if (this.extensions.has(config.id) && !update) {
+        debug('Extension already loaded and not updating, skipping', config.id)
+        continue
+      }
+
+      const code = await safejs(config.code)
+      if (!code) {
+        debug('Failed to fetch code for', config.id)
+        invalidIDs.push(config.id)
+        continue
+      }
+
+      try {
+        await this._loadWorker(code, config.id)
+        set(config.id, code)
+        debug('Loaded and cached code for', config.id)
+      } catch (e) {
+        debug('Failed to load worker for', config.id, e)
+        invalidIDs.push(config.id)
+      }
+    }
+
+    debug('Invalid extension IDs after download', invalidIDs)
+    return invalidIDs
+  }
+
+  async _loadWorker (code: string, name: string) {
+    debug('Creating worker for', name)
+    const Loader = wrap<typeof extensionLoader>(new Worker({ name })) as unknown as Remote<typeof extensionLoader>
+
+    try {
+      await Loader.construct(code)
+      await Loader.loaded()
+      if (this.extensions.has(name)) {
+        debug('Releasing previous worker for', name)
+        await this.extensions.get(name)![releaseProxy]()
+      }
+      this.extensions.set(name, Loader)
+      debug('Worker loaded and set for', name)
+      try {
+        const testResult = await Loader.test()
+        debug('Worker test passed for', name, testResult)
+      } catch (e) {
+        debug('Worker test failed for', name, e)
+        toast.error(`Extension ${name} Failed to load!`, { description: (e as Error).message })
+        throw e
+      }
+    } catch (e) {
+      debug('Error loading worker for', name, e)
+      await Loader[releaseProxy]()
+      throw e
+    }
+  }
+}
+
+export const storage = new class ConfigManager {
+  codeManager = new CodeManager()
+  ready = this.codeManager.initiate(Object.values(get(savedConfigs)))
 
   constructor () {
-    saved.subscribe(async value => {
-      debug('saved extensions changed', value)
-      this.modules = this.load(value)
-      await this.modules
-      this.update(value)
-    })
+    this.update()
   }
 
-  async reload () {
-    debug('reloading extensions')
-    for (const worker of Object.values(this.workers)) {
-      worker[releaseProxy]()
-    }
-    this.workers = {}
-    this.modules = this.load(get(saved))
+  _validateConfig (config: Partial<ExtensionConfig> | null): boolean {
+    const valid = !!config && ['name', 'version', 'id', 'type', 'accuracy', 'icon', 'update', 'code'].every(prop => prop in (config ?? {}))
+    debug('_validateConfig', config, 'result:', valid)
+    return valid
   }
 
-  async delete (id: string) {
-    debug('deleting extension', id)
-    if (id in this.workers) this.workers[id]![releaseProxy]()
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.workers[id]
-    await del(id)
-    saved.update(value => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete value[id]
-      return value
-    })
-  }
-
-  async import (url: string) {
-    debug('importing extension from', url)
-    const config = await safejson<ExtensionConfig[]>(url)
-    if (!config) throw new Error('Make sure the link you provided is a valid JSON config for Hayase', { cause: 'Invalid extension URI' })
-    for (const c of config) {
-      if (!this._validateConfig(c)) throw new Error('Make sure the link you provided is a valid extension config for Hayase', { cause: 'Invalid extension config' })
-    }
-    debug('imported config', config)
-    for (const c of config) {
-      saved.update(value => {
-        value[c.id] = c
-        return value
-      })
-    }
-  }
-
-  async load (config: Record<string, ExtensionConfig>) {
-    const ids = Object.keys(config)
-    const values = await getMany<string>(ids)
-
-    const modules: Record<string, string> = {}
-
-    debug('loading extensions', ids)
-
-    options.update(options => {
+  _ensureOptions (ids: ExtensionID[], enabled = true) {
+    debug('_ensureOptions for', ids, 'enabled:', enabled)
+    savedOptions.update(options => {
       for (const id of ids) {
         if (!(id in options)) {
-          options[id] = { options: {}, enabled: true }
+          options[id] = { options: {}, enabled }
         }
       }
       return options
     })
+  }
 
-    for (let i = 0; i < ids.length; i++) {
-      const module = values[i]
-      const id = ids[i]!
+  _updateSaved (configs: ExtensionConfig[]) {
+    debug('_updateSaved', configs.map(c => c.id))
+    savedConfigs.update(value => {
+      const newConfigs = { ...value }
+      for (const c of configs) {
+        newConfigs[c.id] = c
+      }
+      return newConfigs
+    })
+  }
 
-      if (module) {
-        modules[id] = module
+  configs () {
+    const configs = get(savedConfigs)
+    debug('configs()', configs)
+    return configs
+  }
+
+  // handles user input, needs validation
+  async import (url: string) {
+    debug('Importing extension config from', url)
+    const config = await safejson<ExtensionConfig[]>(url)
+    if (!config) {
+      debug('Import failed: invalid JSON config', url)
+      throw new Error('Make sure the link you provided is a valid JSON config for Hayase', { cause: 'Invalid extension URI' })
+    }
+
+    const attemptedOverrides: string[] = []
+    const validConfigs: ExtensionConfig[] = []
+    for (const c of config) {
+      if (!this._validateConfig(c)) {
+        debug('Invalid extension config found during import', c)
+        throw new Error('Make sure the link you provided is a valid extension config for Hayase', { cause: 'Invalid extension config' })
+      }
+
+      if (c.id in this.configs()) {
+        debug('Extension already exists, will not import', c.id)
+        attemptedOverrides.push(c.id)
       } else {
-        debug('loading module', id)
-        const module = await safejs(config[id]!.code)
-        if (!module) continue
-        modules[id] = module
-        set(id, module)
-      }
-      if (!(id in this.workers)) {
-        debug('creating worker for', id)
-        const worker = new Worker({ name: id })
-        const Loader = wrap<typeof extensionLoader>(worker)
-        try {
-          await Loader.construct(modules[id])
-          this.workers[id] = Loader as unknown as Remote<typeof extensionLoader>
-          await Loader.test()
-        } catch (e) {
-          debug('failed to load extension', id, e)
-          // worker.terminate()
-          console.error(e, id)
-          toast.error(`Failed to load extension ${config[id]!.name}`, { description: (e as Error).message })
-        }
+        validConfigs.push(c)
       }
     }
-    return modules
-  }
 
-  async update (config: Record<string, ExtensionConfig>) {
-    const ids = Object.keys(config)
-    const configs = Object.values(config)
-    debug('updating extensions', ids)
+    const invalidExtensions = await this.codeManager.downloadScripts(validConfigs)
 
-    const updateURLs = new Set<string>(configs.map(({ update }) => update).filter(e => e != null))
+    const validExtensions = validConfigs.filter(c => !invalidExtensions.includes(c.id))
+    this._ensureOptions(validExtensions.map(c => c.id))
 
-    const values = await Promise.all([...updateURLs].map(url => safejson<ExtensionConfig[]>(url)))
-    if (!values.filter(e => e).length) return
-    const newconfig: Record<string, ExtensionConfig> = Object.fromEntries((values.flat().filter(f => this._validateConfig(f) && ids.includes(f!.id)) as ExtensionConfig[]).map((config) => [config.id, config]))
+    this._updateSaved(validExtensions)
 
-    const toDelete = ids.filter(id => newconfig[id]?.version !== config[id]!.version)
-    if (toDelete.length) {
-      debug('deleting old extensions', toDelete)
-      await delMany(toDelete)
-      for (const id of toDelete) {
-        if (id in this.workers) {
-          this.workers[id]![releaseProxy]()
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete this.workers[id]
-        }
-      }
-      saved.set(newconfig)
-      this.modules = this.load(newconfig)
+    debug('Import complete')
+    if (attemptedOverrides.length) {
+      debug('Attempted to override existing extensions', attemptedOverrides)
+      throw new Error(`The following extensions already exist and were not imported: \n\n${attemptedOverrides.join(', ')}\n\nIf you want to override them, please delete the existing extensions first.`, { cause: 'Extension Already Exists!' })
     }
   }
 
-  _validateConfig (config: Partial<ExtensionConfig> | null): boolean {
-    if (!config) return false
-    const properties: Array<keyof ExtensionConfig> = ['name', 'version', 'id', 'type', 'accuracy', 'icon', 'update', 'code']
+  async delete (id: ExtensionID) {
+    debug('Deleting extension from storage', id)
+    await this.codeManager.delete(id)
+    savedConfigs.update(configs => {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete configs[id]
+      return configs
+    })
+    savedOptions.update(options => {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete options[id]
+      return options
+    })
+    debug('Extension deleted from storage', id)
+  }
 
-    return properties.every(prop => prop in config)
+  async update () {
+    await this.ready
+    debug('Updating extensions')
+    const currentConfigs = this.configs()
+    const updateURLs = new Set<string>(Object.values(currentConfigs).map(({ update }) => update).filter(e => e != null))
+
+    const newConfigs = (await Promise.all([...updateURLs].map(url => safejson<ExtensionConfig[]>(url)))).filter(e => !!e).flat()
+
+    // valid config, same update link, different version
+    const safeToUpdate = newConfigs.filter(f => this._validateConfig(f) && currentConfigs[f.id]?.update === f.update && f.version !== currentConfigs[f.id]?.version)
+
+    debug('Extensions safe to update', safeToUpdate.map(f => f.id))
+    const invalidExtensions = await this.codeManager.downloadScripts(safeToUpdate, true)
+
+    const validExtensions = safeToUpdate.filter(c => !invalidExtensions.includes(c.id))
+    this._ensureOptions(validExtensions.map(c => c.id), false)
+
+    this._updateSaved(validExtensions)
+    debug('Update complete')
   }
 }()

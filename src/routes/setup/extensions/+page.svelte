@@ -11,7 +11,7 @@
   import SettingCard from '$lib/components/SettingCard.svelte'
   import { SingleCombo } from '$lib/components/ui/combobox'
   import { Extensions } from '$lib/components/ui/extensions'
-  import { saved, options } from '$lib/modules/extensions'
+  import { savedConfigs, savedOptions } from '$lib/modules/extensions'
   import { dragScroll } from '$lib/modules/navigate'
   import { lookupPreferences, settings } from '$lib/modules/settings'
 
@@ -32,7 +32,7 @@
 
   let checks: Checks[]
   $: checks = [{
-    promise: checkExtensions($saved, $options),
+    promise: checkExtensions($savedConfigs, $savedOptions),
     title: 'Extensions Required',
     pending: 'At least one extension needs to be installed.'
   }]

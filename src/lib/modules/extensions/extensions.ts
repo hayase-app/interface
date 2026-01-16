@@ -14,7 +14,7 @@ import type { EpisodesResponse, Titles, Episode } from '../anizip/types'
 import type { AnitomyResult } from 'anitomyscript'
 
 import { dev } from '$app/environment'
-import { options as extensionOptions, saved } from '$lib/modules/extensions'
+import { savedOptions as extensionOptions, savedConfigs } from '$lib/modules/extensions'
 import { anitomyscript } from '$lib/utils'
 
 const exclusions: string[] = []
@@ -172,9 +172,9 @@ export const extensions = new class Extensions {
 
   async getResultsFromExtensions ({ media, episode, resolution }: { media: Media, episode: number, resolution: keyof typeof videoResolutions }) {
     debug(`Fetching results for ${media.id}:${media.title?.userPreferred} ${episode} ${resolution}`)
-    await storage.modules
-    const workers = storage.workers
-    if (!Object.values(workers).length) {
+    await storage.ready
+    const extensions = storage.codeManager.extensions
+    if (!extensions.size) {
       debug('No torrent sources configured')
       throw new Error('No torrent sources configured. Add extensions in settings.')
     }
@@ -204,14 +204,14 @@ export const extensions = new class Extensions {
     const errors: Array<{ error: Error, extension: string }> = []
 
     const extopts = get(extensionOptions)
-    const configs = get(saved)
+    const configs = get(savedConfigs)
 
     const checkMovie = !singleEp && movie
     const checkBatch = !singleEp && !movie
 
-    debug(`Checking ${Object.keys(workers).length} extensions for ${media.id}:${media.title?.userPreferred} ${episode} ${resolution} ${checkMovie ? 'movie' : ''} ${checkBatch ? 'batch' : ''}`)
+    debug(`Checking ${extensions.size} extensions for ${media.id}:${media.title?.userPreferred} ${episode} ${resolution} ${checkMovie ? 'movie' : ''} ${checkBatch ? 'batch' : ''}`)
 
-    for (const [id, worker] of Object.entries(workers)) {
+    for (const [id, worker] of extensions.entries()) {
       const thisExtOpts = extopts[id]!
       if (!thisExtOpts.enabled) continue
       if (configs[id]!.type !== 'torrent') continue
@@ -257,15 +257,15 @@ export const extensions = new class Extensions {
   }
 
   async getNZBResultsFromExtensions (hash: string) {
-    await storage.modules
-    const workers = storage.workers
+    await storage.ready
+    const extensions = storage.codeManager.extensions
     const results: Array<{ nzb: string, options: Record<string, string> }> = []
     const errors: Array<{ error: Error, extension: string }> = []
 
     const extopts = get(extensionOptions)
-    const configs = get(saved)
+    const configs = get(savedConfigs)
 
-    for (const [id, worker] of Object.entries(workers)) {
+    for (const [id, worker] of extensions.entries()) {
       const thisExtOpts = extopts[id]!
       if (!thisExtOpts.enabled) continue
       if (!thisExtOpts.options.username || !thisExtOpts.options.password || !thisExtOpts.options.domain || !thisExtOpts.options.port || !thisExtOpts.options.poolSize) continue

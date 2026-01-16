@@ -39,13 +39,14 @@ settings.subscribe((value) => {
 })
 
 function derivedDeep<T, U> (store: Readable<T>, fn: (value: T) => U) {
-  let previousValue: U
+  let previousValue: string
 
   return derived<Readable<T>, U>(store, (value: T, set) => {
     const newValue = fn(value)
+    const stringified = JSON.stringify(newValue)
 
-    if (!(JSON.stringify(previousValue) === JSON.stringify(newValue))) {
-      previousValue = newValue
+    if (previousValue !== stringified) {
+      previousValue = stringified
       set(newValue)
     }
   })
