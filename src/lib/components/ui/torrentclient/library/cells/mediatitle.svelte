@@ -2,12 +2,16 @@
   import { client } from '$lib/modules/anilist'
 
   export let value: number
+
+  const query = client.singleTitle(value)
 </script>
 
-{#await client.single(value)}
+{#if $query.fetching}
+  ...
+{:else if $query.error}
   ?
-{:then query}
-  {query.data?.Media?.title?.userPreferred ?? '?'}
-{:catch}
+{:else if $query.data?.Media}
+  {$query.data.Media.title?.userPreferred ?? '?'}
+{:else}
   ?
-{/await}
+{/if}

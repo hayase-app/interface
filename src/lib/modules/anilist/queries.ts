@@ -180,6 +180,17 @@ export const IDMedia = gql(`
   }
 `, [FullMedia])
 
+export const IDTitle = gql(`
+  query IDTitle($id: Int!) {
+    Media(id: $id, type: ANIME) {
+      id,
+      title {
+        userPreferred
+      }
+    }
+  }
+`)
+
 export const Viewer = gql(`
   query Viewer {
     Viewer {
@@ -208,6 +219,9 @@ export const UserLists = gql(`
         entries {
           id,
           media {
+            title {
+              userPreferred
+            },
             id,
             status,
             mediaListEntry {

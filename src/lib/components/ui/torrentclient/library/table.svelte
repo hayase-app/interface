@@ -229,7 +229,7 @@
                   <Table.Cell {...attrs} class={cn(
                     'px-4 min-h-14 first:pl-6 last:pr-6 text-nowrap',
                     (cell.id === 'episode') && 'text-muted-foreground',
-                    (cell.id === 'series' || cell.id === 'name') && 'min-w-80 text-wrap break-all',
+                    (cell.id === 'series' || cell.id === 'name') && 'min-w-72 text-wrap break-all',
                     cell.id === 'select' && 'p-0 relative [&>div]:absolute'
                   )}>
                     <Render of={cell.render()} />
