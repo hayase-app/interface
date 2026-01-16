@@ -27,7 +27,7 @@ export const MediaEdgeFrag = gql(`
     relationType(version:2),
     node {
       ...RelationMedia,
-      coverImage {medium},
+      coverImage { extraLarge },
       type,
       episodes,
       synonyms,
@@ -39,7 +39,7 @@ export const MediaEdgeFrag = gql(`
           node {
             ...RelationMedia,
             type,
-            coverImage { medium }
+            coverImage { extraLarge }
           }
         }
       },
@@ -242,6 +242,7 @@ export const UpdateUser = gql(`
 export const ScheduleMedia = gql(`
   fragment ScheduleMedia on Media @_unmask {
     id,
+    coverImage { extraLarge, color },
     title {
       userPreferred
     }

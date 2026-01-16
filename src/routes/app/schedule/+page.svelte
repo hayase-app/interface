@@ -11,6 +11,7 @@
   import { ChevronLeft, ChevronRight } from '$lib/components/icons/animated'
   import { Button } from '$lib/components/ui/button'
   import * as Drawer from '$lib/components/ui/drawer'
+  import { Load } from '$lib/components/ui/img'
   import { Label } from '$lib/components/ui/label'
   import { Switch } from '$lib/components/ui/switch'
   import * as Tooltip from '$lib/components/ui/tooltip'
@@ -181,16 +182,24 @@
               <div class='mt-auto'>
                 {#each episodes.length > 6 ? episodes.slice(0, 5) : episodes as episode, i (i)}
                   {@const status = _list(episode)}
-                  <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
-                    <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
-                      {#if status}
-                        <StatusDot variant={status} class='hidden xl:inline-flex' />
-                      {/if}
-                      {episode.title?.userPreferred}
-                    </div>
-                    <div class='ml-auto mr-1 text-nowrap hidden xl:inline-flex'>#{episode.episode}</div>
-                    <div class='text-neutral-400 group-select:text-neutral-200 ml-auto xl:ml-0'>{format(episode.airTime, 'HH:mm')}</div>
-                  </ButtonPrimitive.Root>
+
+                  <Tooltip.Root openDelay={100}>
+                    <Tooltip.Trigger class='text-neutral-500 w-full text-left px-3 mt-1.5' let:builder asChild>
+                      <ButtonPrimitive.Root builders={[builder]} class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
+                        <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
+                          {#if status}
+                            <StatusDot variant={status} class='hidden xl:inline-flex' />
+                          {/if}
+                          {episode.title?.userPreferred}
+                        </div>
+                        <div class='ml-auto mr-1 text-nowrap hidden xl:inline-flex'>#{episode.episode}</div>
+                        <div class='text-neutral-400 group-select:text-neutral-200 ml-auto xl:ml-0'>{format(episode.airTime, 'HH:mm')}</div>
+                      </ButtonPrimitive.Root>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content sameWidth={true} class='p-0 overflow-clip'>
+                      <Load src={episode.coverImage?.extraLarge} color={episode.coverImage?.color} />
+                    </Tooltip.Content>
+                  </Tooltip.Root>
                 {/each}
                 {#if episodes.length > 6}
                   <Tooltip.Root openDelay={100}>
@@ -223,7 +232,7 @@
       {#each dayList as { date, number } (date)}
         {@const sameMonth = isSameMonth(now, date)}
         <div>
-          <div class='flex flex-col text-xs py-3 h-48' class:opacity-30={!sameMonth}>
+          <div class='flex flex-col text-xs py-3 h-24' class:opacity-30={!sameMonth}>
             <div class={cn('w-6 h-6 flex items-center justify-center font-bold mx-3', isToday(date) && 'bg-[rgb(61,180,242)] rounded-full')}>
               {number}
             </div>
