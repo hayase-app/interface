@@ -229,7 +229,7 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2(svelte@4.2.19)
       vite:
-        specifier: ^5.4.11
+        specifier: ^5.4.19
         version: 5.4.21(terser@5.43.1)
       vite-plugin-devtools-json:
         specifier: ^1.0.0
