@@ -21,4 +21,5 @@ declare module 'node:fs/promises' {
   export function readdir(path: string | URL): Promise<string[]>
   export function readFile(path: string | URL, options?: { encoding?: string, flag?: string } | string): Promise<string | Uint8Array>
   export function writeFile(path: string | URL, data: string | Uint8Array, options?: { encoding?: string, mode?: number, flag?: string } | string): Promise<void>
+  export function glob(pattern?: string): AsyncIterable<string>
 }

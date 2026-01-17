@@ -1,5 +1,5 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { readdir, readFile, writeFile, glob } from 'node:fs/promises'
+import { join, basename } from 'node:path'
 import process from 'node:process'
 
 import staticAdapter from '@sveltejs/adapter-static'
@@ -18,7 +18,7 @@ const adapterWithFontPreload = (options = {}) => {
   const baseAdapter = staticAdapter(staticOptions)
 
   return {
-    name: 'adapter-static-with-font-preload',
+    name: 'adapter-static-with-font-preload-and-workers',
 
     async adapt (builder) {
       await baseAdapter.adapt(builder)
@@ -63,6 +63,27 @@ const adapterWithFontPreload = (options = {}) => {
       } catch (error) {
         console.error('Error injecting font preloads:', error)
       }
+
+      // find service worker, and replace JASSUB-WORKER-URLS with actual URLs
+      // this for offline support of JASSUB web workers, because vite does not expose workers in the build manifest
+      // if they are loaded from a dependency... wonderful
+      try {
+        const swPath = join(outDir, 'service-worker.js')
+        let swCode = /** @type {string} */ (await readFile(swPath, 'utf-8'))
+        const assetFiles = []
+        for await (const file of glob(join(outDir, '_app/immutable/workers/*.js'))) {
+          assetFiles.push(basename(file))
+        }
+        const workerUrls = assetFiles.map(file => `/_app/immutable/workers/${file}`)
+
+        if (workerUrls.length === 0) return
+
+        swCode = swCode.replace('JASSUB-WORKER-URLS', workerUrls.join('", "'))
+        await writeFile(swPath, swCode, 'utf-8')
+        console.log('Updated service worker with JASSUB worker URLs:', workerUrls)
+      } catch (error) {
+        console.error('Error updating service worker with JASSUB worker URLs:', error)
+      }
     }
   }
 }
@@ -86,6 +107,11 @@ const config = {
     },
     alias: {
       'lucide-svelte/dist/Icon.svelte': './node_modules/lucide-svelte/dist/Icon.svelte'
+    },
+    serviceWorker: {
+      files: (filepath) => {
+        return !['video.mkv', 'NotoSansHK.woff2', 'NotoSansJP.woff2', 'NotoSansKR.woff2'].includes(filepath)
+      }
     }
   },
   runtime: ''

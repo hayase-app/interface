@@ -1,4 +1,4 @@
-<script lang='ts'>
+<!-- <script lang='ts'>
   import TriangleAlert from 'lucide-svelte/icons/triangle-alert'
 
   import { Button } from '$lib/components/ui/button'
@@ -32,4 +32,4 @@
       </div>
     </div>
   </div>
-{/if}
+{/if} -->

@@ -7,7 +7,7 @@ import { build, files, prerendered, version } from '$service-worker'
 
 const fallbackURL = '/offline.html'
 
-precacheAndRoute([fallbackURL, ...prerendered, ...build, ...files.filter(e => !['/Ameku.webm', '/video.mkv', '/NotoSansHK.woff2', '/NotoSansJP.woff2', '/NotoSansKR.woff2'].includes(e))].map(url => ({ url, revision: version })))
+precacheAndRoute(['JASSUB-WORKER-URLS', fallbackURL, ...prerendered, ...build, ...files].map(url => ({ url, revision: version })))
 cleanupOutdatedCaches()
 clientsClaim()
 skipWaiting()
