@@ -13,7 +13,7 @@
   type T = $$Generic<'single' | 'multiple'>
   type $$Props = ToggleGroupPrimitive.Props<T> & VariantProps<typeof toggleVariants>
 
-  let className: string | undefined | null = undefined
+  let className: $$Props['class'] = ''
   export { className as class }
   export let variant: $$Props['variant'] = 'default'
   export let size: $$Props['size'] = 'default'

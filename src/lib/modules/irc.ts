@@ -112,6 +112,7 @@ export default class MessageClient {
         }
 
         if (page.route.id !== '/app/chat' && !msg.user.name.startsWith('Guest-')) {
+          // @ts-expect-error using svelte 4 components in s5
           toast.custom(MessageToast, {
             classes: { toast: '!bg-transparent w-full !shadow-none h-auto flex' },
             componentProps: { msg }

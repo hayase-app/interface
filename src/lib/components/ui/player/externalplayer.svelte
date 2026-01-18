@@ -23,8 +23,8 @@
   export let otherFiles: TorrentFile[]
   export let videoFiles: ResolvedFile[]
   export let selectFile: (file: ResolvedFile) => void
-  export let prev: (() => void) | undefined = undefined
-  export let next: (() => void) | undefined = undefined
+  export let prev: (() => void) = () => {}
+  export let next: (() => void) = () => {}
   let wrapper: HTMLDivElement
 
   $: isMiniplayer = $page.route.id !== '/app/player'
