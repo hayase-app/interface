@@ -87,8 +87,8 @@ importers:
         specifier: ^6.2.2
         version: 6.2.2
       jassub:
-        specifier: ^2.2.3
-        version: 2.2.3
+        specifier: ^2.2.5
+        version: 2.2.5
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
@@ -1935,8 +1935,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jassub@2.2.3:
-    resolution: {integrity: sha512-B9LH0q+gatrgBGNdA6zWwTH2Quq4Xt1BPY/dLlrPbZedGdG0Aqfm+qq6eToYotO3KwI/AKbNsW9xdfw5zNBHWA==}
+  jassub@2.2.5:
+    resolution: {integrity: sha512-sFsyzpf3dgAchREjKrUmfxyq5VA7lusOYD3EugzBDMgYmGlWOXMQhNwt4NrZ9jqKGcSbPjfMI3LIoLUXBa+t9Q==}
 
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
@@ -2420,6 +2420,9 @@ packages:
 
   rvfc-polyfill@1.0.7:
     resolution: {integrity: sha512-seBl7J1J3/k0LuzW2T9fG6JIOpni5AbU+/87LA+zTYKgTVhsfShmS8K/yOo1eeEjGJHnAdkVAUUM+PEjN9Mpkw==}
+
+  rvfc-polyfill@1.0.8:
+    resolution: {integrity: sha512-uA+0wwTkZ4OT8v45pfDfH+7Yq8mY6MvNngiF5Sq6VBgjJsvsfgt7Q18cyZqZjfAhW9rhkgXPX0cW0R9uw7yElA==}
 
   sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
@@ -4833,10 +4836,10 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jassub@2.2.3:
+  jassub@2.2.5:
     dependencies:
       abslink: 1.1.6
-      rvfc-polyfill: 1.0.7
+      rvfc-polyfill: 1.0.8
       throughput: 1.0.2
 
   jiti@1.21.6: {}
@@ -5298,6 +5301,8 @@ snapshots:
   run-series@1.1.9: {}
 
   rvfc-polyfill@1.0.7: {}
+
+  rvfc-polyfill@1.0.8: {}
 
   sade@1.8.1:
     dependencies:
