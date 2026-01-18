@@ -49,8 +49,6 @@ export default defineConfig({
       './RedisDatastore': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
       './IORedisConnection': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
       './Scripts': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
-      // no exports :/
-      'bittorrent-tracker/lib/client/websocket-tracker.js': resolve(import.meta.dirname, 'node_modules/bittorrent-tracker/lib/client/websocket-tracker.js'),
       debug: resolve(import.meta.dirname, 'src/patches/debug.ts')
     }
   },
