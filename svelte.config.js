@@ -90,12 +90,15 @@ const adapterWithFontPreload = (options = {}) => {
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+  compilerOptions: {
+    runes: false
+  },
   onwarn: (warning, handler) => {
     if (warning.code.includes('a11y')) return
     if (warning.code === 'element_invalid_self_closing_tag') return
     handler?.(warning)
   },
-  preprocess: vitePreprocess({}),
+  preprocess: vitePreprocess({ }),
   kit: {
     adapter: adapterWithFontPreload({
       fallback: 'index.html',

@@ -154,11 +154,11 @@
                 <Tree.Item active={Number($current) === -1} on:click={() => { $current = -1; open = false }}>
                   <span>OFF</span>
                 </Tree.Item>
-                {#each Object.entries(normalizeSubs($tracks)) as [lang, tracks] (lang)}
+                {#each Object.entries(normalizeSubs($tracks)) as [lang, _tracks] (lang)}
                   <Tree.Item>
                     <span slot='trigger' class='capitalize'>{lang}</span>
                     <Tree.Sub>
-                      {#each tracks as { number, name }, i (i)}
+                      {#each _tracks as { number, name }, i (i)}
                         <Tree.Item active={Number(number) === Number($current)} on:click={() => { $current = number; open = false }}>
                           <span>{name}</span>
                         </Tree.Item>

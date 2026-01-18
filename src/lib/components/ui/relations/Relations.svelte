@@ -33,13 +33,13 @@
 
   $: $nodesStore && fitAndLayout()
 
-  function getLayoutedElements (nodes: Node[], edges: Edge[]) {
+  function getLayoutedElements (_nodes: Node[], _edges: Edge[]) {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
     g.setGraph({ rankdir: 'LR', edgesep: 50, nodesep: 50, ranksep: 120, ranker: 'tight-tree' })
     // TODO: switch between longest-path and tight-tree based on number of nodes?
 
-    edges.forEach((edge) => g.setEdge(edge.source, edge.target))
-    nodes.forEach((node) =>
+    _edges.forEach((edge) => g.setEdge(edge.source, edge.target))
+    _nodes.forEach((node) =>
       g.setNode(node.id, {
         ...node,
         width: node.measured?.width ?? 120,
@@ -50,7 +50,7 @@
     Dagre.layout(g)
 
     return {
-      nodes: nodes.map((node) => {
+      _nodes: _nodes.map((node) => {
         const position = g.node(node.id)
         // We are shifting the dagre node position (anchor=center center) to the top left
         // so it matches the Svelte Flow node anchor point (top left).
@@ -69,7 +69,7 @@
           targetPosition: 'left'
         }
       }) as Node[],
-      edges: edges.map(e => ({
+      _edges: _edges.map(e => ({
         ...e,
         style: (e.data?.ids as number[]).includes(media.id) ? '--xy-edge-stroke: var(--custom)' : '',
         labelStyle: (e.data?.ids as number[]).includes(media.id) ? '--xy-edge-label-color: var(--custom)' : ''
@@ -78,10 +78,10 @@
   }
 
   function onLayout () {
-    const { nodes, edges } = getLayoutedElements($nodes, $edges)
+    const { _nodes, _edges } = getLayoutedElements($nodes, $edges)
 
-    $nodes = nodes
-    $edges = edges
+    $nodes = _nodes
+    $edges = _edges
   }
   function fitAndLayout () {
     onLayout()
@@ -114,7 +114,7 @@
   })
 
   const nodeTypes = {
-    customText: TextNode as NodeTypes['customText']
+    customText: TextNode as unknown as NodeTypes['customText']
   }
 </script>
 

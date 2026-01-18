@@ -1,17 +1,17 @@
 <script lang='ts' context='module'>
-  // eslint-disable-next-line svelte/no-svelte-internal
-  import { append, element } from 'svelte/internal'
+
+  // import { append, element } from 'svelte/internal'
   import { persisted } from 'svelte-persisted-store'
 
-  const style = element('style')
-  style.id = 'customThemes'
-  append(document.head, style)
+  // const style = element('style')
+  // style.id = 'customThemes'
+  // append(document.head, style)
 
   export const variables = persisted('theme', '')
 
-  variables.subscribe(value => {
-    style.textContent = `:root{${value.replace(/{|}/g, '')}}`
-  })
+// variables.subscribe(value => {
+  //   style.textContent = `:root{${value.replace(/{|}/g, '')}}`
+  // })
 </script>
 
 <script lang='ts'>
@@ -19,7 +19,7 @@
   import { SingleCombo } from '$lib/components/ui/combobox'
   import { Slider } from '$lib/components/ui/slider'
   import { Switch } from '$lib/components/ui/switch'
-  import { Textarea } from '$lib/components/ui/textarea'
+  // import { Textarea } from '$lib/components/ui/textarea'
   // import native from '$lib/modules/native'
   import { settings, SUPPORTS } from '$lib/modules/settings'
 
@@ -48,9 +48,9 @@
     <Switch {id} bind:checked={$settings.showDetailsInRPC} />
   </SettingCard>
 {/if}
-<SettingCard let:id title='CSS Variables' description='Used for custom themes. Can change colors, sizes, spacing and more. Supports only variables.'>
+<!-- <SettingCard let:id title='CSS Variables' description='Used for custom themes. Can change colors, sizes, spacing and more. Supports only variables.'>
   <Textarea class='form-control w-60 shrink-0 mw-full bg-dark' placeholder='--accent-color: #e5204c;' bind:value={$variables} {id} />
-</SettingCard>
+</SettingCard> -->
 <div class='font-weight-bold text-xl font-bold'>Visibility Settings</div>
 <SettingCard let:id title='Show Hentai' description={'Shows hentai content throughout the app. If disabled all hentai content will be hidden and not shown in search results, but shown if present in your list.\n\nThis is also an AniList account setting, so make sure it is enabled in account settings as well to avoid inconsistencies.'}>
   <Switch {id} bind:checked={$settings.showHentai} />

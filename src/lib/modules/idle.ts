@@ -13,13 +13,22 @@ export const activityState = readable<'active' | 'inactive'>(document.hasFocus()
   document.addEventListener('mouseleave', () => {
     if (!document.hasFocus()) set('inactive')
   }, ctrl)
-
   return () => ctrl.abort()
 })
 
-// @ts-expect-error non-standard API
-const idleDetector = typeof IdleDetector !== 'undefined' && new IdleDetector()
-if (idleDetector) idleDetector.start({ threshold: 60_000 })
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let idleDetector: any = { userState: 'active', screenState: 'unlocked' }
+try {
+  // @ts-expect-error non-standard API
+  idleDetector = typeof IdleDetector !== 'undefined' && new IdleDetector()
+  if (idleDetector) {
+    idleDetector.start({ threshold: 60_000 }).catch((error: Error) => {
+      console.warn(error)
+    })
+  }
+} catch (error) {
+  console.warn(error)
+}
 
 export const idleState = readable<'active' | 'idle'>(idleDetector.userState, set => {
   if (!idleDetector) return set('active')
