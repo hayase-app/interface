@@ -15,6 +15,7 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
+  import { afterNavigate } from '$app/navigation'
   import { page } from '$app/stores'
   import { breakpoints } from '$lib/utils'
 
@@ -26,6 +27,11 @@
   $: isBig = $page.route.id === '/app/home'
 
   $: debounced = $bannerSrc
+
+  afterNavigate(() => {
+    if ($page.route.id === '/app/home' || $page.route.id?.startsWith('/app/anime/')) return
+    bannerSrc.value = null
+  })
 </script>
 
 {#if debounced}

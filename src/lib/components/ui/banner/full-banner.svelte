@@ -1,6 +1,4 @@
 <script lang='ts'>
-  import { onDestroy } from 'svelte'
-
   import { Avatars } from '../avatar'
   import { Button } from '../button'
   import { BookmarkButton, FavoriteButton, PlayButton } from '../button/extra'
@@ -38,13 +36,7 @@
 
   let current = shuffled[0]
 
-  const initial = bannerSrc.value
-
   $: if (current) bannerSrc.value = current
-
-  onDestroy(() => {
-    bannerSrc.value = initial
-  })
 
   function currentIndex () {
     return current ? shuffled.indexOf(current) : 0
