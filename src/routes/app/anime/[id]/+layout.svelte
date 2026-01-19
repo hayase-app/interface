@@ -3,7 +3,6 @@
   import Check from 'lucide-svelte/icons/check'
   import Maximize2 from 'lucide-svelte/icons/maximize-2'
   import Share2 from 'lucide-svelte/icons/share-2'
-  import { onDestroy } from 'svelte'
 
   import type { LayoutData } from './$types'
 
