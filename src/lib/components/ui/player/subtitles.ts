@@ -1,4 +1,7 @@
 import JASSUB, { type ASSEvent, type ASSStyle } from 'jassub'
+// import modernWasmUrl from 'jassub/dist/wasm/jassub-worker-modern.wasm?url'
+// import wasmUrl from 'jassub/dist/wasm/jassub-worker.wasm?url'
+// import workerUrl from 'jassub/dist/worker/worker.js?worker&url'
 import { writable } from 'simple-store-svelte'
 import { get } from 'svelte/store'
 
@@ -272,6 +275,9 @@ export default class Subtitles {
       maxRenderHeight: parseInt(this.set.subtitleRenderHeight) || 0,
       fallbackFont: 'roboto medium',
       useLocalFonts: this.set.missingFont
+      // workerUrl,
+      // modernWasmUrl,
+      // wasmUrl
     })
 
     await this.jassub.ready

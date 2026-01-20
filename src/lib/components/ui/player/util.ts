@@ -186,10 +186,9 @@ export async function screenshot (video: HTMLVideoElement, subtitles?: Subtitles
   canvas.height = video.videoHeight
   context.drawImage(video, 0, 0)
   if (subtitles?.jassub) {
-    subtitles.jassub.resize(false, video.videoWidth, video.videoHeight)
-    await new Promise(resolve => setTimeout(resolve, 500)) // this is hacky, but TLDR wait for canvas to update and re-render, in practice this will take at MOST 100ms, but just to be safe
+    await subtitles.jassub.resize(true, video.videoWidth, video.videoHeight)
     context.drawImage(subtitles.jassub._canvas, 0, 0, canvas.width, canvas.height)
-    subtitles.jassub.resize(false, 0, 0, 0, 0) // undo resize
+    subtitles.jassub.resize(true)
   }
   const blob = await new Promise<Blob>(resolve => canvas.toBlob(b => resolve(b!)))
   canvas.remove()

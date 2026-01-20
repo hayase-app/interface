@@ -87,8 +87,8 @@ importers:
         specifier: ^6.2.2
         version: 6.2.2
       jassub:
-        specifier: ^2.2.5
-        version: 2.2.5
+        specifier: ^2.2.7
+        version: 2.2.7
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
@@ -2032,8 +2032,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jassub@2.2.5:
-    resolution: {integrity: sha512-sFsyzpf3dgAchREjKrUmfxyq5VA7lusOYD3EugzBDMgYmGlWOXMQhNwt4NrZ9jqKGcSbPjfMI3LIoLUXBa+t9Q==}
+  jassub@2.2.7:
+    resolution: {integrity: sha512-biBnxRwnX4Fsyhms0GkN8kGumUDOkqlI9vYJHGuI4bGrGUfaxQs4I2rPyGoD7Z0qiJeK9PCW24rPpa+PtW+esA==}
 
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
@@ -5067,7 +5067,7 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jassub@2.2.5:
+  jassub@2.2.7:
     dependencies:
       abslink: 1.1.6
       rvfc-polyfill: 1.0.8
