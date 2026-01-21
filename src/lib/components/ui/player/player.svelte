@@ -713,6 +713,7 @@
     if (!mediaInfo.media.id || !mediaInfo.episode) return
 
     const animeProgress = getAnimeProgress(mediaInfo.media.id)
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (!animeProgress || animeProgress.episode !== mediaInfo.episode) return
 
     currentTime = Math.max(animeProgress.currentTime - 5, 0)

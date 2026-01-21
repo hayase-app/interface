@@ -59,7 +59,7 @@ export default new class AuthAggregator {
     if (this.anilist()) return media.mediaListEntry
     if (this.kitsu()) return kitsu.userlist.value[media.id]
     if (this.mal()) return mal.userlist.value[media.id]
-
+    console.log('doing local')
     return local.get(media.id)?.mediaListEntry
   }
 
@@ -173,7 +173,10 @@ export default new class AuthAggregator {
 
   async setInitialState (media: Media, episode: number) {
     if (episode !== 1) return
-    const mediaList = this.mediaListEntry(media)
+    // media is sourced from last torrent cache from local storage, which LIKELY is outdated as it doesn't use urql cache
+    // so we fetch the media again to get the latest mediaListEntry
+    const updatedMedia = (await client.single(media.id, 'cache-first')).data?.Media ?? media
+    const mediaList = this.mediaListEntry(updatedMedia)
 
     if (!mediaList) return await this.entry({ id: media.id, progress: 0, status: 'CURRENT' })
 

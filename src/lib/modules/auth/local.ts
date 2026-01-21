@@ -50,7 +50,7 @@ export default new class LocalSync {
     return client.schedule(onList && ids.length ? ids : undefined)
   }
 
-  toggleFav (id: number) {
+  async toggleFav (id: number) {
     this.entries.update(entries => {
       const entry = this._getEntry(id)
 
@@ -59,7 +59,7 @@ export default new class LocalSync {
     })
   }
 
-  deleteEntry (media: Media) {
+  async deleteEntry (media: Media) {
     const id = media.id
     this.entries.update(entries => {
       const entry = this._getEntry(id)
@@ -111,7 +111,7 @@ export default new class LocalSync {
     return sub
   })
 
-  entry (variables: VariablesOf<typeof Entry>) {
+  async entry (variables: VariablesOf<typeof Entry>) {
     this.entries.update(entries => {
       const entry = this._getEntry(variables.id)
       entry.mediaListEntry ??= {
