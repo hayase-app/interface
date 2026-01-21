@@ -2,6 +2,7 @@
   import CloudOff from 'lucide-svelte/icons/cloud-off'
   import Folder from 'lucide-svelte/icons/folder'
   import MessagesSquare from 'lucide-svelte/icons/messages-square'
+  import { toast } from 'svelte-sonner'
 
   import SettingCard from '$lib/components/SettingCard.svelte'
   import Anilist from '$lib/components/icons/Anilist.svelte'
@@ -68,6 +69,12 @@
       console.error('Failed to update NSFT setting', e)
     }
   }
+
+  function login (promise: Promise<unknown>) {
+    promise.catch((e) => {
+      toast.error('Login failed!', { description: e.message })
+    })
+  }
 </script>
 
 <div class='font-weight-bold text-xl font-bold'>Account Settings</div>
@@ -98,7 +105,7 @@
       {#if anilist?.viewer?.id}
         <Button variant='secondary' on:click={() => client.client.logout()}>Logout</Button>
       {:else}
-        <Button variant='secondary' on:click={() => client.client.auth()}>Login</Button>
+        <Button variant='secondary' on:click={() => login(client.client.auth())}>Login</Button>
       {/if}
       <Dialog.Root portal='#root'>
         <Dialog.Trigger let:builder asChild>
@@ -234,7 +241,7 @@
       {#if mal?.id}
         <Button variant='secondary' on:click={() => malclient.logout()}>Logout</Button>
       {:else}
-        <Button variant='secondary' on:click={() => malclient.login()}>Login</Button>
+        <Button variant='secondary' on:click={() => login(malclient.login())}>Login</Button>
       {/if}
       <Dialog.Root portal='#root'>
         <Dialog.Trigger let:builder asChild>

@@ -174,7 +174,7 @@ export default class Subtitles {
           await this.selectCaptions(tracks[0]![0])
         }
       }
-    })
+    }).catch(console.error)
 
     native.subtitles(this.selected.hash, this.selected.id, async (subtitle: { text: string, time: number, duration: number, style?: string }, trackNumber) => {
       await tracks
@@ -194,7 +194,7 @@ export default class Subtitles {
           this.addFont(attachment.url)
         }
       }
-    })
+    }).catch(console.error)
 
     video.parentElement!.addEventListener('drop', e => this.handleTransfer(e), this.ctrl)
     video.parentElement!.addEventListener('paste', e => this.handleTransfer(e), this.ctrl)

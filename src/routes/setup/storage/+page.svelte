@@ -19,7 +19,7 @@
       $settings.torrentPath = await native.selectDownload(type as 'cache' | 'internal' | 'sdcard' | undefined)
     } catch (error) {
       toast.error('Failed to select download folder. Please try again.', {
-        description: error instanceof Error ? error.message : 'Unknown error occurred.'
+        description: (error instanceof Error ? error.message : error as string)
       })
     }
   }
@@ -31,10 +31,17 @@
   } as const
 
   async function checkSpaceRequirements (_path: string): Checks['promise'] {
-    const space = await native.checkAvailableSpace()
-    if (space < 1e9) return { status: 'error', text: `${fastPrettyBytes(space)} available, 1GB is the recommended minimum.` }
-    if (space < 5e9) return { status: 'warning', text: `${fastPrettyBytes(space)} available, 5GB is the recommended amount.` }
-    return { status: 'success', text: `${fastPrettyBytes(space)} available.` }
+    try {
+      const space = await native.checkAvailableSpace()
+      if (space < 1e9) return { status: 'error', text: `${fastPrettyBytes(space)} available, 1GB is the recommended minimum.` }
+      if (space < 5e9) return { status: 'warning', text: `${fastPrettyBytes(space)} available, 5GB is the recommended amount.` }
+      return { status: 'success', text: `${fastPrettyBytes(space)} available.` }
+    } catch (error) {
+      toast.error('Failed to check available storage space.', {
+        description: (error instanceof Error ? error.message : error as string)
+      })
+      return { status: 'error', text: 'Could not determine available storage space.' }
+    }
   }
   let space: Checks
   $: space = { promise: checkSpaceRequirements($settings.torrentPath), title: 'Storage Space', pending: 'Checking available storage space...' }

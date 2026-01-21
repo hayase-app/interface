@@ -1,6 +1,7 @@
 import Debug from 'debug'
 import { derived, type Readable } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
+import { toast } from 'svelte-sonner'
 
 import native from '../native'
 
@@ -30,8 +31,10 @@ export const malClientID = persisted('mal-client-id', malID, {
 export const nsfw = derived(settings, $settings => ($settings.showHentai ? null : ['Hentai']) as ['Hentai'] | null)
 
 debug.subscribe((value) => {
-  native.debug(value)
   Debug.enable(value)
+  native.debug(value).catch(e => {
+    _debug('failed to set native debug level ' + e.message)
+  })
 })
 
 settings.subscribe((value) => {
@@ -84,6 +87,9 @@ dohSettings.subscribe(({ enableDoH, doHURL }) => {
   if (SUPPORTS.isAndroid) {
     if (enableDoH) native.setDOH('')
   } else {
-    native.setDOH(enableDoH ? doHURL : '')
+    native.setDOH(enableDoH ? doHURL : '').catch(e => {
+      _debug('failed to set DoH ' + e.message)
+      toast.error('Failed to set DoH!', { description: e.message })
+    })
   }
 })

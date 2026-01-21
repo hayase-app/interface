@@ -234,12 +234,14 @@ export const extensions = new class Extensions {
       }
     }
 
-    if (!navigator.onLine) {
+    try {
       const library = await native.library()
       const entry = library.find(lib => lib.mediaID === media.id && lib.episode === episode)
       if (entry) {
         results.push({ accuracy: 'medium', date: new Date(entry.date), downloads: 0, hash: entry.hash, extension: new Set(['local']), leechers: 0, link: entry.hash, seeders: 0, size: entry.size, title: entry.name ?? entry.hash, type: entry.files > 1 ? 'batch' : undefined, parseObject: {} as unknown as AnitomyResult })
       }
+    } catch (error) {
+      debug('Failed to check local library for existing torrents', error)
     }
 
     debug(`Found ${results.length} results, online ${navigator.onLine}`)

@@ -226,10 +226,14 @@
   let chapters: Chapter[] = []
   const chaptersPromise = native.chapters(mediaInfo.file.hash, mediaInfo.file.id)
   async function loadChapters (pr: typeof chaptersPromise, safeduration: number) {
-    const nativeChapters = await pr
-    if (nativeChapters.length) {
-      chapters = sanitizeChapters(nativeChapters, safeduration)
-      return
+    try {
+      const nativeChapters = await pr
+      if (nativeChapters.length) {
+        chapters = sanitizeChapters(nativeChapters, safeduration)
+        return
+      }
+    } catch (error) {
+      console.warn('Failed to load native chapters:', error)
     }
 
     const idMal = mediaInfo.media.idMal

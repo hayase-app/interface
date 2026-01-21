@@ -17,29 +17,43 @@
   }
 
   async function copyLogs () {
-    const logs = await native.getLogs()
-    navigator.clipboard.writeText(logs)
-    toast.success('Copied to clipboard', {
-      description: 'Copied log contents to clipboard',
-      duration: 5000
-    })
+    try {
+      const logs = await native.getLogs()
+      navigator.clipboard.writeText(logs)
+      toast.success('Copied to clipboard', {
+        description: 'Copied log contents to clipboard',
+        duration: 5000
+      })
+    } catch (error) {
+      const err = error as Error
+      toast.error('Failed to copy logs!', {
+        description: err.message
+      })
+    }
   }
 
   async function copyDevice () {
-    const device = await native.getDeviceInfo() as object
-    const info = {
-      ...device,
-      appInfo: {
-        userAgent: await navigator.userAgentData?.getHighEntropyValues?.(['architecture', 'platform', 'platformVersion']),
-        support: SUPPORTS,
-        settings: $settings
+    try {
+      const device = await native.getDeviceInfo() as object
+      const info = {
+        ...device,
+        appInfo: {
+          userAgent: await navigator.userAgentData?.getHighEntropyValues?.(['architecture', 'platform', 'platformVersion']),
+          support: SUPPORTS,
+          settings: $settings
+        }
       }
+      navigator.clipboard.writeText(JSON.stringify(info, null, 2))
+      toast.success('Copied to clipboard', {
+        description: 'Copied device info to clipboard',
+        duration: 5000
+      })
+    } catch (error) {
+      const err = error as Error
+      toast.error('Failed to copy device info!', {
+        description: err.message
+      })
     }
-    navigator.clipboard.writeText(JSON.stringify(info, null, 2))
-    toast.success('Copied to clipboard', {
-      description: 'Copied device info to clipboard',
-      duration: 5000
-    })
   }
 
   async function importSettings () {

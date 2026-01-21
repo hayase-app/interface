@@ -47,13 +47,17 @@
   if (!speedTest.isRunning) speedTest.play()
 
   async function checkPortAvailability (port: number): Checks['promise'] {
-    const res = await native.checkIncomingConnections(port)
-    $hasForwarding = res
-    if (res) {
-      $settings.maxConns = 120
-      return { status: 'success', text: 'Port forwarding is available.' }
+    try {
+      const res = await native.checkIncomingConnections(port)
+      $hasForwarding = res
+      if (res) {
+        $settings.maxConns = 120
+        return { status: 'success', text: 'Port forwarding is available.' }
+      }
+      return { status: 'error', text: 'Not available. Peer discovery will suffer. Streaming old, poorly seeded anime might be impossible.', slot: 'port' }
+    } catch (error) {
+      return { status: 'error', text: 'Failed to check port forwarding availability. ' + (error instanceof Error ? error.message : error as string) }
     }
-    return { status: 'error', text: 'Not available. Peer discovery will suffer. Streaming old, poorly seeded anime might be impossible.', slot: 'port' }
   }
 
   $: port = $settings.torrentPort
@@ -95,6 +99,6 @@
 
 <Footer step={1} {checks}>
   <div class='contents' on:click={() => native.openURL('https://thewiki.moe/getting-started/torrenting/#port-forwarding')}>
-    <CircleHelp class='size-4 ml-2 shrink-0 inline cursor-pointer' />
+    <CircleHelp class='size-4 ml-2 shrink-0 inline cursor-pointer text-blue-500 border-b border-blue-500' />
   </div>
 </Footer>

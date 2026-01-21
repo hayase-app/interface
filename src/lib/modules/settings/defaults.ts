@@ -1,5 +1,3 @@
-import native from '../native'
-
 import SUPPORTS from './supports'
 
 import type { languageCodes, subtitleResolutions, videoResolutions } from './util'
@@ -34,7 +32,7 @@ export default {
   showNavigation: false,
   torrentPath: '',
   angle: 'default' as 'default' | 'd3d11'| 'd3d9' | 'warp' | 'gl' | 'gles' | 'swiftshader' | 'vulkan' | 'metal',
-  idleAnimation: native.defaultTransparency(),
+  idleAnimation: false,
   uiScale: 1,
   enableExternal: false,
   playerPath: '',
