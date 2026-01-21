@@ -84,6 +84,17 @@ const adapterWithFontPreload = (options = {}) => {
       } catch (error) {
         console.error('Error updating service worker with JASSUB worker URLs:', error)
       }
+
+      // copy index.html to offline.html for offline fallback for service worker
+      try {
+        const indexPath = join(outDir, 'index.html')
+        const offlinePath = join(outDir, 'offline.html')
+        const indexHtml = /** @type {string} */ (await readFile(indexPath, 'utf-8'))
+        await writeFile(offlinePath, indexHtml, 'utf-8')
+        console.log('Created offline.html for service worker offline fallback')
+      } catch (error) {
+        console.error('Error creating offline.html for service worker:', error)
+      }
     }
   }
 }

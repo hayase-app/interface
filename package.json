@@ -6,7 +6,7 @@
 	"packageManager": "pnpm@10.28.0",
 	"scripts": {
 		"dev": "vite dev --open",
-		"build": "vite build && scopy ./build/index.html ./build/offline.html",
+		"build": "vite build",
 		"preview": "vite preview --port 7344",
 		"sync": "svelte-kit sync",
 		"check": "svelte-check --threshold error --tsconfig ./tsconfig.web.json",
@@ -16,7 +16,7 @@
 		"lint:fix": "eslint --quiet -c eslint.config.js --fix",
 		"gql:turbo": "node ./node_modules/gql.tada/bin/cli.js turbo -c ./tsconfig.web.json",
 		"gql:check": "node ./node_modules/gql.tada/bin/cli.js check -c ./tsconfig.web.json",
-		"gql:generate": "node --experimental-strip-types ./generateALIntrospection.ts"
+		"gql:generate": "node ./generateALIntrospection.ts"
 	},
 	"devDependencies": {
 		"@gql.tada/svelte-support": "^1.0.1",
@@ -36,13 +36,13 @@
 		"ms": "^2.1.3",
 		"native": "github:hayase-app/native",
 		"rollup-plugin-license": "^3.6.0",
-		"simple-copy": "^2.2.1",
 		"svelte": "^5.46.4",
 		"svelte-check": "^4.3.5",
 		"svelte-radix": "^1.1.1",
 		"svelte-sonner": "^0.3.28",
 		"tailwindcss": "^3.4.17",
 		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.53.1",
 		"vaul-svelte": "^0.3.2",
 		"vite": "^7.3.1",
 		"vite-plugin-devtools-json": "^1.0.0",
@@ -102,6 +102,12 @@
 	"pnpm": {
 		"overrides": {
 			"streamx": "2.22.0"
-		}
+		},
+		"ignoredBuiltDependencies": [
+			"bufferutil",
+			"esbuild",
+			"node-datachannel",
+			"utf-8-validate"
+		]
 	}
 }
