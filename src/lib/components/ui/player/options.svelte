@@ -5,7 +5,7 @@
   import { Input } from '../input'
 
   import Keybinds from './keybinds.svelte'
-  import { normalizeSubs, normalizeTracks, type Chapter } from './util'
+  import { normalizeSubs, normalizeTracks, screenshot, type Chapter } from './util'
 
   import type PictureInPicture from './pip'
   import type { ResolvedFile } from './resolver'
@@ -233,8 +233,8 @@
               {/each}
             </Tree.Sub>
           </Tree.Item>
-          <Tree.Item on:click={() => (showKeybinds = !showKeybinds)}>
-            Keybinds
+          <Tree.Item on:click={() => screenshot(video, subtitles)}>
+            Screenshot
           </Tree.Item>
           <Tree.Item on:click={fullscreen} active={!!fullscreenElement}>
             Fullscreen
@@ -244,6 +244,9 @@
           </Tree.Item>
           <Tree.Item on:click={deband} active={$settings.playerDeband}>
             Deband
+          </Tree.Item>
+          <Tree.Item on:click={() => (showKeybinds = !showKeybinds)}>
+            Keybinds
           </Tree.Item>
         </Tree.Root>
       {/if}

@@ -190,10 +190,29 @@ export async function screenshot (video: HTMLVideoElement, subtitles?: Subtitles
     context.drawImage(subtitles.jassub._canvas, 0, 0, canvas.width, canvas.height)
     subtitles.jassub.resize(true)
   }
-  const blob = await new Promise<Blob>(resolve => canvas.toBlob(b => resolve(b!)))
+  const blob = await new Promise<Blob>(resolve => canvas.toBlob(b => resolve(b!), 'image/png', 1))
   canvas.remove()
-  await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
-  toast.success('Screenshot', { description: 'Saved screenshot to clipboard.' })
+  function download () {
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'screenshot.png'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+    toast.success('Saved screenshot to clipboard', {
+      description: 'Click here to download it as a PNG file instead.',
+      action: {
+        label: 'Download',
+        onClick: download
+      }
+    })
+  } catch (error) {
+    toast.error('Failed to copy screenshot to clipboard. Downloading instead.')
+    download()
+  }
 }
 
 const skippableChaptersRx: Array<[string, RegExp]> = [
