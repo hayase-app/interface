@@ -8,6 +8,7 @@
 
   import ExtensionSettings from './ExtensionSettings.svelte'
 
+  import StatusDot from '$lib/components/StatusDot.svelte'
   import { Input } from '$lib/components/ui/input'
   import * as Tabs from '$lib/components/ui/tabs'
   import * as Tooltip from '$lib/components/ui/tooltip'
@@ -54,6 +55,44 @@
               <img src={config.icon} alt='ico' class='size-10 rounded-md bg-neutral-900' loading='lazy' decoding='async' />
               <div class='flex flex-col'>
                 <div class='text-md font-bold'>
+                  {#await storage.codeManager.extensions.get(id)?.test()}
+                    <Tooltip.Root>
+                      <Tooltip.Trigger class='inline' tabindex={-1}>
+                        <StatusDot variant='PENDING' />
+                      </Tooltip.Trigger>
+                      <Tooltip.Content class='max-w-full w-52'>
+                        This extension is currently being tested for online status.
+                      </Tooltip.Content>
+                    </Tooltip.Root>
+                  {:then res}
+                    <Tooltip.Root>
+                      <Tooltip.Trigger class='inline' tabindex={-1}>
+                        <StatusDot variant='COMPLETED' />
+                      </Tooltip.Trigger>
+                      <Tooltip.Content class='max-w-full w-52'>
+                        {#if res === true}
+                          This extension is online and reachable.
+                        {:else if res === false}
+                          This extension is offline and unreachable, but the extension expects this.
+                        {:else}
+                          {res}
+                        {/if}
+                      </Tooltip.Content>
+                    </Tooltip.Root>
+                  {:catch error}
+                    <Tooltip.Root>
+                      <Tooltip.Trigger class='inline' tabindex={-1}>
+                        <StatusDot variant='DROPPED' />
+                      </Tooltip.Trigger>
+                      <Tooltip.Content class='max-w-full w-52'>
+                        {#if error === false}
+                          This extension is offline and unreachable.
+                        {:else}
+                          {error.stack ?? error.message ?? error}
+                        {/if}
+                      </Tooltip.Content>
+                    </Tooltip.Root>
+                  {/await}
                   {config.name}
                 </div>
                 <div class='text-xs text-muted-foreground'>

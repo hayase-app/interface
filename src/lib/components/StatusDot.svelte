@@ -14,7 +14,8 @@
         COMPLETED: 'bg-[rgb(123,213,85)]',
         PAUSED: 'bg-[rgb(250,122,122)]',
         REPEATING: 'bg-[#3baeea]',
-        DROPPED: 'bg-[rgb(232,93,117)]'
+        DROPPED: 'bg-[rgb(200,80,80)]',
+        PENDING: 'bg-[rgb(180,180,180)]'
       }
     },
     defaultVariants: {

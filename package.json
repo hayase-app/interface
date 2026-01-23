@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.232",
+	"version": "6.4.233",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@10.28.0",
@@ -10,7 +10,7 @@
 		"preview": "vite preview --port 7344",
 		"sync": "svelte-kit sync",
 		"check": "svelte-check --threshold error --tsconfig ./tsconfig.web.json",
-		"check:watch": "svelte-check -threshold error --tsconfig ./tsconfig.web.json --watch",
+		"check:watch": "svelte-check --threshold error --tsconfig ./tsconfig.web.json --watch",
 		"test": "pnpm run sync && pnpm run lint && pnpm run gql:check && pnpm run check",
 		"lint": "eslint --quiet -c eslint.config.js",
 		"lint:fix": "eslint --quiet -c eslint.config.js --fix",

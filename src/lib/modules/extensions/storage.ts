@@ -13,7 +13,9 @@ import type extensionLoader from './worker'
 
 const debug = Debug('ui:extensions')
 
-type SavedExtensions = Record<ExtensionConfig['id'], ExtensionConfig>
+type ExtensionID = string
+
+type SavedExtensions = Record<ExtensionID, ExtensionConfig>
 
 type ExtensionsOptions = {
   [K in keyof SavedExtensions]: {
@@ -77,9 +79,6 @@ const safejs = async (url: string): Promise<string | null> => {
     return null
   }
 }
-
-type ExtensionID = string
-
 class CodeManager {
   extensions: Map<ExtensionID, Remote<typeof extensionLoader>> = new Map<ExtensionID, Remote<typeof extensionLoader>>()
 
