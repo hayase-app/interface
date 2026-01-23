@@ -73,7 +73,7 @@
   }
 </script>
 
-<div class={cn('w-full h-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-grabbing touch-none')}
+<div class={cn('size-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-grabbing touch-none')}
   bind:this={wrapper}
   on:pointerdown={startDragging}
   on:pointerup|self={endDragging}
@@ -82,7 +82,7 @@
   on:pointercancel|self={endHover}>
   <div class={cn(
     'pointer-events-auto w-full',
-    isMiniplayer ? 'max-w-80 absolute bottom-0 right-0 rounded-lg overflow-clip miniplayer transition-transform duration-[500ms] ease-[cubic-bezier(0.3,1.5,0.8,1)]' : 'h-full w-full',
+    isMiniplayer ? 'max-w-80 absolute bottom-0 right-0 rounded-lg overflow-clip miniplayer transition-transform duration-[500ms] ease-[cubic-bezier(0.3,1.5,0.8,1)]' : 'size-full',
     dragging && isMiniplayer && 'dragging',
     !$isPlaying && 'paused select:paused-show'
   )} style:--top={bottom} style:--left={right}>

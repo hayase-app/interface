@@ -47,7 +47,7 @@
   }
 </script>
 
-<div class='p-3 md:p-10 md:pb-0 pb-0 w-full h-full flex flex-col min-w-0'>
+<div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col min-w-0'>
   <div class='flex justify-center'>
     <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>{overview.title}</h2>

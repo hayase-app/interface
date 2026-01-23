@@ -13,7 +13,7 @@
 <div class='px-6 mt-14 w-full lg:max-w-4xl pb-5'>
   <div class='w-full relative flex justify-around'>
     <div class='absolute top-[19px] left-0 w-full h-[10px] rounded-[10px] bg-secondary shrink-0 overflow-clip'>
-      <div class='bg-white w-full h-full transform-gpu' style:--tw-translate-x='-{STEP_PERCENTAGE[step]}%' />
+      <div class='bg-white size-full transform-gpu' style:--tw-translate-x='-{STEP_PERCENTAGE[step]}%' />
     </div>
     <div class='w-20 flex flex-col items-center z-10 shrink-0'>
       <Badge class='w-12 h-12 rounded-[50%] flex justify-center' href='../storage/' tabindex='-1'><HardDrive /></Badge>

@@ -25,15 +25,15 @@
   <div class='h-[45%] banner relative bg-black rounded-t'>
     {#if trace}
       {#if !SUPPORTS.isUnderPowered}
-        <Load src={trace.image} alt={media.title?.english} class={cn('object-cover w-full h-full blur-2xl saturate-200 absolute -z-10', hideFrame === false && 'hidden')} />
+        <Load src={trace.image} alt={media.title?.english} class={cn('object-cover size-full blur-2xl saturate-200 absolute -z-10', hideFrame === false && 'hidden')} />
       {/if}
-      <Load src={trace.image} alt={media.title?.english} class='object-cover w-full h-full rounded-t' />
+      <Load src={trace.image} alt={media.title?.english} class='object-cover size-full rounded-t' />
       <Videoframe src={trace.video} on:hide={hide} />
     {:else}
       {#if !SUPPORTS.isUnderPowered}
-        <Banner {media} class={cn('object-cover w-full h-full blur-2xl saturate-200 absolute -z-10', hideFrame === false && 'hidden')} />
+        <Banner {media} class={cn('object-cover size-full blur-2xl saturate-200 absolute -z-10', hideFrame === false && 'hidden')} />
       {/if}
-      <Banner {media} class='object-cover w-full h-full rounded-t' />
+      <Banner {media} class='object-cover size-full rounded-t' />
       {#if media.trailer?.id && !hideFrame && !SUPPORTS.isUnderPowered}
         <YoutubeIframe id={media.trailer.id} on:hide={hide} />
       {/if}
@@ -64,7 +64,7 @@
         </span>
       {/if}
     </div>
-    <div class='w-full h-full overflow-clip text-[.7rem] text-muted-foreground line-clamp-4'>
+    <div class='size-full overflow-clip text-[.7rem] text-muted-foreground line-clamp-4'>
       {desc(media)}
     </div>
   </div>

@@ -37,7 +37,7 @@
   {/if}
   <div class='item w-[16rem] flex flex-col'>
     <div class='h-[9rem]'>
-      <Load src={trace?.image ?? coverMedium(media)} alt='cover' class='object-cover w-full h-full rounded' color={media.coverImage?.color} />
+      <Load src={trace?.image ?? coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
     </div>
     <div class='flex justify-between pt-3 gap-2'>
       <div class='font-black text-[.8rem] line-clamp-2'>

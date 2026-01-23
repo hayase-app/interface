@@ -36,7 +36,7 @@
       <div class='w-[300px] rounded core-bg gap-2 flex flex-col pb-2'>
         <div class={cn('w-full h-[105px] relative p-3 flex items-end', !banner && 'bg-white/10')}>
           {#if banner}
-            <Load src={banner} alt='banner' class='absolute top-0 left-0 w-full h-full rounded-t opacity-50 pointer-events-none object-cover' />
+            <Load src={banner} alt='banner' class='absolute top-0 left-0 size-full rounded-t opacity-50 pointer-events-none object-cover' />
           {/if}
           <Avatar.Root class='inline-block size-20'>
             <Avatar.Image src={avatar} alt={name} />

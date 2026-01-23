@@ -23,7 +23,7 @@
   }
 </script>
 
-<div class='h-full w-full overflow-clip absolute top-0 rounded-t'>
+<div class='size-full overflow-clip absolute top-0 rounded-t'>
   <div class='absolute z-10 top-0 right-0 p-3' class:hide use:click={toggleMute}>
     {#if muted}
       <VolumeX size='1rem' fill='currentColor' class='pointer-events-none' />
@@ -44,7 +44,7 @@
   />
 </div>
 {#if !SUPPORTS.isUnderPowered}
-  <div class='h-full w-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
+  <div class='size-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
     <video
       crossorigin='anonymous'
       class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2'

@@ -45,7 +45,7 @@
   <Dialog.Content class='flex justify-center max-h-[80%] max-w-3xl p-0'>
     <div class='flex flex-col sm:flex-row w-full overflow-y-auto' use:dragScroll>
       <div class='relative w-full h-[150px] sm:w-[260px] sm:h-[400px] shrink-0'>
-        <img alt='images' loading='lazy' decoding='async' class='object-cover w-full h-full sm:rounded-l-lg overflow-clip' style:background={media.coverImage?.color ?? '#000'} src={$breakpoints.sm ? cover(media) : banner(media)} />
+        <img alt='images' loading='lazy' decoding='async' class='object-cover size-full sm:rounded-l-lg overflow-clip' style:background={media.coverImage?.color ?? '#000'} src={$breakpoints.sm ? cover(media) : banner(media)} />
       </div>
       <form class='flex flex-col w-full rounded-r-lg h-full'>
         <div class='pt-4 px-5 w-full'>

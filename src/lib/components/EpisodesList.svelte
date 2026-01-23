@@ -65,7 +65,9 @@
             )}>
             {#if image}
               <div class='w-52 shrink-0 relative overflow-clip'>
-                <Load src={image} class={cn('object-cover h-full w-full', watched && 'opacity-20', spoiler && (SUPPORTS.isUnderPowered ? 'hidden' : 'blur-[6px]'))} />
+                <div class={cn('size-full', watched && 'opacity-20')}>
+                  <Load src={image} class={cn('object-cover size-full', spoiler && (SUPPORTS.isUnderPowered ? 'hidden' : 'blur-[6px]'))} />
+                </div>
                 {#if spoiler && SUPPORTS.isUnderPowered}
                   <Logo class='absolute size-8 text-neutral-600 inset-0 m-auto' />
                 {/if}
@@ -80,7 +82,7 @@
                     {rating}
                   </div>
                 {/if}
-                <div class='absolute flex items-center justify-center w-full h-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-200 text-white transition-[background] ease-out top-0'>
+                <div class='absolute flex items-center justify-center size-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-200 text-white transition-[background] ease-out top-0'>
                   <Play class='size-6 scale-75 opacity-0 group-select:opacity-100 group-select:scale-100 duration-200 transition-[transform,opacity] ease-out' fill='currentColor' />
                 </div>
               </div>

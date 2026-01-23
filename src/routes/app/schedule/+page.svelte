@@ -79,7 +79,7 @@
   const _list = list
 </script>
 
-<div class='flex flex-col items-center w-full h-full overflow-y-auto p-3 md:p-10 min-w-0' use:dragScroll>
+<div class='flex flex-col items-center size-full overflow-y-auto p-3 md:p-10 min-w-0' use:dragScroll>
   <div class='space-y-0.5 self-start mb-6'>
     <h2 class='text-2xl font-bold'>Airing Calendar</h2>
     <p class='text-muted-foreground'>

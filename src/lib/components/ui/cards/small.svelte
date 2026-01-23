@@ -34,7 +34,7 @@
   {/if}
   <div class='item w-[9.5rem] flex flex-col'>
     <div class='h-[13.5rem]'>
-      <Load src={coverMedium(media)} alt='cover' class='object-cover w-full h-full rounded' color={media.coverImage?.color} />
+      <Load src={coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
     </div>
     <div class='pt-3 font-black text-[.8rem] line-clamp-2'>
       {#if status}

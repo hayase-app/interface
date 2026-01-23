@@ -193,8 +193,8 @@
     <!-- this hacky thing is required for dialog root focus trap... pitiful -->
     <div class='size-0' tabindex='0' />
     {#if $searchStore}
-      <div class='absolute top-0 left-0 w-full h-full max-h-36 overflow-hidden flex items-end'>
-        <Banner media={$searchStore.media} class='object-cover w-full h-full absolute bottom-[0.5px] left-0 -z-10 opacity-40' />
+      <div class='absolute top-0 left-0 size-full max-h-36 overflow-hidden flex items-end'>
+        <Banner media={$searchStore.media} class='object-cover size-full absolute bottom-[0.5px] left-0 -z-10 opacity-40' />
         <div class='w-full h-[70%] bg-gradient-to-t from-black/80 to-transparent' />
       </div>
       <div class='gap-4 w-full relative h-full flex flex-col pt-8' style:--custom={$searchStore.media.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>

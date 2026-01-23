@@ -48,7 +48,7 @@
 
 <svelte:document bind:visibilityState />
 
-<div class='p-3 md:p-10 md:pb-0 pb-0 w-full h-full flex flex-col'>
+<div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col'>
   <div class='flex justify-center'>
     <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>Settings</h2>

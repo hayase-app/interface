@@ -53,7 +53,7 @@
       <span class='text-2xl font-bold'>{(torrent.progress * 100).toFixed(1)}%</span>
     </div>
     <div class='relative w-full overflow-clip rounded-full bg-secondary h-3'>
-      <div class='h-full w-full bg-primary transition-transform transform-gpu' style:--tw-translate-x='{(torrent.progress * 100) - 100}%' />
+      <div class='size-full bg-primary transition-transform transform-gpu' style:--tw-translate-x='{(torrent.progress * 100) - 100}%' />
     </div>
     <div class='grid grid-cols-2 md:grid-cols-4 gap-4 text-sm'>
       <div class='flex items-center gap-2'>

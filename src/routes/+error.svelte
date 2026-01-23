@@ -4,7 +4,7 @@
   import { Separator } from '$lib/components/ui/separator'
 </script>
 
-<div class='w-full h-full flex flex-col grow items-center justify-center gap-9'>
+<div class='size-full flex flex-col grow items-center justify-center gap-9'>
   <Menubar />
   <div class='overflow-x-hidden overflow-y-scroll relative flex justify-center items-center text-white px-15 w-full font-light'>
     <div class='w-96 sm:!hidden justify-center items-center flex-col flex'>

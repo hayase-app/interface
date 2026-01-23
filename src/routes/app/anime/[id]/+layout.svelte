@@ -62,13 +62,13 @@
     <div class='flex flex-col md:flex-row w-full items-center md:items-end gap-5 pt-12'>
       <Dialog.Root portal='#root'>
         <Dialog.Trigger class='shrink-0 w-[180px] h-[256px] rounded overflow-hidden relative group focus-visible:ring-1 focus-visible:ring-ring select:scale-[1.02] transition-transform duration-200'>
-          <div class='absolute flex-center w-full h-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-300 text-white transition-all ease-out'>
+          <div class='absolute flex-center size-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-300 text-white transition-all ease-out'>
             <Maximize2 class='size-10 scale-75 opacity-0 group-select:opacity-100 group-select:scale-100 duration-300 transition-all ease-out' />
           </div>
-          <Load src={cover(media)} color={media.coverImage?.color} class='w-full h-full object-cover' />
+          <Load src={cover(media)} color={media.coverImage?.color} class='size-full object-cover' />
         </Dialog.Trigger>
         <Dialog.Content class='flex justify-center p-0 overflow-clip'>
-          <Load src={cover(media)} color={media.coverImage?.color} class='h-full w-full object-cover' />
+          <Load src={cover(media)} color={media.coverImage?.color} class='size-full object-cover' />
         </Dialog.Content>
       </Dialog.Root>
       <div class='flex flex-col gap-4 items-center md:items-start justify-end w-full'>

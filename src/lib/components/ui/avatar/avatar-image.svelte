@@ -14,6 +14,6 @@
 <AvatarPrimitive.Image
   {src}
   {alt}
-  class={cn('aspect-square h-full w-full object-cover', className)}
+  class={cn('aspect-square size-full object-cover', className)}
   {...$$restProps}
 />

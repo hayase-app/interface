@@ -54,7 +54,7 @@
 
 <svelte:document bind:visibilityState />
 
-<div class='preserve-3d absolute w-full h-full overflow-clip flip backface-hidden backplate bg-black flex-col justify-center pointer-events-none hidden'
+<div class='preserve-3d absolute size-full overflow-clip flip backface-hidden backplate bg-black flex-col justify-center pointer-events-none hidden'
   bind:this={plate}
   class:!flex={showBackplate}
   class:backplate-fly={isFlying}

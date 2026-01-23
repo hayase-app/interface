@@ -60,7 +60,7 @@
 
 <!-- indivious is nice because its faster, but not reliable -->
 <!-- <video src={`https://inv.tux.pizza/latest_version?id=${media.trailer.id}&itag=18`}
-    class='w-full h-full position-absolute left-0'
+    class='size-full position-absolute left-0'
     class:d-none={hide}
     playsinline
     preload='none'
@@ -70,7 +70,7 @@
     on:loadeddata={() => { hide = false }}
     autoplay /> -->
 
-<div class='h-full w-full overflow-clip absolute top-0 rounded-t'>
+<div class='size-full overflow-clip absolute top-0 rounded-t'>
   <div class='absolute z-10 top-0 right-0 p-3' class:hide use:click={toggleMute}>
     {#if muted}
       <VolumeX size='1rem' fill='currentColor' class='pointer-events-none' />
@@ -90,7 +90,7 @@
     src='https://www.youtube-nocookie.com/embed/{id}?enablejsapi=1&autoplay=1&controls=0&mute=1&disablekb=1&loop=1&playlist={id}&cc_lang_pref=ja'
   />
 </div>
-<div class='h-full w-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
+<div class='size-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
   <iframe
     credentialless
     class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2'
