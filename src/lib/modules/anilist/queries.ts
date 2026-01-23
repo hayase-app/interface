@@ -262,6 +262,7 @@ export const ScheduleMedia = gql(`
     }
     mediaListEntry {
       status,
+      progress,
       id
     }
     aired: airingSchedule(page: 1, perPage: 50, notYetAired: false) {

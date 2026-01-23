@@ -2,8 +2,9 @@ import { episodes, type Media } from '../anilist'
 
 import { authAggregator } from '.'
 
-export function progress (media: Pick<Media, 'mediaListEntry' | 'id'>): number | undefined {
-  return authAggregator.mediaListEntry(media)?.progress ?? undefined
+export function progress (media: { id: Media['id'], mediaListEntry: Pick<Media['mediaListEntry'] & {}, 'progress' | 'id'> | null}): number | undefined {
+  // HACK: this is unsafe, but it shouldnt be a problem
+  return authAggregator.mediaListEntry(media as Media)?.progress ?? undefined
 }
 
 export function fav (media: Pick<Media, 'isFavourite' | 'id'>): boolean {

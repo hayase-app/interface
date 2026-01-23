@@ -6,7 +6,7 @@
   import { cn } from '$lib/utils'
 
   const dotvariants = tv({
-    base: 'inline-flex w-[0.55rem] h-[0.55rem] me-1 bg-blue-600 rounded-full',
+    base: 'inline-flex size-[0.55rem] me-1 rounded-full',
     variants: {
       variant: {
         CURRENT: 'bg-[rgb(61,180,242)]',
@@ -31,4 +31,4 @@
   export { className as class }
 </script>
 
-<span class={cn(dotvariants({ variant }), className)} />
+<span class={cn(dotvariants({ variant }), className)}><slot /></span>

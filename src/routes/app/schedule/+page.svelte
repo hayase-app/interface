@@ -1,8 +1,10 @@
 <script lang='ts'>
   import { Button as ButtonPrimitive } from 'bits-ui'
   import { addMonths, endOfMonth, endOfWeek, format, isSameMonth, isToday, startOfMonth, startOfWeek, subMonths } from 'date-fns'
+  import Check from 'lucide-svelte/icons/check'
   import { persisted } from 'svelte-persisted-store'
   import Cross2 from 'svelte-radix/Cross2.svelte'
+  import { tv } from 'tailwind-variants'
 
   import type { Schedule, ScheduleMedia } from '$lib/modules/anilist/queries'
   import type { ResultOf } from 'gql.tada'
@@ -16,7 +18,7 @@
   import { Switch } from '$lib/components/ui/switch'
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { dedupeAiring } from '$lib/modules/anilist'
-  import { authAggregator, list } from '$lib/modules/auth'
+  import { authAggregator, list, progress } from '$lib/modules/auth'
   import { dragScroll } from '$lib/modules/navigate'
   import { cn, breakpoints } from '$lib/utils'
 
@@ -77,6 +79,25 @@
 
   // very stupid fix, for a very stupid bug
   const _list = list
+  const _progress = progress
+
+  const checkvariants = tv({
+    base: 'inline-flex size-[0.55rem] me-1 rounded-full',
+    variants: {
+      variant: {
+        CURRENT: 'text-[rgb(61,180,242)]',
+        PLANNING: 'text-[rgb(247,154,99)]',
+        COMPLETED: 'text-[rgb(123,213,85)]',
+        PAUSED: 'text-[rgb(250,122,122)]',
+        REPEATING: 'text-[#3baeea]',
+        DROPPED: 'text-[rgb(200,80,80)]',
+        PENDING: 'text-[rgb(180,180,180)]'
+      }
+    },
+    defaultVariants: {
+      variant: 'CURRENT'
+    }
+  })
 </script>
 
 <div class='flex flex-col items-center size-full overflow-y-auto p-3 md:p-10 min-w-0' use:dragScroll>
@@ -161,10 +182,15 @@
                   <Drawer.Footer>
                     {#each episodes as episode, i (i)}
                       {@const status = _list(episode)}
+                      {@const progress = _progress(episode) ?? 0}
                       <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
                         <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                           {#if status}
-                            <StatusDot variant={status} class='hidden' />
+                            {#if progress >= episode.episode}
+                              <Check class={cn(checkvariants({ variant: status }))} strokeWidth={5} />
+                            {:else}
+                              <StatusDot variant={status} class='hidden xl:inline-flex justify-center items-center' />
+                            {/if}
                           {/if}
                           {episode.title?.userPreferred}
                         </div>
@@ -182,13 +208,17 @@
               <div class='mt-auto'>
                 {#each episodes.length > 6 ? episodes.slice(0, 5) : episodes as episode, i (i)}
                   {@const status = _list(episode)}
-
+                  {@const progress = _progress(episode) ?? 0}
                   <Tooltip.Root openDelay={100}>
                     <Tooltip.Trigger class='text-neutral-500 w-full text-left px-3 mt-1.5' let:builder asChild>
                       <ButtonPrimitive.Root builders={[builder]} class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
                         <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                           {#if status}
-                            <StatusDot variant={status} class='hidden xl:inline-flex' />
+                            {#if progress >= episode.episode}
+                              <Check class={cn(checkvariants({ variant: status }))} strokeWidth={5} />
+                            {:else}
+                              <StatusDot variant={status} class='hidden xl:inline-flex justify-center items-center' />
+                            {/if}
                           {/if}
                           {episode.title?.userPreferred}
                         </div>
@@ -209,10 +239,15 @@
                     <Tooltip.Content sameWidth={true} class='text-center gap-1.5'>
                       {#each episodes.slice(5) as episode, i (i)}
                         {@const status = _list(episode)}
-                        <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group', +episode.airTime < Date.now() && 'text-neutral-400')} href='/app/anime/{episode.id}'>
+                        {@const progress = _progress(episode) ?? 0}
+                        <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group', +episode.airTime < Date.now() && 'text-neutral-500')} href='/app/anime/{episode.id}'>
                           <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                             {#if status}
-                              <StatusDot variant={status} class='hidden xl:inline-flex' />
+                              {#if progress >= episode.episode}
+                                <Check class={cn(checkvariants({ variant: status }))} strokeWidth={5} />
+                              {:else}
+                                <StatusDot variant={status} class='hidden xl:inline-flex justify-center items-center' />
+                              {/if}
                             {/if}
                             {episode.title?.userPreferred}
                           </div>
