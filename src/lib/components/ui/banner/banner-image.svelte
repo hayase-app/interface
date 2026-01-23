@@ -36,7 +36,9 @@
 
 {#if debounced}
   <div class={cn('object-cover w-screen absolute top-0 left-0 h-full overflow-hidden pointer-events-none bg-black', className)}>
-    <Banner media={debounced} class='min-w-[100vw] w-screen {isBig ? 'h-[80vh] md:h-[90vh]' : 'h-[23rem]' } banner-gr-1 {$breakpoints.md ? '' : 'banner-gr-sm'} object-cover {$hideBanner ? 'opacity-5' : 'opacity-100'} transition-opacity duration-500 relative banner-gr' />
+    {#key debounced.id}
+      <Banner media={debounced} class='min-w-[100vw] w-screen {isBig ? 'h-[80vh] md:h-[90vh]' : 'h-[23rem]' } banner-gr-1 {$breakpoints.md ? '' : 'banner-gr-sm'} object-cover {$hideBanner ? 'opacity-5' : 'opacity-100'} transition-opacity duration-500 relative banner-gr' />
+    {/key}
   </div>
 {/if}
 

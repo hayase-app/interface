@@ -92,11 +92,9 @@
     </div>
   {/if}
   <div class='lg:pl-5 pb-2 grid grid-cols-1 lg:grid-cols-2 mt-auto w-full max-h-full' style:--custom={current.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
-    <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left gap-4'>
+    <div class='w-full flex flex-col items-center text-center lg:items-start lg:text-left justify-end gap-4'>
       <a class='text-white font-black text-3xl lg:text-4xl line-clamp-2 w-[900px] max-w-[85%] leading-tight text-balance fade-in hover:text-neutral-300 hover:underline cursor-pointer text-shadow-lg' href='/app/anime/{current.id}'>
-        {#await episodesCached(current.id)}
-          {title(current)}
-        {:then metadata}
+        {#await episodesCached(current.id) then metadata}
           {@const src = metadata?.images?.find(i => i.coverType === 'Clearlogo')?.url}
           {#if src}
             <a class='w-full flex justify-center lg:justify-start'>
@@ -105,6 +103,8 @@
           {:else}
             {title(current)}
           {/if}
+        {:catch error}
+          {title(current)}
         {/await}
       </a>
       <div class='hidden sm:block gap-2 items-center lg:self-start flex-nowrap max-w-full lg:place-content-start font-bold'>
