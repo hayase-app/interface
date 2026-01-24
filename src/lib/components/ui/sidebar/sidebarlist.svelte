@@ -11,7 +11,9 @@
   import { page } from '$app/stores'
   import Logo from '$lib/components/icons/Logo.svelte'
   import { Home, Search, Calendar, Users, Download, Bolt, LogIn } from '$lib/components/icons/animated'
+  import CloudDownload from '$lib/components/icons/animated/cloud-download.svelte'
   import * as Avatar from '$lib/components/ui/avatar'
+  import * as Tooltip from '$lib/components/ui/tooltip'
   import client from '$lib/modules/auth/client'
   import { lockedState, idleState, activityState } from '$lib/modules/idle'
   import native from '$lib/modules/native'
@@ -29,6 +31,16 @@
   let isMac = false
 
   if (highEntropyValues) highEntropyValues.then(({ platform }) => { isMac = platform === 'macOS' })
+
+  let updateProgress = 0
+  native.updateProgress(progress => {
+    updateProgress = progress
+  })
+  native.checkUpdate()
+
+  function updateAndRestart () {
+    if (updateProgress === 1) native.updateAndRestart()
+  }
 </script>
 
 <svelte:document bind:visibilityState />
@@ -55,9 +67,26 @@
 <!-- <SidebarButton href='/app/chat/' class='animated-icon'>
   <Messages size={18} />
 </SidebarButton> -->
-<SidebarButton href='/app/client/' id='sidebar-client' data-down='#sidebar-donate'>
+<SidebarButton href='/app/client/' class='animated-icon' id='sidebar-client' data-down='#sidebar-donate'>
   <Download size={18} />
 </SidebarButton>
+{#if updateProgress}
+  {@const ready = updateProgress === 1}
+  <Tooltip.Root>
+    <Tooltip.Trigger let:builder tabindex={-1}>
+      <Button builders={[builder]} variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent md:rounded-l-none', ready && 'text-green-500 select:text-green-700')} on:click={updateAndRestart}>
+        <CloudDownload size={18} />
+      </Button>
+    </Tooltip.Trigger>
+    <Tooltip.Content side='right'>
+      {#if ready}
+        Update ready to install! Click to restart.
+      {:else}
+        Downloading update: {Math.round(updateProgress * 100)}%
+      {/if}
+    </Tooltip.Content>
+  </Tooltip.Root>
+{/if}
 <!-- <Dialog.Root portal='#root' >
   <Dialog.Trigger asChild let:builder>
     <Button variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class='animated-icon px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none hidden md:flex' builders={[builder]}>

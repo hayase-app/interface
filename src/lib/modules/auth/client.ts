@@ -59,7 +59,7 @@ export default new class AuthAggregator {
     if (this.anilist()) return media.mediaListEntry
     if (this.kitsu()) return kitsu.userlist.value[media.id]
     if (this.mal()) return mal.userlist.value[media.id]
-    console.log('doing local')
+
     return local.get(media.id)?.mediaListEntry
   }
 
