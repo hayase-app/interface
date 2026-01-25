@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.237",
+	"version": "6.4.238",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@10.28.0",
@@ -66,6 +66,7 @@
 		"@xyflow/svelte": "^0.1.36",
 		"abslink": "^1.1.6",
 		"anitomyscript": "github:thaunknown/anitomyscript",
+		"bittorrent-tracker": "10.0.12",
 		"bottleneck": "^2.19.5",
 		"clsx": "^2.1.1",
 		"cobe": "github:thaunknown/cobe",
@@ -80,7 +81,7 @@
 		"lucide-svelte": "^0.542.0",
 		"marked": "^16.2.1",
 		"overtype": "^1.2.3",
-		"p2pt": "^1.6.2",
+		"p2pt": "github:ThaUnknown/p2pt#modernise",
 		"parse-torrent": "^11.0.19",
 		"path-esm": "^1.0.0",
 		"semver": "^7.7.2",
@@ -101,7 +102,7 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"streamx": "2.22.0"
+			"streamx": "2.20.1"
 		},
 		"ignoredBuiltDependencies": [
 			"bufferutil",

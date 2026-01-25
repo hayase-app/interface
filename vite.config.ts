@@ -43,6 +43,8 @@ export default defineConfig({
     alias: {
       path: 'path-esm',
       'node-fetch': '',
+      // no exports :/
+      'bittorrent-tracker/lib/client/websocket-tracker.js': resolve(import.meta.dirname, 'node_modules/bittorrent-tracker/lib/client/websocket-tracker.js'),
       // thank you bottleneck for importing useless modules
       './RedisConnection': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
       './RedisConnection.js': resolve(import.meta.dirname, 'src/patches/empty.cjs'),
