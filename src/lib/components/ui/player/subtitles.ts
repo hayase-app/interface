@@ -194,7 +194,7 @@ export default class Subtitles {
     }).catch(console.error)
 
     native.attachments(this.selected.hash, this.selected.id).then(async attachments => {
-      const filtered = attachments.filter(attachment => (fontRx.test(attachment.filename) || attachment.mimetype.toLowerCase().includes('font')) && this.fonts.includes(attachment.url))
+      const filtered = attachments.filter(attachment => (fontRx.test(attachment.filename) || attachment.mimetype.toLowerCase().includes('font')) && !this.fonts.includes(attachment.url))
       const urls = filtered.map(a => a.url)
       this.fonts.push(...urls)
       await this.jassub?.ready
