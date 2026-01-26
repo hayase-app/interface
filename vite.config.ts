@@ -56,11 +56,14 @@ export default defineConfig({
   },
   server: { port: 7344 },
   build: {
-    target: 'es2020',
+    target: 'esnext',
     sourcemap: true
   },
   ssr: {
     target: 'webworker'
+  },
+  worker: {
+    format: 'es'
   },
   optimizeDeps: {
     exclude: ['anitomyscript']

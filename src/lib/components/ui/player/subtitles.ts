@@ -1,11 +1,12 @@
-import JASSUB, { type ASSEvent, type ASSStyle } from 'jassub'
-// import modernWasmUrl from 'jassub/dist/wasm/jassub-worker-modern.wasm?url'
-// import wasmUrl from 'jassub/dist/wasm/jassub-worker.wasm?url'
-// import workerUrl from 'jassub/dist/worker/worker.js?worker&url'
+import JASSUB from 'jassub'
+import modernWasmUrl from 'jassub/dist/wasm/jassub-worker-modern.wasm?url'
+import wasmUrl from 'jassub/dist/wasm/jassub-worker.wasm?url'
+import workerUrl from 'jassub/dist/worker/worker.js?worker&url'
 import { writable } from 'simple-store-svelte'
 import { get } from 'svelte/store'
 
 import type { ResolvedFile } from './resolver'
+import type { ASSEvent, ASSStyle } from 'jassub/dist/worker/util'
 import type { TorrentFile } from 'native'
 
 import native from '$lib/modules/native'
@@ -50,18 +51,22 @@ const STYLE_OVERRIDES: Record<typeof defaults.subtitleStyle, Pick<ASSStyle, 'Fon
   }
 }
 
-const OVERRIDE_FONTS: Partial<Record<typeof defaults.subtitleStyle, string>> = {
-  gandhisans: '/GandhiSans-Bold.woff2',
-  notosans: '/NotoSans-Bold.woff2'
+const AVAILABLE_FONTS = {
+  'Roboto Medium': '/Roboto.woff2',
+  'Gandhi Sans': '/GandhiSans-Bold.woff2',
+  'Noto Sans': '/NotoSans-Bold.woff2',
+  'Noto Sans JP Bold': '/NotoSansJP.woff2',
+  'Noto Sans KR Bold': '/NotoSansKR.woff2',
+  'Noto Sans HK': '/NotoSansHK.woff2'
 }
 
-const LANGUAGE_OVERRIDES: Record<string, {url: string, name: string}> = {
-  jpn: { url: '/NotoSansJP.woff2', name: 'Noto Sans JP Bold' },
-  kor: { url: '/NotoSansKR.woff2', name: 'Noto Sans KR Bold' },
-  chi: { url: '/NotoSansHK.woff2', name: 'Noto Sans HK' },
-  ja: { url: '/NotoSansJP.woff2', name: 'Noto Sans JP Bold' },
-  ko: { url: '/NotoSansKR.woff2', name: 'Noto Sans KR Bold' },
-  zh: { url: '/NotoSansHK.woff2', name: 'Noto Sans HK' }
+const LANGUAGE_OVERRIDES: Record<string, string> = {
+  jpn: 'Noto Sans JP Bold',
+  kor: 'Noto Sans KR Bold',
+  chi: 'Noto Sans HK',
+  ja: 'Noto Sans JP Bold',
+  ko: 'Noto Sans KR Bold',
+  zh: 'Noto Sans HK'
 }
 
 function detectCJKLanguage (str: string) {
@@ -96,7 +101,7 @@ export default class Subtitles {
   constructor (video: HTMLVideoElement, otherFiles: TorrentFile[], selected: ResolvedFile) {
     this.video = video
     this.selected = selected
-    this.fonts = ['/Roboto.woff2', ...otherFiles.filter(file => fontRx.test(file.name)).map(file => file.url)]
+    this.fonts = [...otherFiles.filter(file => fontRx.test(file.name)).map(file => file.url)]
 
     this.current.subscribe(value => {
       this.selectCaptions(value)
@@ -188,12 +193,12 @@ export default class Subtitles {
       }
     }).catch(console.error)
 
-    native.attachments(this.selected.hash, this.selected.id).then(attachments => {
-      for (const attachment of attachments) {
-        if (fontRx.test(attachment.filename) || attachment.mimetype.toLowerCase().includes('font')) {
-          this.addFont(attachment.url)
-        }
-      }
+    native.attachments(this.selected.hash, this.selected.id).then(async attachments => {
+      const filtered = attachments.filter(attachment => (fontRx.test(attachment.filename) || attachment.mimetype.toLowerCase().includes('font')) && this.fonts.includes(attachment.url))
+      const urls = filtered.map(a => a.url)
+      this.fonts.push(...urls)
+      await this.jassub?.ready
+      await this.jassub?.renderer.addFonts(urls)
     }).catch(console.error)
 
     video.parentElement!.addEventListener('drop', e => this.handleTransfer(e), this.ctrl)
@@ -210,14 +215,6 @@ export default class Subtitles {
 
     for (const file of await Promise.all(promises)) {
       if (subRx.test(file.name)) this.addSingleSubtitleFile(file)
-    }
-  }
-
-  async addFont (url: string) {
-    if (!this.fonts.includes(url)) {
-      this.fonts.push(url)
-      await this.jassub?.ready
-      await this.jassub?.renderer.addFont(url)
     }
   }
 
@@ -273,11 +270,12 @@ export default class Subtitles {
       subContent: defaultHeader,
       fonts: this.fonts,
       maxRenderHeight: parseInt(this.set.subtitleRenderHeight) || 0,
-      fallbackFont: 'roboto medium',
-      useLocalFonts: this.set.missingFont
-      // workerUrl,
-      // modernWasmUrl,
-      // wasmUrl
+      defaultFont: 'roboto medium',
+      queryFonts: this.set.missingFont ? 'localandremote' : false,
+      workerUrl,
+      modernWasmUrl,
+      wasmUrl,
+      availableFonts: AVAILABLE_FONTS
     })
 
     await this.jassub.ready
@@ -290,8 +288,6 @@ export default class Subtitles {
     if (this.lastSubtitleStyle === subtitleStyle) return
     if (this.jassub) this.lastSubtitleStyle = subtitleStyle
     if (subtitleStyle !== 'none') {
-      const font = OVERRIDE_FONTS[subtitleStyle]
-      if (font) this.addFont(font)
       const overrideStyle: ASSStyle = {
         Name: 'DialogueStyleOverride',
         FontSize: 72,
@@ -390,8 +386,7 @@ export default class Subtitles {
     await this.jassub.renderer.setTrack(track.meta.header.slice(0, -1))
     for (const subtitle of track.events) await this.jassub.renderer.createEvent(subtitle)
     if (LANGUAGE_OVERRIDES[track.meta.language ?? '']) {
-      const { name, url } = LANGUAGE_OVERRIDES[track.meta.language ?? '']!
-      this.addFont(url)
+      const name = LANGUAGE_OVERRIDES[track.meta.language ?? '']!
       await this.jassub.renderer.setDefaultFont(name)
     } else {
       await this.jassub.renderer.setDefaultFont('roboto medium')
