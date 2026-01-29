@@ -8,6 +8,7 @@
 
 <script lang='ts'>
 
+  import Castplayer, { activeDisplay } from './castplayer.svelte'
   import Externalplayer from './externalplayer.svelte'
   import Player from './player.svelte'
 
@@ -103,7 +104,9 @@
 <!-- TODO: inefficient, but safe -->
 {#key current}
   {#if $settings.enableExternal}
-    <Externalplayer mediaInfo={current} otherFiles={mediaInfo.otherFiles} videoFiles={mediaInfo.resolvedFiles} {selectFile} {prev} {next} />
+    <Externalplayer mediaInfo={current} videoFiles={mediaInfo.resolvedFiles} {selectFile} {prev} {next} />
+  {:else if $activeDisplay}
+    <Castplayer mediaInfo={current} videoFiles={mediaInfo.resolvedFiles} {selectFile} {prev} {next} />
   {:else}
     <Player mediaInfo={current} otherFiles={mediaInfo.otherFiles} videoFiles={mediaInfo.resolvedFiles} {selectFile} {prev} {next} />
   {/if}

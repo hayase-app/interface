@@ -1,6 +1,6 @@
 <script lang='ts'>
   import Captions from 'lucide-svelte/icons/captions'
-  // import Cast from 'lucide-svelte/icons/cast'
+  import Cast from 'lucide-svelte/icons/cast'
   import Contrast from 'lucide-svelte/icons/contrast'
   import DecimalsArrowLeft from 'lucide-svelte/icons/decimals-arrow-left'
   import DecimalsArrowRight from 'lucide-svelte/icons/decimals-arrow-right'
@@ -28,6 +28,7 @@
   import ProgressButton from '../button/progress-button.svelte'
 
   import Animations, { playAnimation } from './animations.svelte'
+  import { displays } from './castplayer.svelte'
   import DownloadStats from './downloadstats.svelte'
   import EpisodesModal from './episodesmodal.svelte'
   import { condition, loadWithDefaults } from './keybinds.svelte'
@@ -146,11 +147,6 @@
   function fullscreen () {
     return fullscreenElement ? document.exitFullscreen() : document.getElementById('episodeListTarget')!.requestFullscreen()
   }
-
-  // function toggleCast () {
-  // // TODO: never
-  // }
-
   $: fullscreenElement ? screen.orientation.lock('landscape') : screen.orientation.unlock()
 
   beforeNavigate(({ to }) => {
@@ -433,6 +429,7 @@
   })
 
   let openSubs: () => Promise<void>
+  let openCast: () => Promise<void>
 
   function cycleSubtitles (e: KeyboardEvent | MouseEvent) {
     if (!subtitles) return
@@ -883,7 +880,7 @@
               x{$playbackRate?.toFixed(1)}
             </div>
           {/if}
-          <Options {fullscreen} {wrapper} {seekTo} bind:openSubs {video} {selectAudio} {selectVideo} {chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
+          <Options {fullscreen} {wrapper} {seekTo} bind:openSubs bind:openCast {video} {selectAudio} {selectVideo} {chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
           {#if subtitles}
             <Button class='p-3 size-12' variant='ghost' on:click={openSubs} on:keydown={keywrap(openSubs)} data-up='#player-seekbar'>
               <Subtitles size='24px' fill='currentColor' strokeWidth='0' />
@@ -900,15 +897,13 @@
               </div>
             {/if}
           </Button>
-          <!-- {#if false}
-            <Button class='p-3 size-12' variant='ghost' on:click={toggleCast} on:keydown={keywrap(toggleCast)} data-up='#player-seekbar'>
-              {#if cast}
-                <Cast size='24px' fill='white' strokeWidth='2' />
-              {:else}
-                <Cast size='24px' strokeWidth='2' />
-              {/if}
+          {#if $displays.length}
+            <Button class='p-3 size-12' variant='ghost' on:click={openCast} on:keydown={keywrap(openCast)} data-up='#player-seekbar'>
+              <!-- <Cast size='24px' fill='white' strokeWidth='2' />
+            {:else} -->
+              <Cast size='24px' strokeWidth='2' />
             </Button>
-          {/if} -->
+          {/if}
           <Button class='p-3 size-12 relative animated-icon shrink-0' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)} data-up='#player-seekbar'>
             {#if fullscreenElement}
               <div transition:scaleBlurFade class='absolute'>

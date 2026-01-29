@@ -1,7 +1,23 @@
+<script lang='ts' context='module'>
+  import { writable } from 'svelte/store'
+
+  import native from '$lib/modules/native'
+
+  native.getDisplays(dis => displays.set(dis))
+  export const displays = writable<Array<{ friendlyName: string, host: string }>>([])
+
+  const stopCast = (host: string) => {
+    native.castClose(host)
+    activeDisplay.set(null)
+  }
+
+  export const activeDisplay = writable<{ friendlyName: string, host: string } | null>(null)
+</script>
+
 <script lang='ts'>
   import SkipBack from 'lucide-svelte/icons/skip-back'
   import SkipForward from 'lucide-svelte/icons/skip-forward'
-  import { writable } from 'svelte/store'
+  import Square from 'lucide-svelte/icons/square'
 
   import { Button } from '../button'
 
@@ -14,7 +30,6 @@
   import { page } from '$app/stores'
   import * as Dialog from '$lib/components/ui/dialog'
   import { authAggregator } from '$lib/modules/auth'
-  import native from '$lib/modules/native'
   import { settings } from '$lib/modules/settings'
   import { toTS } from '$lib/utils'
 
@@ -30,7 +45,6 @@
   function openPlayer () {
     if (isMiniplayer) goto('/app/player/')
   }
-  const player = $page.route.id !== '/app/player' ? Promise.resolve() : native.spawnPlayer(mediaInfo.file.url)
   const startTime = Date.now()
 
   const elapsed = writable(0, (set) => {
@@ -58,13 +72,29 @@
   function clamp (value: number): number {
     return Math.min(Math.max(value, 0), 100)
   }
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const actualMedia = {
+    contentId: mediaInfo.file.lan,
+    contentType: mediaInfo.file.type,
+    metadata: {
+      metadataType: 2,
+      posterUrl: mediaInfo.session.image,
+      title: mediaInfo.session.title,
+      subtitle: mediaInfo.session.description
+    },
+    streamType: 'BUFFERED',
+    mediaCategory: 'VIDEO'
+  } as Parameters<typeof native.castPlay>[3]
+
+  const host = $activeDisplay!.host
 </script>
 
 <div class='flex-col w-full flex-shrink-0 relative overflow-clip flex justify-center items-center bg-black {isMiniplayer ? 'aspect-video cursor-pointer' : 'h-full' } px-8' on:click={openPlayer} bind:this={wrapper}>
   <div class='flex flex-col gap-2 text-left' class:min-w-[320px]={!isMiniplayer}>
-    <div class='text-white text-2xl font-bold leading-none line-clamp-1 mb-2'>Now Watching</div>
+    <div class='text-white text-2xl font-bold leading-none line-clamp-1 mb-2'>Now Casting</div>
     <EpisodesModal portal={wrapper} {mediaInfo} />
-    {#await player}
+    {#await native.castPlay(host, mediaInfo.file.hash, mediaInfo.file.id, actualMedia)}
       <div class='ml-auto self-end text-sm leading-none font-light text-nowrap mt-3'>{toTS(Math.min($elapsed, duration))} / {toTS(duration)}</div>
       <div class='relative w-full h-1 flex items-center justify-center overflow-clip rounded-[2px]'>
         <div class='bg-[rgba(217,217,217,0.4)] absolute left-0 w-full h-0.5' />
@@ -80,13 +110,16 @@
       <div class='text-red-500 text-sm font-light leading-none whitespace-pre-wrap'>{error.stack}</div>
     {/await}
     {#if !isMiniplayer}
-      <div class='flex w-full justify-between pt-3'>
+      <div class='flex w-full pt-3 gap-2'>
+        <Button class='w-12 h-12' variant='destructive' on:click={() => stopCast(host)}>
+          <Square size='24px' fill='currentColor' />
+        </Button>
         <Button class='p-3 w-12 h-12' variant='ghost' on:click={prev} disabled={!prev}>
           <SkipBack size='24px' fill='currentColor' strokeWidth='1' />
         </Button>
         <Dialog.Root portal={wrapper}>
           <Dialog.Trigger asChild let:builder>
-            <Button class='py-3 px-8 h-12 text-lg font-bold' variant='ghost' builders={[builder]}>
+            <Button class='py-3 px-8 h-12 text-lg font-bold mx-auto' variant='ghost' builders={[builder]}>
               Playlist
             </Button>
           </Dialog.Trigger>

@@ -4,6 +4,7 @@
 
   import { Input } from '../input'
 
+  import { activeDisplay, displays } from './castplayer.svelte'
   import Keybinds from './keybinds.svelte'
   import { normalizeSubs, normalizeTracks, screenshot, type Chapter } from './util'
 
@@ -51,6 +52,12 @@
     open = true
     await tick()
     treeState.set(['subs'])
+  }
+
+  export async function openCast () {
+    open = true
+    await tick()
+    treeState.set(['cast'])
   }
 
   let className: HTMLAttributes<HTMLDivElement>['class'] = ''
@@ -229,6 +236,16 @@
                       {file.name}
                     </Tooltip.Content>
                   </Tooltip.Root>
+                </Tree.Item>
+              {/each}
+            </Tree.Sub>
+          </Tree.Item>
+          <Tree.Item id='cast'>
+            <span slot='trigger'>Cast</span>
+            <Tree.Sub>
+              {#each $displays as { friendlyName, host }, i (i)}
+                <Tree.Item on:click={() => { $activeDisplay = { friendlyName, host }; open = false }}>
+                  <span class='text-nowrap'>{friendlyName}</span>
                 </Tree.Item>
               {/each}
             </Tree.Sub>

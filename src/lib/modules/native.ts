@@ -14,6 +14,7 @@ const dummyFiles = [
     size: 1234567890,
     path: '/Amebku.webm',
     url: 'http://localhost:7344/video.mkv',
+    lan: 'http://localhost:7344/video.mkv',
     id: 0
   }
 // {
@@ -142,6 +143,9 @@ export default Object.assign<Native, Partial<Native>>({
   downloadProgress: async () => undefined,
   updateProgress: async () => undefined,
   createNZB: async () => undefined,
+  getDisplays: async () => undefined,
+  castPlay: async () => undefined,
+  castClose: async () => undefined,
   torrentInfo: async (): Promise<TorrentInfo> => ({
     name: '',
     progress: 0,
