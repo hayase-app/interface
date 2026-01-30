@@ -73,19 +73,24 @@
     return Math.min(Math.max(value, 0), 100)
   }
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const actualMedia = {
+  const actualMedia: Parameters<typeof native.castPlay>[3] = {
     contentId: mediaInfo.file.lan,
     contentType: mediaInfo.file.type,
     metadata: {
       metadataType: 2,
       posterUrl: mediaInfo.session.image,
       title: mediaInfo.session.title,
-      subtitle: mediaInfo.session.description
+      seriesTitle: mediaInfo.session.title,
+      subtitle: mediaInfo.session.description,
+      episodeTitle: mediaInfo.session.description,
+      episode: mediaInfo.episode,
+      episodeNumber: mediaInfo.episode
     },
+    // @ts-expect-error enum
     streamType: 'BUFFERED',
+    // @ts-expect-error enum
     mediaCategory: 'VIDEO'
-  } as Parameters<typeof native.castPlay>[3]
+  }
 
   const host = $activeDisplay!.host
 </script>
