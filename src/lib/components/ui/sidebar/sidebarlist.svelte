@@ -39,7 +39,7 @@
   native.checkUpdate()
 
   function updateAndRestart () {
-    if (updateProgress === 1) native.updateAndRestart()
+    if (updateProgress === 100) native.updateAndRestart()
   }
 </script>
 
@@ -71,7 +71,7 @@
   <Download size={18} />
 </SidebarButton>
 {#if updateProgress}
-  {@const ready = updateProgress === 1}
+  {@const ready = updateProgress === 100}
   <Tooltip.Root>
     <Tooltip.Trigger let:builder tabindex={-1}>
       <Button builders={[builder]} variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent md:rounded-l-none', ready && 'text-green-500 select:text-green-700')} on:click={updateAndRestart}>
@@ -82,7 +82,7 @@
       {#if ready}
         Update ready to install! Click to restart.
       {:else}
-        Downloading update: {Math.round(updateProgress * 100)}%
+        Downloading update: {Math.round(updateProgress)}%
       {/if}
     </Tooltip.Content>
   </Tooltip.Root>
