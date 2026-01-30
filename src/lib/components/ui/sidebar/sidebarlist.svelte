@@ -41,6 +41,10 @@
   function updateAndRestart () {
     if (updateProgress === 100) native.updateAndRestart()
   }
+
+  function manualUpdate () {
+    native.openURL('https://hayase.watch/download/')
+  }
 </script>
 
 <svelte:document bind:visibilityState />
@@ -86,6 +90,22 @@
       {/if}
     </Tooltip.Content>
   </Tooltip.Root>
+{:else}
+  <!-- TODO: this flow is quite hacky, but it needs to support old broken electron builds, that are bricked and cant auto-update, this will need to change in the future -->
+  {#await native.updateReady() catch error}
+    {#if error.message !== 'No update available' && navigator.onLine}
+      <Tooltip.Root>
+        <Tooltip.Trigger let:builder tabindex={-1}>
+          <Button builders={[builder]} variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent md:rounded-l-none, text-red-500 select:text-red-700')} on:click={manualUpdate}>
+            <CloudDownload size={18} />
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Content side='right' class='whitespace-pre'>
+          Something went wrong checking for updates.{'\n'}Click here to update manually.{'\n\n'}Error: {error.message}.
+        </Tooltip.Content>
+      </Tooltip.Root>
+    {/if}
+  {/await}
 {/if}
 <!-- <Dialog.Root portal='#root' >
   <Dialog.Trigger asChild let:builder>
