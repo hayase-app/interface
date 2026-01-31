@@ -75,7 +75,7 @@
         <div class='flex flex-col gap-1.5 text-center md:text-start w-full'>
           <h2 class='line-clamp-1 text-base md:text-lg font-light text-muted-foreground select-text'>{media.title?.romaji?.toLowerCase().trim() === title(media).toLowerCase().trim() ? nativeTitle : romajiTitle}</h2>
           <h1 class='font-black text-3xl md:text-4xl line-clamp-2 text-white select-text'>{title(media)}</h1>
-          <div class='flex-wrap w-full justify-start md:pt-1 gap-4 hidden md:flex'>
+          <div class='flex-wrap w-full justify-start md:pt-1 gap-2 hidden md:flex'>
             <div class='rounded px-3.5 font-bold bg-custom text-contrast'>
               {of(media) ?? duration(media) ?? 'N/A'}
             </div>
@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class='flex gap-2 items-center justify-center md:justify-start md:self-start w-full overflow-x-clip [&>*]:flex-shrink-0'>
-      <div class='flex md:mr-3 w-full min-[380px]:w-[180px]'>
+      <div class='flex md:mr-3 w-full min-[380px]:w-[180px] !shrink'>
         <PlayButton size='default' {media} class='rounded-r-none w-full bg-custom select:!bg-custom-600 text-contrast' />
         {#key media}
           <EntryEditor {media} />
@@ -111,7 +111,7 @@
       </div>
       <FavoriteButton {media} variant='secondary' size='icon' class='min-[380px]:-order-1 md:order-none select:!text-custom' />
       <BookmarkButton {media} variant='secondary' size='icon' class='min-[380px]:-order-2 md:order-none select:!text-custom' />
-      <TransitionButton size='icon' variant='secondary' on:click={share} class='select:!text-custom'>
+      <TransitionButton size='icon' variant='secondary' on:click={share} class='hidden min-[380px]:flex select:!text-custom'>
         <div slot='base'>
           <Share2 class='size-4' />
         </div>
@@ -122,7 +122,7 @@
       {#if media.trailer?.id}
         <Dialog.Root portal='#root'>
           <Dialog.Trigger let:builder asChild>
-            <Button size='icon' variant='secondary' class='select:!text-custom animated-icon' builders={[builder]}>
+            <Button size='icon' variant='secondary' class='hidden min-[380px]:flex select:!text-custom animated-icon' builders={[builder]}>
               <Clapperboard class='size-4' />
             </Button>
           </Dialog.Trigger>
@@ -150,7 +150,7 @@
         {/each}
       </div>
     </div>
-    <div class='flex gap-2 items-center md:justify-start md:self-start flex-wrap'>
+    <div class='flex gap-2 items-center justify-center md:justify-start md:self-start md:flex-wrap [flex-wrap:balance]'>
       {#each media.genres ?? [] as genre (genre)}
         <Button variant='secondary' class='select:!text-custom h-7 text-nowrap' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
           {genre}

@@ -34,6 +34,10 @@ function calculateMedia (mqls: Record<string, MediaQueryList>) {
 }
 
 const mediaQueries = {
+  '4xs': '(min-width: 280px)',
+  '3xs': '(min-width: 320px)',
+  '2xs': '(min-width: 360px)',
+  xs: '(min-width: 480px)',
   sm: '(min-width: 640px)',
   md: '(min-width: 768px)',
   lg: '(min-width: 1024px)',

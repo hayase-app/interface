@@ -10,7 +10,7 @@
   import { Themes } from '$lib/components/ui/themes'
   import { authAggregator } from '$lib/modules/auth'
   import '@xyflow/svelte/dist/style.css'
-  import { cn } from '$lib/utils'
+  import { breakpoints, cn } from '$lib/utils'
 
   export let data: PageData
 
@@ -28,9 +28,9 @@
   let value: string
 </script>
 
-<Tabs.Root bind:value class='w-full' activateOnFocus={false}>
-  <div class='flex justify-between items-center gap-3 sm:flex-row flex-col'>
-    <Tabs.List class='flex'>
+<Tabs.Root bind:value class='w-full' activateOnFocus={false} orientation={$breakpoints.xs ? 'horizontal' : 'vertical'}>
+  <div class='flex justify-center md:justify-start'>
+    <Tabs.List orientation={$breakpoints.xs ? 'horizontal' : 'vertical'}>
       <Tabs.Trigger value='episodes' tabindex={0} class='px-8 data-[state=active]:bg-custom data-[state=active]:text-contrast data-[state=active]:font-bold'>Episodes</Tabs.Trigger>
       <Tabs.Trigger value='relations' tabindex={0} class='px-8 data-[state=active]:bg-custom data-[state=active]:text-contrast data-[state=active]:font-bold'>Relations</Tabs.Trigger>
       <Tabs.Trigger value='threads' tabindex={0} class='px-8 data-[state=active]:bg-custom data-[state=active]:text-contrast data-[state=active]:font-bold'>Threads</Tabs.Trigger>

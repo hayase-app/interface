@@ -107,7 +107,7 @@
           {title(current)}
         {/await}
       </a>
-      <div class='hidden sm:block gap-2 items-center lg:self-start flex-nowrap max-w-full lg:place-content-start font-bold'>
+      <div class='hidden sm:flex gap-2 items-center lg:self-start flex-nowrap max-w-full lg:place-content-start font-bold'>
         <div class='rounded px-3.5 !text-custom h-7 text-nowrap bg-primary/10 text-sm inline-flex items-center'>
           {of(current) ?? duration(current) ?? 'N/A'}
         </div>

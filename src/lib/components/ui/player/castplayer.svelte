@@ -31,7 +31,7 @@
   import * as Dialog from '$lib/components/ui/dialog'
   import { authAggregator } from '$lib/modules/auth'
   import { settings } from '$lib/modules/settings'
-  import { toTS } from '$lib/utils'
+  import { breakpoints, cn, toTS } from '$lib/utils'
 
   export let mediaInfo: MediaInfo
   export let videoFiles: ResolvedFile[]
@@ -96,7 +96,7 @@
 </script>
 
 <div class='flex-col w-full flex-shrink-0 relative overflow-clip flex justify-center items-center bg-black {isMiniplayer ? 'aspect-video cursor-pointer' : 'h-full' } px-8' on:click={openPlayer} bind:this={wrapper}>
-  <div class='flex flex-col gap-2 text-left' class:min-w-[320px]={!isMiniplayer}>
+  <div class='flex flex-col gap-2 text-left' class:max-w-[320px]={!isMiniplayer}>
     <div class='text-white text-2xl font-bold leading-none line-clamp-1 mb-2'>Now Casting</div>
     <EpisodesModal portal={wrapper} {mediaInfo} />
     {#await native.castPlay(host, mediaInfo.file.hash, mediaInfo.file.id, actualMedia)}
@@ -116,15 +116,15 @@
     {/await}
     {#if !isMiniplayer}
       <div class='flex w-full pt-3 gap-2'>
-        <Button class='w-12 h-12' variant='destructive' on:click={() => stopCast(host)}>
-          <Square size='24px' fill='currentColor' />
+        <Button class={cn($breakpoints['4xs'] ? 'size-12' : 'size-8')} variant='destructive' on:click={() => stopCast(host)}>
+          <Square size={$breakpoints['4xs'] ? '24px' : '16px'} fill='currentColor' />
         </Button>
-        <Button class='p-3 w-12 h-12' variant='ghost' on:click={prev} disabled={!prev}>
-          <SkipBack size='24px' fill='currentColor' strokeWidth='1' />
+        <Button class={cn($breakpoints['4xs'] ? 'size-12' : 'size-8')} variant='ghost' on:click={prev} disabled={!prev}>
+          <SkipBack size={$breakpoints['4xs'] ? '24px' : '16px'} fill='currentColor' strokeWidth='1' />
         </Button>
         <Dialog.Root portal={wrapper}>
           <Dialog.Trigger asChild let:builder>
-            <Button class='py-3 px-8 h-12 text-lg font-bold mx-auto' variant='ghost' builders={[builder]}>
+            <Button class={cn($breakpoints['4xs'] ? 'px-8 h-12 text-lg' : 'px-4 h-8 text-sm', 'font-bold')} variant='ghost' builders={[builder]}>
               Playlist
             </Button>
           </Dialog.Trigger>
@@ -136,8 +136,8 @@
             {/each}
           </Dialog.Content>
         </Dialog.Root>
-        <Button class='p-3 w-12 h-12' variant='ghost' on:click={next} disabled={!next}>
-          <SkipForward size='24px' fill='currentColor' strokeWidth='1' />
+        <Button class={cn($breakpoints['4xs'] ? 'size-12' : 'size-8')} variant='ghost' on:click={next} disabled={!next}>
+          <SkipForward size={$breakpoints['4xs'] ? '24px' : '16px'} fill='currentColor' strokeWidth='1' />
         </Button>
       </div>
     {/if}

@@ -116,7 +116,7 @@
         </Keybinds>
       {:else}
         <Tree.Root bind:state={treeState}>
-          {#if 'audioTracks' in HTMLVideoElement.prototype}
+          {#if 'audioTracks' in HTMLVideoElement.prototype && video.audioTracks?.length}
             <Tree.Item>
               <span slot='trigger'>Audio</span>
               <Tree.Sub>
@@ -135,7 +135,7 @@
               </Tree.Sub>
             </Tree.Item>
           {/if}
-          {#if 'videoTracks' in HTMLVideoElement.prototype}
+          {#if 'videoTracks' in HTMLVideoElement.prototype && video.videoTracks?.length}
             <Tree.Item>
               <span slot='trigger'>Video</span>
               <Tree.Sub>
@@ -184,19 +184,21 @@
               </Tree.Sub>
             </Tree.Item>
           {/if}
-          <Tree.Item>
-            <span slot='trigger'>Chapters</span>
-            <Tree.Sub>
-              {#each chapters as { text, start }, i (i)}
-                <Tree.Item on:click={() => { seekTo(start); open = false }}>
-                  <div class='flex justify-between w-full pr-2'>
-                    <span class='capitalize'>{text || '?'}</span>
-                    <span class='text-muted-foreground'>{toTS(start || 0)}</span>
-                  </div>
-                </Tree.Item>
-              {/each}
-            </Tree.Sub>
-          </Tree.Item>
+          {#if chapters.length}
+            <Tree.Item>
+              <span slot='trigger'>Chapters</span>
+              <Tree.Sub>
+                {#each chapters as { text, start }, i (i)}
+                  <Tree.Item on:click={() => { seekTo(start); open = false }}>
+                    <div class='flex justify-between w-full pr-2'>
+                      <span class='capitalize'>{text || '?'}</span>
+                      <span class='text-muted-foreground'>{toTS(start || 0)}</span>
+                    </div>
+                  </Tree.Item>
+                {/each}
+              </Tree.Sub>
+            </Tree.Item>
+          {/if}
           <Tree.Item>
             <span slot='trigger'>Playback Rate</span>
             <Tree.Sub>
@@ -240,16 +242,18 @@
               {/each}
             </Tree.Sub>
           </Tree.Item>
-          <Tree.Item id='cast'>
-            <span slot='trigger'>Cast</span>
-            <Tree.Sub>
-              {#each $displays as { friendlyName, host }, i (i)}
-                <Tree.Item on:click={() => { $activeDisplay = { friendlyName, host }; open = false }}>
-                  <span class='text-nowrap'>{friendlyName}</span>
-                </Tree.Item>
-              {/each}
-            </Tree.Sub>
-          </Tree.Item>
+          {#if $displays.length}
+            <Tree.Item id='cast'>
+              <span slot='trigger'>Cast</span>
+              <Tree.Sub>
+                {#each $displays as { friendlyName, host }, i (i)}
+                  <Tree.Item on:click={() => { $activeDisplay = { friendlyName, host }; open = false }}>
+                    <span class='text-nowrap'>{friendlyName}</span>
+                  </Tree.Item>
+                {/each}
+              </Tree.Sub>
+            </Tree.Item>
+          {/if}
           <Tree.Item on:click={() => screenshot(video, subtitles)}>
             Screenshot
           </Tree.Item>
