@@ -23,7 +23,7 @@
 </script>
 
 <div style:background={color ?? '#1890ff'} class={cn('overflow-clip', className)}>
-  <img {src} {alt} on:load on:load={test} class={cn(className, SUPPORTS.isUnderPowered ? 'transition-opacity load-in-no-blur' : 'transition-[opacity,filter] load-in', !ready && 'opacity-0 blur-none')} decoding='async' loading='lazy' style:background={color ?? '#1890ff'} />
+  <img {src} {alt} on:load on:load={test} class={cn(className, 'duration-300', SUPPORTS.isUnderPowered ? 'transition-opacity load-in-no-blur' : 'transition-[opacity,filter] load-in', !ready && 'opacity-0 blur-none')} decoding='async' loading='lazy' style:background={color ?? '#1890ff'} />
 </div>
 
 <style>
