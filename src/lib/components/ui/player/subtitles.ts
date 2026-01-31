@@ -270,7 +270,7 @@ export default class Subtitles {
       subContent: defaultHeader,
       fonts: this.fonts,
       maxRenderHeight: parseInt(this.set.subtitleRenderHeight) || 0,
-      defaultFont: 'roboto medium',
+      defaultFont: STYLE_OVERRIDES[this.set.subtitleStyle].FontName ?? 'roboto medium',
       queryFonts: this.set.missingFont ? 'localandremote' : false,
       workerUrl,
       modernWasmUrl,
@@ -315,8 +315,10 @@ export default class Subtitles {
         ...STYLE_OVERRIDES[subtitleStyle]
       }
       await this.jassub?.renderer.styleOverride(overrideStyle)
+      await this.jassub?.renderer.setDefaultFont(overrideStyle.FontName)
     } else {
       await this.jassub?.renderer.disableStyleOverride()
+      await this.jassub?.renderer.setDefaultFont('roboto medium')
     }
   }
 
