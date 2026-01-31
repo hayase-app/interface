@@ -211,28 +211,37 @@ export const extensions = new class Extensions {
 
     debug(`Checking ${extensions.size} extensions for ${media.id}:${media.title?.userPreferred} ${episode} ${resolution} ${checkMovie ? 'movie' : ''} ${checkBatch ? 'batch' : ''}`)
 
+    const extensionPromises: Array<Promise<void>> = []
+
     for (const [id, worker] of extensions.entries()) {
       const thisExtOpts = extopts[id]!
       if (!thisExtOpts.enabled) continue
       if (configs[id]!.type !== 'torrent') continue
-      try {
-        const promises: Array<Promise<TorrentResult[]>> = []
-        promises.push(worker.single(options, thisExtOpts.options))
-        if (checkMovie) promises.push(worker.movie(options, thisExtOpts.options))
-        if (checkBatch) promises.push(worker.batch(options, thisExtOpts.options))
 
-        for (const result of await Promise.allSettled(promises)) {
-          if (result.status === 'fulfilled') {
-            results.push(...result.value.map(v => ({ ...v, extension: new Set([id]), parseObject: {} as unknown as AnitomyResult })))
-          } else {
-            console.error(result.reason, id)
-            errors.push({ error: result.reason as unknown as Error, extension: id })
+      const extensionPromise = (async () => {
+        try {
+          const promises: Array<Promise<TorrentResult[]>> = []
+          promises.push(worker.single(options, thisExtOpts.options))
+          if (checkMovie) promises.push(worker.movie(options, thisExtOpts.options))
+          if (checkBatch) promises.push(worker.batch(options, thisExtOpts.options))
+
+          for (const result of await Promise.allSettled(promises)) {
+            if (result.status === 'fulfilled') {
+              results.push(...result.value.map(v => ({ ...v, extension: new Set([id]), parseObject: {} as unknown as AnitomyResult })))
+            } else {
+              console.error(result.reason, id)
+              errors.push({ error: result.reason as unknown as Error, extension: id })
+            }
           }
+        } catch (error) {
+          errors.push({ error: error as Error, extension: id })
         }
-      } catch (error) {
-        errors.push({ error: error as Error, extension: id })
-      }
+      })()
+
+      extensionPromises.push(extensionPromise)
     }
+
+    await Promise.all(extensionPromises)
 
     try {
       const library = await native.library()
