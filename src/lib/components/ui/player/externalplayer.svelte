@@ -81,12 +81,12 @@
     {/await}
     {#if !isMiniplayer}
       <div class='flex w-full justify-between pt-3'>
-        <Button class={cn($breakpoints['4xs'] ? 'size-12' : 'size-8')} variant='ghost' on:click={prev} disabled={!prev}>
+        <Button class={cn($breakpoints['4xs'] ? 'size-12 p-3' : 'size-8 p-1')} variant='ghost' on:click={prev} disabled={!prev}>
           <SkipBack size={$breakpoints['4xs'] ? '24px' : '16px'} fill='currentColor' strokeWidth='1' />
         </Button>
         <Dialog.Root portal={wrapper}>
           <Dialog.Trigger asChild let:builder>
-            <Button class={cn($breakpoints['4xs'] ? 'px-8 h-12 text-lg' : 'px-4 h-8 text-sm', 'font-bold')} variant='ghost' builders={[builder]}>
+            <Button class={cn($breakpoints['4xs'] ? 'px-8 h-12 text-lg' : 'px-4 h-8 text-sm', 'py-0 font-bold')} variant='ghost' builders={[builder]}>
               Playlist
             </Button>
           </Dialog.Trigger>
@@ -98,7 +98,7 @@
             {/each}
           </Dialog.Content>
         </Dialog.Root>
-        <Button class={cn($breakpoints['4xs'] ? 'size-12' : 'size-8')} variant='ghost' on:click={next} disabled={!next}>
+        <Button class={cn($breakpoints['4xs'] ? 'size-12 p-3' : 'size-8 p-1')} variant='ghost' on:click={next} disabled={!next}>
           <SkipForward size={$breakpoints['4xs'] ? '24px' : '16px'} fill='currentColor' strokeWidth='1' />
         </Button>
       </div>
