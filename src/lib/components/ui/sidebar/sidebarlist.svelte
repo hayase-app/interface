@@ -101,7 +101,12 @@
           </Button>
         </Tooltip.Trigger>
         <Tooltip.Content side='right' class='whitespace-pre'>
-          Something went wrong checking for updates.{'\n'}Click here to update manually.{'\n\n'}Error: {error.message}.
+          <div class='font-black'>
+            Something went wrong checking for updates.{'\n'}Click here to update manually.
+          </div>
+          <div class='text-xs text-muted-foreground'>
+            Error: {error.message?.slice?.(0, 100)}.
+          </div>
         </Tooltip.Content>
       </Tooltip.Root>
     {/if}
