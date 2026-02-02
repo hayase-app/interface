@@ -1,18 +1,17 @@
-<script lang='ts' context='module'>
-
-  // import { append, element } from 'svelte/internal'
+<!-- <script lang='ts' context='module'>
+  import { append, element } from 'svelte/internal'
   import { persisted } from 'svelte-persisted-store'
 
-  // const style = element('style')
-  // style.id = 'customThemes'
-  // append(document.head, style)
+  const style = element('style')
+  style.id = 'customThemes'
+  append(document.head, style)
 
   export const variables = persisted('theme', '')
 
-// variables.subscribe(value => {
-  //   style.textContent = `:root{${value.replace(/{|}/g, '')}}`
-  // })
-</script>
+  variables.subscribe(value => {
+    style.textContent = `:root{${value.replace(/{|}/g, '')}}`
+  })
+</script> -->
 
 <script lang='ts'>
   import SettingCard from '$lib/components/SettingCard.svelte'

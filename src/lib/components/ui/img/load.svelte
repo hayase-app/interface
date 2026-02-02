@@ -28,22 +28,18 @@
 
 <style>
   @keyframes load-in {
-    0% {
+    from {
       opacity: 0;
       filter: blur(6px);
     }
-    100% {
-      opacity: 1;
+    to {
       filter: blur(0);
     }
   }
 
   @keyframes load-in-no-blur {
-    0% {
+    from {
       opacity: 0;
-    }
-    100% {
-      opacity: 1;
     }
   }
 
