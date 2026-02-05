@@ -105,7 +105,7 @@ class CodeManager {
       return this._loadWorker(code, id)
     })
 
-    await Promise.all(workerPromises)
+    await Promise.allSettled(workerPromises)
     debug('All workers initiated')
   }
 
@@ -154,7 +154,7 @@ class CodeManager {
       this.extensions.set(id, Loader)
       debug('Worker loaded and set for', id)
       try {
-        const testResult = await Loader.test()
+        const testResult = await Promise.race([Loader.test(), new Promise((resolve, reject) => setTimeout(() => reject(new Error('Extension check timed out.')), 5000))])
         debug('Worker test passed for', id, testResult)
       } catch (e) {
         debug('Worker test failed for', id, e)
