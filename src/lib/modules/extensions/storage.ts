@@ -140,29 +140,31 @@ class CodeManager {
     return invalidIDs
   }
 
-  async _loadWorker (code: string, name: string) {
-    debug('Creating worker for', name)
-    const Loader = wrap<typeof extensionLoader>(new Worker({ name })) as unknown as Remote<typeof extensionLoader>
+  async _loadWorker (code: string, id: string) {
+    debug('Creating worker for', id)
+    const Loader = wrap<typeof extensionLoader>(new Worker({ name: id })) as unknown as Remote<typeof extensionLoader>
 
     try {
       await Loader.construct(code)
       await Loader.loaded()
-      if (this.extensions.has(name)) {
-        debug('Releasing previous worker for', name)
-        await this.extensions.get(name)![releaseProxy]()
+      if (this.extensions.has(id)) {
+        debug('Releasing previous worker for', id)
+        await this.extensions.get(id)![releaseProxy]()
       }
-      this.extensions.set(name, Loader)
-      debug('Worker loaded and set for', name)
+      this.extensions.set(id, Loader)
+      debug('Worker loaded and set for', id)
       try {
         const testResult = await Loader.test()
-        debug('Worker test passed for', name, testResult)
+        debug('Worker test passed for', id, testResult)
       } catch (e) {
-        debug('Worker test failed for', name, e)
-        toast.error(`Extension ${name} Failed to load!`, { description: (e as Error).message })
+        debug('Worker test failed for', id, e)
+        if (get(savedOptions)[id]?.enabled) {
+          toast.error(`Extension ${id} Failed to load!`, { description: (e as Error).message })
+        }
         throw e
       }
     } catch (e) {
-      debug('Error loading worker for', name, e)
+      debug('Error loading worker for', id, e)
       await Loader[releaseProxy]()
       throw e
     }
