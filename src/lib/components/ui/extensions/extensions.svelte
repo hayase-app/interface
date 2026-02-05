@@ -36,6 +36,10 @@
       }
     })()
   }
+
+  export async function test (id: string) {
+    return await storage.codeManager.extensions.get(id)?.test()
+  }
 // TODO: import files
 </script>
 
@@ -55,7 +59,7 @@
               <img src={config.icon} alt='ico' class='size-10 rounded-md bg-neutral-900' loading='lazy' decoding='async' />
               <div class='flex flex-col'>
                 <div class='text-md font-bold'>
-                  {#await storage.codeManager.extensions.get(id)?.test()}
+                  {#await test(id)}
                     <Tooltip.Root>
                       <Tooltip.Trigger class='inline' tabindex={-1}>
                         <StatusDot variant='PENDING' />
@@ -70,7 +74,7 @@
                         <StatusDot variant='COMPLETED' />
                       </Tooltip.Trigger>
                       <Tooltip.Content class='max-w-full w-52'>
-                        {#if res === true}
+                        {#if res === true || res == null}
                           This extension is online and reachable.
                         {:else if res === false}
                           This extension is offline and unreachable, but the extension expects this.
@@ -88,7 +92,7 @@
                         {#if error === false}
                           This extension is offline and unreachable.
                         {:else}
-                          {error.stack ?? error.message ?? error}
+                          {error.message ?? error.stack ?? error}
                         {/if}
                       </Tooltip.Content>
                     </Tooltip.Root>
