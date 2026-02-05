@@ -353,7 +353,8 @@
       {/each}
     </div>
   </div>
-  <div class='flex flex-wrap md:px-7 justify-center pointer-events-auto'>
+  <!-- <div class='md:px-7 pointer-events-auto flex flex-wrap justify-center'> -->
+  <div class='md:px-7 pointer-events-auto grid grid-cols-[repeat(auto-fill,minmax(184px,max-content))] justify-center'>
     {#each media as query, i (i)}
       {#if trace}
         <TraceCards {query} {trace} />

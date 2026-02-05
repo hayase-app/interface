@@ -64,7 +64,7 @@
               filler && '!ring-yellow-400 ring-1'
             )}>
             {#if image}
-              <div class='w-52 shrink-0 relative overflow-clip'>
+              <div class='max-w-52 w-1/2 shrink-0 relative overflow-clip'>
                 <div class={cn('size-full', watched && 'opacity-20')}>
                   <Load src={image} class={cn('object-cover size-full', spoiler && (SUPPORTS.isUnderPowered ? 'hidden' : 'blur-[6px]'))} />
                 </div>
