@@ -6,6 +6,8 @@ import { get } from 'svelte/store'
 import { persisted } from 'svelte-persisted-store'
 import { toast } from 'svelte-sonner'
 
+import native from '../native.ts'
+
 import Worker from './worker?worker'
 
 import type { ExtensionConfig } from './types'
@@ -107,6 +109,25 @@ class CodeManager {
 
     await Promise.allSettled(workerPromises)
     debug('All workers initiated')
+
+    await this.enableCORS()
+  }
+
+  async enableCORS () {
+    const urls = []
+    for (const worker of this.extensions.values()) {
+      try {
+        urls.push(await worker.url())
+      } catch (e) {
+        debug('Worker is not responsive during CORS enable', e)
+      }
+    }
+    try {
+      await native.enableCORS(urls)
+      debug('CORS enabled for', urls)
+    } catch (error) {
+      debug('Failed to enable CORS for', urls, 'error:', error)
+    }
   }
 
   async downloadScripts (configs: ExtensionConfig[], update = false) {
@@ -135,6 +156,8 @@ class CodeManager {
         invalidIDs.push(config.id)
       }
     }
+
+    await this.enableCORS()
 
     debug('Invalid extension IDs after download', invalidIDs)
     return invalidIDs

@@ -4,12 +4,12 @@ import { expose } from 'abslink/w3c'
 import type { NZBorURLSource, SearchFunction, TorrentSource } from './types'
 
 export default expose({
-  mod: null as unknown as Promise<TorrentSource | NZBorURLSource>,
+  mod: null as unknown as Promise<(TorrentSource | NZBorURLSource) & { url: string }>,
   construct (code: string) {
     this.mod = this.load(code)
   },
 
-  async load (code: string): Promise<TorrentSource | NZBorURLSource> {
+  async load (code: string): Promise<(TorrentSource | NZBorURLSource) & { url: string }> {
     // WARN: unsafe eval
     const url = URL.createObjectURL(new Blob([code], { type: 'application/javascript' }))
     const module = await import(/* @vite-ignore */url)
@@ -24,6 +24,10 @@ export default expose({
   [finalizer] () {
     console.log('destroyed worker')
     self.close()
+  },
+
+  async url () {
+    return (await this.mod).url
   },
 
   async single (...args: Parameters<SearchFunction>): ReturnType<SearchFunction> {

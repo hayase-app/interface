@@ -146,6 +146,7 @@ export default Object.assign<Native, Partial<Native>>({
   getDisplays: async () => undefined,
   castPlay: async () => undefined,
   castClose: async () => undefined,
+  enableCORS: async () => undefined,
   torrentInfo: async (): Promise<TorrentInfo> => ({
     name: '',
     progress: 0,
