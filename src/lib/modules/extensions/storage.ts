@@ -184,7 +184,6 @@ class CodeManager {
         if (get(savedOptions)[id]?.enabled) {
           toast.error(`Extension ${id} Failed to load!`, { description: (e as Error).message })
         }
-        throw e
       }
     } catch (e) {
       debug('Error loading worker for', id, e)
