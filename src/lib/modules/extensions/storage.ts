@@ -294,13 +294,14 @@ export const storage = new class ConfigManager {
     const newConfigs = (await Promise.all([...updateURLs].map(url => safejson<ExtensionConfig[]>(url)))).filter(e => !!e).flat()
 
     // valid config, same update link, different version
-    const safeToUpdate = newConfigs.filter(f => this._validateConfig(f) && currentConfigs[f.id]?.update === f.update && f.version !== currentConfigs[f.id]?.version)
+    const safeToUpdate = newConfigs.filter(f => this._validateConfig(f) && ((currentConfigs[f.id]?.update === f.update && f.version !== currentConfigs[f.id]?.version) || !currentConfigs[f.id]))
 
     debug('Extensions safe to update', safeToUpdate.map(f => f.id))
     const invalidExtensions = await this.codeManager.downloadScripts(safeToUpdate, true)
 
     const validExtensions = safeToUpdate.filter(c => !invalidExtensions.includes(c.id))
-    this._ensureOptions(validExtensions.map(c => c.id), false)
+    // TODO: this needs to be changed to false!
+    this._ensureOptions(validExtensions.map(c => c.id), true)
 
     this._updateSaved(validExtensions)
     debug('Update complete')
