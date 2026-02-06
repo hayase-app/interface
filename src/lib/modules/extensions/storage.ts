@@ -98,6 +98,8 @@ class CodeManager {
   async initiate (configs: ExtensionConfig[]) {
     debug('Initiating extensions', configs.map(c => c.id))
     const configIDs = configs.map(c => c.id)
+    const urls = configs.filter(c => !!c.url).map(c => atob(c.url!))
+    await this.enableCORS(urls)
 
     const codeList = await getMany<string>(configIDs)
 
@@ -109,19 +111,9 @@ class CodeManager {
 
     await Promise.allSettled(workerPromises)
     debug('All workers initiated')
-
-    await this.enableCORS()
   }
 
-  async enableCORS () {
-    const urls = []
-    for (const worker of this.extensions.values()) {
-      try {
-        urls.push(await worker.url())
-      } catch (e) {
-        debug('Worker is not responsive during CORS enable', e)
-      }
-    }
+  async enableCORS (urls: string[]) {
     try {
       await native.enableCORS(urls)
       debug('CORS enabled for', urls)
@@ -156,8 +148,6 @@ class CodeManager {
         invalidIDs.push(config.id)
       }
     }
-
-    await this.enableCORS()
 
     debug('Invalid extension IDs after download', invalidIDs)
     return invalidIDs
@@ -226,6 +216,7 @@ export const storage = new class ConfigManager {
       for (const c of configs) {
         newConfigs[c.id] = c
       }
+      this.codeManager.enableCORS(Object.values(newConfigs).filter(c => !!c.url).map(c => atob(c.url!)))
       return newConfigs
     })
   }
@@ -260,6 +251,9 @@ export const storage = new class ConfigManager {
         validConfigs.push(c)
       }
     }
+
+    const urls = validConfigs.filter(c => !!c.url).map(c => atob(c.url!))
+    await this.codeManager.enableCORS(urls)
 
     const invalidExtensions = await this.codeManager.downloadScripts(validConfigs)
 

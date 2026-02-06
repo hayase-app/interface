@@ -354,7 +354,7 @@
     </div>
   </div>
   <!-- <div class='md:px-7 pointer-events-auto flex flex-wrap justify-center'> -->
-  <div class='md:px-7 pointer-events-auto grid grid-cols-[repeat(auto-fill,minmax(184px,max-content))] justify-center'>
+  <div class={cn('md:px-7 pointer-events-auto grid justify-center', trace ? 'md:grid-cols-[repeat(auto-fill,minmax(288px,max-content))]' : 'grid-cols-[repeat(auto-fill,minmax(184px,max-content))]')}>
     {#each media as query, i (i)}
       {#if trace}
         <TraceCards {query} {trace} />

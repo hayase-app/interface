@@ -13,6 +13,7 @@ export interface ExtensionConfig {
   ratio?: 'perma' | number
   icon: string // URL to the icon
   media: 'sub' | 'dub' | 'both'
+  url?: string // URL to enable CORS on the extension's API
   languages: CountryCodes[] // languages for sub/dub, this doesn't include the languages of the source itself, aka raw sub impiles you can turn it off and just get raw in japanese
   update?: string // URL to the config file, can be prefixed with 'gh:' to fetch from GitHub, e.g. 'gh:username/repo' or 'npm:' to fetch from npm, e.g. 'npm:package-name', or a straight url
   code: string // URL to the extension code, can be prefixed with 'gh:' to fetch from GitHub, e.g. 'gh:username/repo' or 'npm:' to fetch from npm, e.g. 'npm:package-name', a straight url, or file: for inline code
