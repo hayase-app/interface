@@ -59,6 +59,8 @@ export interface SingleEpisode {
   airingAt?: Date
   filler: boolean
   anidbEid?: number
+  tvdbId?: number
+  tvdbShowId?: number
 }
 
 export function episodeByAirDate (alDate: Date | undefined, episodes: Map<string, Episode & { airdatems?: number }>, episode: number): Episode & { airdatems?: number } | undefined {
@@ -129,9 +131,9 @@ export function makeEpisodeList (media: Media, episodesRes?: EpisodesResponse | 
       }
     }
 
-    const { image, summary, overview, rating, title, length, airdate, anidbEid, runtime } = resolvedEpisode ?? {}
+    const { image, summary, overview, rating, title, length, airdate, anidbEid, runtime, tvdbId } = resolvedEpisode ?? {}
     const res = {
-      episode, image, summary: summary ?? overview, rating, title, length, airdate, airingAt, filler: !!fillerEpisodes[media.id]?.includes(episode), anidbEid, runtime
+      episode, image, summary: summary ?? overview, rating, title, length, airdate, airingAt, filler: !!fillerEpisodes[media.id]?.includes(episode), anidbEid, runtime, tvdbId
     }
     episodeList.push(res)
   }
@@ -185,8 +187,8 @@ export const extensions = new class Extensions {
     debug(`Fetching sources for ${media.id}:${media.title?.userPreferred} ${episode} ${movie} ${resolution}`)
 
     const aniDBMeta = await this.ALToAniDB(media)
-    const anidbAid = aniDBMeta?.mappings?.anidb_id
-    const anidbEid = anidbAid && (await this.ALtoAniDBEpisode({ media, episode }, aniDBMeta))?.anidbEid
+    const { anidb_id: anidbAid, mal_id: malId, themoviedb_id: tmdbId, kitsu_id: kitsuId, thetvdb_id: tvdbId, imdb_id: imdbId } = aniDBMeta?.mappings ?? {}
+    const { anidbEid, tvdbId: tvdbEId } = (anidbAid && await this.ALtoAniDBEpisode({ media, episode }, aniDBMeta)) || {}
     debug(`AniDB Mapping: ${anidbAid} ${anidbEid}`)
 
     const options = {
@@ -195,6 +197,12 @@ export const extensions = new class Extensions {
       episode,
       anidbAid,
       anidbEid,
+      tvdbId,
+      tvdbEId,
+      malId,
+      tmdbId,
+      kitsuId,
+      imdbId,
       titles: this.createTitles(media),
       resolution,
       exclusions: get(settings).enableExternal ? [] : exclusions
@@ -322,7 +330,7 @@ export const extensions = new class Extensions {
     return await _episodes(parentID)
   }
 
-  async ALtoAniDBEpisode ({ media, episode }: {media: Media, episode: number}, episodesRes: EpisodesResponse) {
+  async ALtoAniDBEpisode ({ media, episode }: {media: Media, episode: number}, episodesRes?: EpisodesResponse | null) {
     return makeEpisodeList(media, episodesRes)[episode - 1] ?? undefined
   }
 
