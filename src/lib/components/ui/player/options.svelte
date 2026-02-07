@@ -6,8 +6,9 @@
 
   import { activeDisplay, displays } from './castplayer.svelte'
   import Keybinds from './keybinds.svelte'
-  import { normalizeSubs, normalizeTracks, screenshot, type Chapter } from './util'
+  import { normalizeSubs, normalizeTracks, screenshot } from './util'
 
+  import type { Chapter } from './chapters'
   import type PictureInPicture from './pip'
   import type { ResolvedFile } from './resolver'
   import type Subtitles from './subtitles'

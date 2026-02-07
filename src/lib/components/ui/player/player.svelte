@@ -313,8 +313,8 @@
   function checkSkippableChapters () {
     const current = findChapter(currentTime, $chapters)
     const wasSkippable = currentSkippable?.autoskippable
-    if (current?.skippable) {
-      currentSkippable = current
+    if (current) {
+      currentSkippable = current.skippable ? current : undefined
       if ($settings.playerSkip && current.autoskippable && !wasSkippable && !$w2globby) animating = true
     }
   }
