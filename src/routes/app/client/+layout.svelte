@@ -64,7 +64,7 @@
         <div>WebTorrent v2.8.4</div>
       </div>
     </aside>
-    <div class='w-full lg:max-w-6xl flex-grow pb-2'>
+    <div class='w-full lg:max-w-6xl flex-grow pb-2 min-w-0'>
       {#if !SUPPORTS.isUnderPowered}
         <Globe />
       {/if}
