@@ -29,6 +29,7 @@
 
   import Animations, { playAnimation } from './animations.svelte'
   import { displays } from './castplayer.svelte'
+  import Chapters, { findChapter, getChapterTitle, type Chapter } from './chapters'
   import DownloadStats from './downloadstats.svelte'
   import EpisodesModal from './episodesmodal.svelte'
   import { condition, loadWithDefaults } from './keybinds.svelte'
@@ -37,7 +38,7 @@
   import Seekbar from './seekbar.svelte'
   import Subs from './subtitles'
   import Thumbnailer from './thumbnailer'
-  import { findChapter, getChaptersAniSkip, getChapterTitle, isChapterSkippable, sanitizeChapters, screenshot, type Chapter, type MediaInfo } from './util'
+  import { screenshot, type MediaInfo } from './util'
   import Volume from './volume.svelte'
 
   import type { ResolvedFile } from './resolver'
@@ -219,26 +220,12 @@
     if (!wasPaused) video.play()
   }
 
-  let chapters: Chapter[] = []
-  const chaptersPromise = native.chapters(mediaInfo.file.hash, mediaInfo.file.id)
-  async function loadChapters (pr: typeof chaptersPromise, safeduration: number) {
-    try {
-      const nativeChapters = await pr
-      if (nativeChapters.length) {
-        chapters = sanitizeChapters(nativeChapters, safeduration)
-        return
-      }
-    } catch (error) {
-      console.warn('Failed to load native chapters:', error)
-    }
+  const chaptersHandler = new Chapters(mediaInfo)
+  const chapters = chaptersHandler.chapters
 
-    const idMal = mediaInfo.media.idMal
-    if (!idMal) return
-    const aniSkipChapters = await getChaptersAniSkip(idMal, mediaInfo.episode, safeduration)
-    if (!aniSkipChapters.length) return
-    chapters = sanitizeChapters(aniSkipChapters, safeduration)
-  }
-  $: loadChapters(chaptersPromise, safeduration)
+  $: console.log($chapters, chaptersHandler)
+
+  $: chaptersHandler.loadChapters(safeduration)
 
   function createSubtitles (video: HTMLVideoElement) {
     subtitles = new Subs(video, otherFiles, mediaInfo.file)
@@ -294,7 +281,7 @@
   }
 
   // other
-  $: if (ended && $settings.playerAutoplay && !isMiniplayer) next?.()
+  $: if (ended && $settings.playerAutoplay && !isMiniplayer && !$w2globby) next?.()
 
   function handleVisibility (visibility: DocumentVisibilityState) {
     if (!ended && $settings.playerPause && !pictureInPictureElement) {
@@ -322,13 +309,13 @@
 
   $: if (readyState > 0) clearInterval(interval)
 
-  let currentSkippable: string | null = null
+  let currentSkippable: Chapter | undefined
   function checkSkippableChapters () {
-    const current = findChapter(currentTime, chapters)
-    const wasSkippable = currentSkippable
-    if (current) {
-      currentSkippable = isChapterSkippable(current)
-      if ($settings.playerSkip && !wasSkippable) animating = true
+    const current = findChapter(currentTime, $chapters)
+    const wasSkippable = currentSkippable?.autoskippable
+    if (current?.skippable) {
+      currentSkippable = current
+      if ($settings.playerSkip && current.autoskippable && !wasSkippable && !$w2globby) animating = true
     }
   }
 
@@ -339,14 +326,14 @@
   let animating = false
 
   function skip () {
-    const current = findChapter(currentTime, chapters)
+    const current = findChapter(currentTime, $chapters)
     if (current) {
-      if (!isChapterSkippable(current) && (current.end - current.start) > 100) {
+      if (!current.skippable && (current.end - current.start) > 100) {
         currentTime = currentTime + 85
       } else {
         const endtime = current.end + 0.5
         currentTime = endtime
-        currentSkippable = null
+        currentSkippable = undefined
       }
     } else if (currentTime < 10) {
       currentTime = 90
@@ -794,7 +781,7 @@
           Subtitle delay: {subtitleDelay} sec
         </div>
       {/if}
-      <Options {wrapper} bind:openSubs {video} {seekTo} {selectAudio} {selectVideo} {fullscreen} {chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'
+      <Options {wrapper} bind:openSubs {video} {seekTo} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'
         class='{($settings.minimalPlayerUI || SUPPORTS.isAndroid) ? 'inline-flex' : 'mobile:inline-flex hidden'} p-3 size-12 absolute z-[1] top-4 left-4 bg-black/20 pointer-events-auto transition-opacity delay-150 select:opacity-100 {immersed && 'opacity-0'}' />
       {#if fastForwarding}
         <div class='absolute top-10 font-bold text-sm animate-[fade-in_.4s_ease] flex items-center leading-none bg-black/60 px-4 py-2 rounded-2xl'>x2 <FastForward class='ml-2' size='12' fill='currentColor' /></div>
@@ -829,7 +816,7 @@
     </div>
     {#if currentSkippable}
       <ProgressButton onclick={skip} bind:animating size='default' duration={3000} class={cn('px-7 font-bold absolute bottom-40 right-10 transition-opacity delay-150', immersed && !animating && 'opacity-0')}>
-        Skip {currentSkippable}
+        Skip {currentSkippable.skiptype ?? ''}
       </ProgressButton>
     {/if}
     <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity delay-150 select:opacity-100' class:opacity-0={immersed}>
@@ -838,7 +825,7 @@
           <EpisodesModal portal={wrapper} {mediaInfo} />
         </div>
         <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg'>
-          <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, chapters) || ''}</div>
+          <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, $chapters) || ''}</div>
           <div class='ml-auto self-end text-sm leading-none font-light text-nowrap' use:click={toggleTimeFormat}>
             {#if $timeFormat === 'positive'}
               {toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}
@@ -848,7 +835,7 @@
           </div>
         </div>
       </div>
-      <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} {chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
+      <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} chapters={$chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
       <div class='justify-between gap-2 {($settings.minimalPlayerUI || SUPPORTS.isAndroid) ? 'hidden' : 'mobile:hidden flex'}'>
         <div class='flex text-white gap-2'>
           <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)} id='player-play-pause-button' data-up='#player-seekbar'>
@@ -880,7 +867,7 @@
               x{$playbackRate?.toFixed(1)}
             </div>
           {/if}
-          <Options {fullscreen} {wrapper} {seekTo} bind:openSubs bind:openCast {video} {selectAudio} {selectVideo} {chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
+          <Options {fullscreen} {wrapper} {seekTo} bind:openSubs bind:openCast {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
           {#if subtitles}
             <Button class='p-3 size-12' variant='ghost' on:click={openSubs} on:keydown={keywrap(openSubs)} data-up='#player-seekbar'>
               <Subtitles size='24px' fill='currentColor' strokeWidth='0' />

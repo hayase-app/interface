@@ -270,7 +270,7 @@ export default class Subtitles {
       subContent: defaultHeader,
       fonts: this.fonts,
       maxRenderHeight: parseInt(this.set.subtitleRenderHeight) || 0,
-      defaultFont: STYLE_OVERRIDES[this.set.subtitleStyle].FontName ?? 'roboto medium',
+      defaultFont: STYLE_OVERRIDES[this.set.subtitleStyle]?.FontName ?? 'roboto medium',
       queryFonts: this.set.missingFont ? 'localandremote' : false,
       workerUrl,
       modernWasmUrl,

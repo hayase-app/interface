@@ -29,7 +29,7 @@
 <script lang='ts'>
   import { createEventDispatcher } from 'svelte'
 
-  import { getChapterTitle } from './util'
+  import { getChapterTitle } from './chapters'
 
   import type Thumbnailer from './thumbnailer'
 
