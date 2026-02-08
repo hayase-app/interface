@@ -3,6 +3,12 @@ export type Accuracy = 'high' | 'medium' | 'low'
 
 type CountryCodes = 'ALL' | 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT'
 
+export type SearchOptions = Record<string, {
+  type: 'string' | 'number' | 'boolean'
+  description: string
+  default: any
+}>
+
 export interface ExtensionConfig {
   name: string
   version: string
@@ -17,11 +23,7 @@ export interface ExtensionConfig {
   languages: CountryCodes[] // languages for sub/dub, this doesn't include the languages of the source itself, aka raw sub impiles you can turn it off and just get raw in japanese
   update?: string // URL to the config file, can be prefixed with 'gh:' to fetch from GitHub, e.g. 'gh:username/repo' or 'npm:' to fetch from npm, e.g. 'npm:package-name', or a straight url
   code: string // URL to the extension code, can be prefixed with 'gh:' to fetch from GitHub, e.g. 'gh:username/repo' or 'npm:' to fetch from npm, e.g. 'npm:package-name', a straight url, or file: for inline code
-  options?: Record<string, {
-      type: 'string' | 'number' | 'boolean'
-      description: string
-      default: any
-    }>
+  options?: SearchOptions
 }
 
 export interface TorrentResult {
@@ -50,11 +52,10 @@ export interface TorrentQuery {
   type?: 'sub' | 'dub'
 }
 
-export type SearchFunction = (query: TorrentQuery, options?: Record<string, {
-    type: 'string' | 'number' | 'boolean'
-    description: string
-    default: any
-  }>) => Promise<TorrentResult[]>
+export type TorrentQueryWithFetch = TorrentQuery & { fetch: typeof fetch }
+
+export type SearchFunction = (query: TorrentQueryWithFetch, options?: SearchOptions) => Promise<TorrentResult[]>
+export type NZBorURLFunction = (hash: string, options?: SearchOptions) => Promise<string>
 
 export class TorrentSource {
   test: () => Promise<boolean>
@@ -65,9 +66,5 @@ export class TorrentSource {
 
 export class NZBorURLSource {
   test: () => Promise<boolean>
-  query: (hash: string, options?: Record<string, {
-      type: 'string' | 'number' | 'boolean'
-      description: string
-      default: any
-    }>) => Promise<string> // accepts btih hash, return URL to NZB or DDL
+  query: (hash: string, options?: SearchOptions, fetch: typeof fetch) => Promise<string> // accepts btih hash, return URL to NZB or DDL
 }

@@ -86,6 +86,11 @@
       episode: mediaInfo.episode,
       episodeNumber: mediaInfo.episode
     },
+    customData: {
+      hash: mediaInfo.file.hash,
+      id: mediaInfo.file.id,
+      audioLanguage: $settings.audioLanguage
+    },
     // @ts-expect-error enum
     streamType: 'BUFFERED',
     // @ts-expect-error enum
