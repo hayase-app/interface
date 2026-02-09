@@ -223,8 +223,6 @@
   const chaptersHandler = new Chapters(mediaInfo)
   const chapters = chaptersHandler.chapters
 
-  $: console.log($chapters, chaptersHandler)
-
   $: chaptersHandler.loadChapters(safeduration)
 
   function createSubtitles (video: HTMLVideoElement) {

@@ -1,3 +1,8 @@
+<script lang='ts' context='module'>
+  import { flip } from 'svelte/animate'
+  import { quartInOut } from 'svelte/easing'
+</script>
+
 <script lang='ts'>
   import type { client } from '$lib/modules/anilist'
 
@@ -44,9 +49,11 @@
 {:else if $query.data}
   {#if $query.data.Page?.media}
     {#each $query.data.Page.media as media, i (media?.id ?? '#' + i)}
-      {#if media}
-        <SmallCard {media} />
-      {/if}
+      <div animate:flip={{ duration: 400, easing: quartInOut }}>
+        {#if media}
+          <SmallCard {media} />
+        {/if}
+      </div>
     {:else}
       <div class='p-5 flex items-center justify-center w-full h-80'>
         <div>
