@@ -73,7 +73,7 @@
   }
 </script>
 
-<div class={cn('size-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-grabbing touch-none')}
+<div class={cn('size-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-pointer touch-none')}
   bind:this={wrapper}
   on:pointerdown={startDragging}
   on:pointerup|self={endDragging}
@@ -82,7 +82,7 @@
   on:pointercancel|self={endHover}>
   <div class={cn(
     'pointer-events-auto w-full',
-    isMiniplayer ? 'max-w-80 absolute bottom-0 right-0 rounded-lg overflow-clip miniplayer transition-transform duration-[500ms] ease-[cubic-bezier(0.3,1.5,0.8,1)]' : 'size-full',
+    isMiniplayer ? 'max-w-[22rem] px-4 absolute bottom-0 right-0 [&>*]:rounded-lg [&>*]:overflow-clip miniplayer transition-transform duration-[500ms] ease-[cubic-bezier(0.3,1.5,0.8,1)]' : 'size-full',
     dragging && isMiniplayer && 'dragging',
     !$isPlaying && 'paused select:paused-show'
   )} style:--top={bottom} style:--left={right}>
@@ -104,15 +104,15 @@
 
 <style>
   .paused {
-    --padding-right: calc(100% - 2rem);
-    --padding-left: calc(-100vi + 2rem);
+    --padding-right: calc(100% - 3rem);
+    --padding-left: calc(-100vi + 3rem);
   }
   .miniplayer {
     transform: translate3d(
       clamp(
         calc(var(--padding-left, -100vi + 100% + 1rem)),
         var(--left),
-        var(--padding-right, -1rem)
+        var(--padding-right, 0px)
       ),
       clamp(
         calc(-100vb + 100% + 1rem),
