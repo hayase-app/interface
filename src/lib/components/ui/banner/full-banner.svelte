@@ -68,22 +68,18 @@
 
   $: filtered = $following?.data?.Page?.mediaList?.filter(ml => ml?.user?.id !== authAggregator.id()) ?? []
 
-  $: usersForCurrent = filtered.filter(f => f?.media?.id === current?.id)
+  $: usersForCurrent = filtered.filter((f): f is NonNullable<typeof f> => f?.media?.id === current?.id && !!f?.user).map(({ user }) => user!)
 </script>
 
 {#if current}
   {#if usersForCurrent.length}
     <div class='md:pt-14 md:pl-10 p-4 flex space-x-2'>
-      <Avatars>
-        {#each usersForCurrent as ml, i (ml?.user?.id ?? i)}
-          {#if ml?.user}
-            <Profile user={ml.user} class='inline-block size-8 fade-in' />
-          {/if}
-        {/each}
+      <Avatars users={usersForCurrent} let:user>
+        <Profile {user} class='inline-block size-8 fade-in' />
       </Avatars>
       <div class='flex flex-col justify-between leading-none font-medium fade-in'>
         <div class='text-muted-foreground text-xs'>
-          {usersForCurrent[0]?.user?.name ?? ''}
+          {usersForCurrent[0]?.name ?? ''}
         </div>
         <div class='text-sm'>
           Also Watched This Series

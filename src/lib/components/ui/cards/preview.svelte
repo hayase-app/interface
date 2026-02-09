@@ -7,8 +7,8 @@
   import Videoframe from './videoframe.svelte'
 
   import { desc, duration, format, season, title, type Media } from '$lib/modules/anilist'
-  import { of } from '$lib/modules/auth'
-  import { SUPPORTS } from '$lib/modules/settings'
+  import { list, of } from '$lib/modules/auth'
+  import { settings, SUPPORTS } from '$lib/modules/settings'
   import { cn, type TraceAnime } from '$lib/utils'
 
   export let media: Media
@@ -19,6 +19,8 @@
   function hide (e: CustomEvent<boolean>) {
     hideFrame = e.detail
   }
+
+  $: spoiler = $settings.hideSpoilers && ['CURRENT', 'PLANNING'].includes(list(media)!)
 </script>
 
 <div class='!absolute w-[17.5rem] h-80 left-1/2 right-1/2 top-0 bottom-0 m-auto bg-neutral-950 z-30 rounded cursor-pointer absolute-container'>
@@ -58,7 +60,7 @@
       <span class='text-nowrap flex items-center'>
         {season(media)}
       </span>
-      {#if media.averageScore}
+      {#if media.averageScore && !spoiler}
         <span class='text-nowrap flex items-center text-ellipsis'>
           {media.averageScore}%
         </span>

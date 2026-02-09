@@ -56,6 +56,7 @@
         {@const watched = _progress >= episode && !completed}
         {@const target = _progress + 1 === episode}
         {@const spoiler = !watched && !target && $settings.hideSpoilers}
+        {@const underPoweredSpoiler = spoiler && SUPPORTS.isUnderPowered}
         <div class={!target ? 'px-3 w-full' : 'contents'}>
           <div use:click={() => play(episode)}
             class={cn(
@@ -66,9 +67,11 @@
             {#if image}
               <div class='max-w-52 w-1/2 shrink-0 relative overflow-clip'>
                 <div class={cn('size-full', watched && 'opacity-20')}>
-                  <Load src={image} class={cn('object-cover size-full', spoiler && (SUPPORTS.isUnderPowered ? 'hidden' : 'blur-[6px]'))} />
+                  {#if !underPoweredSpoiler}
+                    <Load src={image} class={cn('object-cover size-full', spoiler && 'blur-[6px]')} />
+                  {/if}
                 </div>
-                {#if spoiler && SUPPORTS.isUnderPowered}
+                {#if underPoweredSpoiler}
                   <Logo class='absolute size-8 text-neutral-600 inset-0 m-auto' />
                 {/if}
                 {#if length ?? runtime ?? media.duration}
@@ -76,10 +79,10 @@
                     {length ?? runtime ?? media.duration}m
                   </div>
                 {/if}
-                {#if rating}
-                  <div class='absolute bottom-1 right-1 bg-neutral-900/80 text-secondary-foreground text-[9.6px] px-1 py-0.5 rounded flex'>
+                {#if rating && !underPoweredSpoiler}
+                  <div class={cn('absolute bottom-1 right-1 bg-neutral-900/80 text-secondary-foreground text-[9.6px] px-1 py-0.5 rounded flex', spoiler && 'blur-[3px]')}>
                     <Star class='size-2.5 mt-0.5 mr-1 text-yellow-400' fill='currentColor' />
-                    {rating}
+                    {spoiler ? '5.00' : rating}
                   </div>
                 {/if}
                 <div class='absolute flex items-center justify-center size-full bg-black group-select:bg-opacity-50 bg-opacity-0 duration-200 text-white transition-[background] ease-out top-0'>
@@ -98,8 +101,8 @@
                   <div class='h-0.5 overflow-hidden bg-custom shrink-0' style:width={$watchProgress.progress + '%'} />
                 </div>
               {/if}
-              <div class='text-[9.6px] text-muted-foreground overflow-hidden {spoiler && !SUPPORTS.isUnderPowered && 'blur-[6px]'}'>
-                {#if spoiler && SUPPORTS.isUnderPowered}
+              <div class='text-[9.6px] text-muted-foreground overflow-hidden {spoiler && !underPoweredSpoiler && 'blur-[6px]'}'>
+                {#if underPoweredSpoiler}
                   <div class='flex flex-col gap-2 pt-1'>
                     <div class='bg-primary/5 size-full rounded h-1.5 w-60' />
                     <div class='bg-primary/5 size-full rounded h-1.5 w-48' />

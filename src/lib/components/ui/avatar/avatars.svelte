@@ -1,4 +1,12 @@
+<script lang='ts' context='module'>
+  import { flip } from 'svelte/animate'
+  import { cubicInOut } from 'svelte/easing'
+</script>
+
 <script lang='ts'>
+  import type { UserFrag } from '$lib/modules/anilist/queries'
+  import type { ResultOf } from 'gql.tada'
+
   import { cn } from '$lib/utils'
 
   let className: string | undefined | null = undefined
@@ -6,6 +14,7 @@
 
   export let overlap = 8
   export let border = 4
+  export let users: Array<ResultOf<typeof UserFrag>> = []
 </script>
 
 <div
@@ -18,5 +27,9 @@
   style:--avatars-overlap='{overlap}px'
   style:--avatars-border='{border}px'
 >
-  <slot />
+  {#each users as user, i (user.id ?? i)}
+    <div animate:flip={{ duration: 100, easing: cubicInOut }}>
+      <slot {user} />
+    </div>
+  {/each}
 </div>

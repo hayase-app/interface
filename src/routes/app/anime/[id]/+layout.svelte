@@ -18,10 +18,11 @@
   import { Load } from '$lib/components/ui/img'
   import { Profile } from '$lib/components/ui/profile'
   import { cover, desc, duration, format, season, status, title, getBGColorForRating } from '$lib/modules/anilist'
-  import { authAggregator, of } from '$lib/modules/auth'
+  import { authAggregator, list, of } from '$lib/modules/auth'
   import native from '$lib/modules/native'
   import { dragScroll } from '$lib/modules/navigate'
-  import { colors } from '$lib/utils'
+  import { settings, SUPPORTS } from '$lib/modules/settings'
+  import { cn, colors } from '$lib/utils'
 
   export let data: LayoutData
 
@@ -55,6 +56,9 @@
   let container: HTMLDivElement
 
   $: ({ r, g, b } = colors(media.coverImage?.color ?? undefined))
+
+  $: spoiler = $settings.hideSpoilers && ['CURRENT', 'PLANNING'].includes(list(media)!)
+  $: underPoweredSpoiler = spoiler && SUPPORTS.isUnderPowered
 </script>
 
 <div class='min-w-0 -ml-14 pl-14 grow items-center flex flex-col h-full overflow-y-auto -z-1 pb-10' use:dragScroll on:scroll={handleScroll} bind:this={container} style:--custom={media.coverImage?.color ?? '#fff'} style:--red={r} style:--green={g} style:--blue={b}>
@@ -90,9 +94,11 @@
                 {season(media)}
               </Button>
             {/if}
-            {#if media.averageScore}
-              <Button class='rounded px-3.5 font-bold text-contrast h-6 py-0 text-base {getBGColorForRating(media.averageScore)}' on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
-                {media.averageScore}%
+            {#if media.averageScore && !underPoweredSpoiler}
+              <Button class={cn('rounded px-3.5 font-bold text-contrast h-6 py-0 text-base', getBGColorForRating(spoiler ? 100 : media.averageScore))} on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+                <span class={cn(spoiler && 'blur-[3px]')}>
+                  {spoiler ? 50 : media.averageScore}%
+                </span>
               </Button>
             {/if}
           </div>

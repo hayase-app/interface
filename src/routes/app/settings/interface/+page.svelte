@@ -54,7 +54,7 @@
 <SettingCard let:id title='Show Hentai' description={'Shows hentai content throughout the app. If disabled all hentai content will be hidden and not shown in search results, but shown if present in your list.\n\nThis is also an AniList account setting, so make sure it is enabled in account settings as well to avoid inconsistencies.'}>
   <Switch {id} bind:checked={$settings.showHentai} />
 </SettingCard>
-<SettingCard let:id title='Hide Spoilers' description='Hides potential spoilers such as titles, descriptions and episode images throughout the app.'>
+<SettingCard let:id title='Hide Spoilers' description='Hides potential spoilers such as titles, descriptions, episode images and ratings throughout the app.'>
   <Switch {id} bind:checked={$settings.hideSpoilers} />
 </SettingCard>
 <div class='font-weight-bold text-xl font-bold'>UI Settings</div>
