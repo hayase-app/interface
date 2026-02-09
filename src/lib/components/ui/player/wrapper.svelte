@@ -40,6 +40,7 @@
     } else if (!dragging && Math.abs(firstX - e.offsetX) > 3 && Math.abs(firstY - e.offsetY) > 3) {
       dragging = true
     }
+    if (!dragging) return
     bottom = e.offsetY - initialY + 'px'
     right = e.offsetX - initialX + 'px'
   }
@@ -110,7 +111,7 @@
   .miniplayer {
     transform: translate3d(
       clamp(
-        calc(var(--padding-left, -100vi + 100% + 1rem)),
+        calc(var(--padding-left, -100vi + 100%)),
         var(--left),
         var(--padding-right, 0px)
       ),
