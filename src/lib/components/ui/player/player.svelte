@@ -279,7 +279,7 @@
   }
 
   // other
-  $: if (ended && $settings.playerAutoplay && !isMiniplayer && !$w2globby) next?.()
+  $: if (ended && $settings.playerAutoplay && !isMiniplayer && (!$w2globby || Object.keys($w2globby.peers.value).length > 1)) next?.()
 
   function handleVisibility (visibility: DocumentVisibilityState) {
     if (!ended && $settings.playerPause && !pictureInPictureElement) {
@@ -313,7 +313,7 @@
     const wasSkippable = currentSkippable?.autoskippable
     if (current) {
       currentSkippable = current.skippable ? current : undefined
-      if ($settings.playerSkip && current.autoskippable && !wasSkippable && !$w2globby) animating = true
+      if ($settings.playerSkip && current.autoskippable && !wasSkippable && (!$w2globby || Object.keys($w2globby.peers.value).length > 1)) animating = true
     }
   }
 
