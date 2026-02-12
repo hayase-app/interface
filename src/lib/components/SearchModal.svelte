@@ -14,7 +14,7 @@
   import { extensions } from '$lib/modules/extensions/extensions'
   import { click, dragScroll } from '$lib/modules/navigate'
   import { settings, videoResolutions } from '$lib/modules/settings'
-  import { cn, colors, fastPrettyBytes, since, transferToFileList } from '$lib/utils'
+  import { breakpoints, cn, colors, fastPrettyBytes, since, transferToFileList } from '$lib/utils'
 
   const termMapping: Record<string, {text: string, color: string}> = {}
   termMapping['5.1'] = termMapping['5.1CH'] = { text: '5.1', color: '#f67255' }
@@ -246,21 +246,23 @@
               {@const { results, errors } = search}
               {#each filterAndSortResults(results, inputText, downloaded) as result (result.hash)}
                 <div class='p-3 flex cursor-pointer mb-2 relative rounded-md overflow-hidden bg-neutral-950 group/card select:ring-1 select:ring-custom select:bg-neutral-900 select:scale-[1.02] select:shadow-lg scale-100 transition-all [content-visibility:auto] [contain-intrinsic-height:auto_106px]' class:opacity-40={result.accuracy === 'low'} use:click={() => play(result)} title={result.parseObject.file_name[0]}>
-                  <div class='size-20 relative shrink-0 flex items-center justify-center text-xs px-1 text-wrap break-all font-bold text-center overflow-clip'>
-                    {#if result.accuracy === 'high' || result.accuracy === 'medium'}
-                      <BadgeCheck class={cn('absolute top-0 left-0 mix-blend-difference', result.accuracy === 'high' ? 'text-[#53da33]' : 'text-muted-foreground/20')} fill='currentColor' color='#000' size='1.2rem' />
-                    {/if}
-                    {#if downloaded.has(result.hash)}
-                      <Download class='text-[#53da33] size-12 opacity-80' stroke-width='0.5' color='currentColor' stroke='currentColor' />
-                    {:else if result.type}
-                      <Folder class='text-yellow-300 size-12 opacity-80' fill='currentColor' />
-                    {:else}
-                      <File class='text-muted-foreground size-12 opacity-80' />
-                    {/if}
-                  </div>
+                  {#if result.accuracy === 'high' || result.accuracy === 'medium'}
+                    <BadgeCheck class={cn('absolute top-4 left-4 md:top-3 md:left-3 mix-blend-difference', result.accuracy === 'high' ? 'text-[#53da33]' : 'text-muted-foreground/20')} fill='currentColor' color='#000' size='1.2rem' />
+                  {/if}
+                  {#if $breakpoints.md}
+                    <div class='size-20 relative shrink-0 flex items-center justify-center text-xs px-1 text-wrap break-all font-bold text-center overflow-clip'>
+                      {#if downloaded.has(result.hash)}
+                        <Download class='text-[#53da33] size-12 opacity-80' stroke-width='0.5' color='currentColor' stroke='currentColor' />
+                      {:else if result.type}
+                        <Folder class='text-yellow-300 size-12 opacity-80' fill='currentColor' />
+                      {:else}
+                        <File class='text-muted-foreground size-12 opacity-80' />
+                      {/if}
+                    </div>
+                  {/if}
                   <div class='flex pl-2 flex-col justify-between w-full h-20 relative min-w-0 text-[.7rem]'>
                     <div class='flex w-full items-center'>
-                      <div class='text-xl font-bold text-nowrap group-select/card:text-custom transition-colors'>{getGroup(result.parseObject)}</div>
+                      <div class='text-xl font-bold text-nowrap group-select/card:text-custom transition-colors pl-6 md:pl-0'>{getGroup(result.parseObject)}</div>
                       <div class='ml-auto flex gap-2 self-start'>
                         {#each result.extension as id (id)}
                           {#if $savedConfigs[id]}

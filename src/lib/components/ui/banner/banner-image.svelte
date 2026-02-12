@@ -22,7 +22,7 @@
   type $$Props = HTMLAttributes<HTMLImageElement>
 
   let className: $$Props['class'] = ''
-  export { className as class } // TODO: needs nice animations, should update to coverimage on mobile width
+  export { className as class }
 
   $: isBig = $page.route.id === '/app/home'
 

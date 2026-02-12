@@ -40,7 +40,7 @@ exports.colors = [6, 2, 3, 4, 5, 1]
  * and the Firebug extension (any Firefox version) are known
  * to support "%c" CSS customizations.
  *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ * add a `localStorage` variable to explicitly enable/disable colors
  */
 
 function useColors () {

@@ -146,9 +146,6 @@
         description: 'This may take a while depending on the library size.'
       })
   }
-
-// TODO once new resolver is implemented
-  // $: allIDsPromise = client.multiple($lib.map(e => e.mediaID))
 </script>
 
 <div class='flex gap-2'>
