@@ -4,8 +4,9 @@ export type Accuracy = 'high' | 'medium' | 'low'
 type CountryCodes = 'ALL' | 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT'
 
 export type SearchOptions = Record<string, {
-  type: 'string' | 'number' | 'boolean'
+  type: 'string' | 'number' | 'boolean' | 'select'
   description: string
+  values?: any[]
   default: any
 }>
 
@@ -41,15 +42,21 @@ export interface TorrentResult {
 }
 
 export interface TorrentQuery {
+  media: any // anilist Media object
   anilistId: number // anilist anime id
   anidbAid?: number // anidb anime id
   anidbEid?: number // anidb episode id
+  tvdbId?: number // thetvdb anime id
+  tvdbEId?: number // thetvdb episode id
+  imdbId?: string // imdb id
+  tmdbId?: number // tmdb anime id
   titles: string[] // list of titles and alternative titles
   episode?: number
   episodeCount?: number // total episode count for the series
   resolution: '2160' | '1080' | '720' | '540' | '480' | ''
-  exclusions: string[] // list of keywords to exclude from searches
+  exclusions: string[] // list of keywords to exclude from searches, this might be unsupported codecs (e.g., "x265"), sources (e.g., "web-dl"), or other keywords (e.g., "uncensored")
   type?: 'sub' | 'dub'
+  fetch: typeof globalThis.fetch // fetch function to perform network requests, this function should be used instead of the global fetch to ensure CORS requests work properly
 }
 
 export type TorrentQueryWithFetch = TorrentQuery & { fetch: typeof fetch }

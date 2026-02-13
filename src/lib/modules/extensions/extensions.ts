@@ -203,6 +203,7 @@ export const extensions = new class Extensions {
       tmdbId,
       kitsuId,
       imdbId,
+      media,
       titles: this.createTitles(media),
       resolution,
       exclusions: get(settings).enableExternal ? [] : exclusions
