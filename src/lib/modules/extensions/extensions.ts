@@ -194,7 +194,7 @@ export const extensions = new class Extensions {
 
     const options = {
       anilistId: media.id,
-      episodeCount: episodes(media) ?? undefined,
+      episodeCount: episodes(media),
       episode,
       anidbAid,
       anidbEid,

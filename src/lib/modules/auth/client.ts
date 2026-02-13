@@ -180,6 +180,10 @@ export default new class AuthAggregator {
 
     if (!mediaList) return await this.entry({ id: media.id, progress: 0, status: 'CURRENT' })
 
+    // for single episode media don't set to REPEATING, as restarting the app over and over again will keep setting it to REPEATING, then COMPLETED
+    // which means movies won't auto mark as REPEATING, sucks, but necessary
+    if (episodes(updatedMedia) === 1 && mediaList.status === 'COMPLETED') return
+
     if (['COMPLETED', 'PLANNING', 'PAUSED'].includes(mediaList.status ?? '')) {
       const status = mediaList.status === 'COMPLETED' ? 'REPEATING' : 'CURRENT'
       const lists = (mediaList.customLists as Array<{enabled: boolean, name: string}> | undefined)?.filter(({ enabled }) => enabled).map(({ name }) => name) ?? []
