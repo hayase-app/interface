@@ -61,6 +61,7 @@ export interface SingleEpisode {
   anidbEid?: number
   tvdbId?: number
   tvdbShowId?: number
+  absoluteEpisodeNumber?: number
 }
 
 export function episodeByAirDate (alDate: Date | undefined, episodes: Map<string, Episode & { airdatems?: number }>, episode: number): Episode & { airdatems?: number } | undefined {
@@ -131,9 +132,9 @@ export function makeEpisodeList (media: Media, episodesRes?: EpisodesResponse | 
       }
     }
 
-    const { image, summary, overview, rating, title, length, airdate, anidbEid, runtime, tvdbId } = resolvedEpisode ?? {}
+    const { image, summary, overview, rating, title, length, airdate, anidbEid, runtime, tvdbId, absoluteEpisodeNumber } = resolvedEpisode ?? {}
     const res = {
-      episode, image, summary: summary ?? overview, rating, title, length, airdate, airingAt, filler: !!fillerEpisodes[media.id]?.includes(episode), anidbEid, runtime, tvdbId
+      episode, image, summary: summary ?? overview, rating, title, length, airdate, airingAt, filler: !!fillerEpisodes[media.id]?.includes(episode), anidbEid, runtime, tvdbId, absoluteEpisodeNumber
     }
     episodeList.push(res)
   }
@@ -188,7 +189,7 @@ export const extensions = new class Extensions {
 
     const aniDBMeta = await this.ALToAniDB(media)
     const { anidb_id: anidbAid, mal_id: malId, themoviedb_id: tmdbId, kitsu_id: kitsuId, thetvdb_id: tvdbId, imdb_id: imdbId } = aniDBMeta?.mappings ?? {}
-    const { anidbEid, tvdbId: tvdbEId } = (anidbAid && await this.ALtoAniDBEpisode({ media, episode }, aniDBMeta)) || {}
+    const { anidbEid, tvdbId: tvdbEId, absoluteEpisodeNumber } = (anidbAid && await this.ALtoAniDBEpisode({ media, episode }, aniDBMeta)) || {}
     debug(`AniDB Mapping: ${anidbAid} ${anidbEid}`)
 
     const options = {
@@ -204,6 +205,7 @@ export const extensions = new class Extensions {
       kitsuId,
       imdbId,
       media,
+      absoluteEpisodeNumber,
       titles: this.createTitles(media),
       resolution,
       exclusions: get(settings).enableExternal ? [] : exclusions

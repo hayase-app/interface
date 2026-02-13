@@ -49,14 +49,14 @@ export interface TorrentQuery {
   tvdbId?: number // thetvdb anime id
   tvdbEId?: number // thetvdb episode id
   imdbId?: string // imdb id
-  tmdbId?: number // tmdb anime id
+  tmdbId?: string // tmdb anime id
   titles: string[] // list of titles and alternative titles
-  episode?: number
+  episode: number
   episodeCount?: number // total episode count for the series
+  absoluteEpisodeNumber?: number
   resolution: '2160' | '1080' | '720' | '540' | '480' | ''
   exclusions: string[] // list of keywords to exclude from searches, this might be unsupported codecs (e.g., "x265"), sources (e.g., "web-dl"), or other keywords (e.g., "uncensored")
   type?: 'sub' | 'dub'
-  fetch: typeof globalThis.fetch // fetch function to perform network requests, this function should be used instead of the global fetch to ensure CORS requests work properly
 }
 
 export type TorrentQueryWithFetch = TorrentQuery & { fetch: typeof fetch }

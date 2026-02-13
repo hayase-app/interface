@@ -2,7 +2,7 @@
   // @ts-nocheck i give up with dynamic keys
   import type { ExtensionConfig } from '$lib/modules/extensions/types'
 
-  import { Bolt } from '$lib/components/icons/animated'
+  import { Bolt, Trash } from '$lib/components/icons/animated'
   import { Button } from '$lib/components/ui/button'
   import * as Dialog from '$lib/components/ui/dialog'
   import { Input } from '$lib/components/ui/input'
@@ -46,16 +46,19 @@
                     <Switch {id} bind:checked={$exopts[config.id].options[id]} />
                   </div>
                 {:else if options.type === 'select'}
-                  <Select.Root portal='#root'>
-                    <Select.Trigger>
-                      <Select.Value placeholder={options.default} bind:value={$exopts[config.id].options[id]} />
-                    </Select.Trigger>
-                    <Select.Content>
-                      {#each options.values ?? [] as value, i (i)}
-                        <Select.Item {value} label={value}>{value}</Select.Item>
-                      {/each}
-                    </Select.Content>
-                  </Select.Root>
+                  <div class='space-y-2'>
+                    <Label for={id} class='leading-[unset] grow font-bold'>{options.description}</Label>
+                    <Select.Root portal='#root' selected={$exopts[config.id].options[id]} onSelectedChange={({ value }) => { $exopts[config.id].options[id] = value }}>
+                      <Select.Trigger {id}>
+                        <Select.Value placeholder={options.default} />
+                      </Select.Trigger>
+                      <Select.Content fitViewport={true} class='overflow-y-auto'>
+                        {#each options.values ?? [] as value, i (i)}
+                          <Select.Item {value} label={value}>{value}</Select.Item>
+                        {/each}
+                      </Select.Content>
+                    </Select.Root>
+                  </div>
                 {/if}
               {/each}
               <div class='pt-3 gap-3 mt-auto flex flex-col sm:flex-row-reverse'>
@@ -68,6 +71,10 @@
           </Dialog.Header>
         </Dialog.Content>
       </Dialog.Root>
+    {:else}
+      <Button variant='ghost' size='icon-sm' class='animated-icon select:text-red-600' on:click={deleteExtension}>
+        <Trash size={16} />
+      </Button>
     {/if}
     <Switch class='mt-auto' bind:checked={$exopts[config.id].enabled} hideState={true} />
   {/if}

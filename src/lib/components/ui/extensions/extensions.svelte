@@ -124,7 +124,7 @@
               </div>
               {#if config.languages}
                 <div class='font-twemoji text-xl leading-none content-center line-clamp-1'>
-                  {#each config.languages as lang (lang)}
+                  {#each config.languages as lang, i (i)}
                     {codeToEmoji(lang)}
                   {/each}
                 </div>
