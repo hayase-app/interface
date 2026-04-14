@@ -172,7 +172,17 @@
   }
 
   // functions
+  let blockPlayPause = false;
+
+  function blockPlayPauseInput(){
+    blockPlayPause = true;
+  }
+  
+  function unblockPlayPauseInput(){
+    blockPlayPause = false;
+  }
   function playPause () {
+    if(blockPlayPause) return;
     playAnimation(paused ? 'play' : 'pause')
     return paused ? Promise.allSettled([video.play(), pip.element.value?.play()]) : [video.pause(), pip.element.value?.pause()]
   }
@@ -695,6 +705,7 @@
         fastForwarding = true
         oldPlaybackRate = $playbackRate
         $playbackRate = 2
+        blockPlayPauseInput()
       }, 1000)
     }
     const endFF = () => {
@@ -703,6 +714,7 @@
       fastForwarding = false
       $playbackRate = oldPlaybackRate
       paused = wasPaused
+      setTimeout(unblockPlayPauseInput)
     }
     document.addEventListener(type + 'down' as 'keydown' | 'pointerdown', event => {
       if (isMiniplayer) return
