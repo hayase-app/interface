@@ -22,15 +22,26 @@
     if (typeof fn === 'function') cnd = fn
   })
 
-  document.addEventListener('keydown', e => runBind(e, e.code as KeyCode), {
+  document.addEventListener('keydown', e => runBind(e, e.code as KeyCode, 'keydown'), {
     capture: true
   })
 
-  async function runBind (e: MouseEvent | KeyboardEvent, code: KeyCode) {
+  document.addEventListener('keyup', e => runBind(e, e.code as KeyCode, 'keyup'), {
+    capture: true
+  })
+
+  async function runBind (e: MouseEvent | KeyboardEvent, code: KeyCode, eventType: string) {
     if (!code && 'key' in e) code = codeMap[e.key] ?? ''
 
     const kbn = get(binds)
-    if (cnd(code)) kbn[layout[code] ?? code]?.fn?.(e)
+    if (cnd(code)) {
+      const bind = kbn[layout[code] ?? code]
+      
+      if(!bind) return;
+      if(!bind.eventType) bind.eventType = 'keydown';
+
+      if(bind.eventType == eventType) bind.fn?.(e)
+    }
   }
 
   export function loadWithDefaults (defaults: Partial<Record<string, Bind>>) {
@@ -132,7 +143,7 @@
       {...$$restProps}
       use:draggable={name}
       on:pointerover={() => pointerOver($binds[name], label)}
-      on:click={(e) => clickable && runBind(e, name)}>
+      on:click={(e) => clickable && runBind(e, name, 'keydown')}>
       <slot prop={$binds[name]} keyLabel={label} />
     </div>
   {/each}

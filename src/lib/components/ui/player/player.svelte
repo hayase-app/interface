@@ -528,7 +528,8 @@
       id: 'play_arrow',
       icon: Play,
       type: 'icon',
-      desc: 'Play/Pause'
+      desc: 'Play/Pause',
+      eventType: 'keyup'
     },
     KeyN: {
       fn: () => next?.(),
