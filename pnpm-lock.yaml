@@ -26,9 +26,6 @@ importers:
       '@mediabunny/ac3':
         specifier: ^1.40.1
         version: 1.40.1(mediabunny@1.40.1)
-      '@mediabunny/flac-encoder':
-        specifier: ^1.40.1
-        version: 1.40.1(mediabunny@1.40.1)
       '@prgm/sveltekit-progress-bar':
         specifier: 2.0.0
         version: 2.0.0(@sveltejs/kit@2.49.5(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.46.4)(vite@7.3.1(jiti@2.5.1)(terser@5.43.1)(yaml@2.6.0)))(svelte@5.46.4)(typescript@5.9.3)(vite@7.3.1(jiti@2.5.1)(terser@5.43.1)(yaml@2.6.0)))(svelte@5.46.4)
@@ -64,7 +61,7 @@ importers:
         version: 1.1.6
       anitomyscript:
         specifier: github:thaunknown/anitomyscript
-        version: https://codeload.github.com/thaunknown/anitomyscript/tar.gz/fc00888d69ba59258167f2fac9e86576b29863b7
+        version: git+https://github.com/thaunknown/anitomyscript.git#fc00888d69ba59258167f2fac9e86576b29863b7
       bittorrent-tracker:
         specifier: 10.0.12
         version: 10.0.12
@@ -96,8 +93,8 @@ importers:
         specifier: ^6.2.2
         version: 6.2.2
       jassub:
-        specifier: ^2.4.3
-        version: 2.4.3
+        specifier: ^2.5.0
+        version: 2.5.0
       js-levenshtein:
         specifier: ^1.1.6
         version: 1.1.6
@@ -115,7 +112,7 @@ importers:
         version: 1.2.3
       p2pt:
         specifier: github:ThaUnknown/p2pt#modernise
-        version: https://codeload.github.com/ThaUnknown/p2pt/tar.gz/9ad7a56ed6ee43f5664ebad33b803702ee349316
+        version: git+https://github.com/ThaUnknown/p2pt.git#9ad7a56ed6ee43f5664ebad33b803702ee349316
       parse-torrent:
         specifier: ^11.0.19
         version: 11.0.19
@@ -215,7 +212,7 @@ importers:
         version: 2.1.3
       native:
         specifier: github:hayase-app/native
-        version: https://codeload.github.com/hayase-app/native/tar.gz/8e9d865f111e356a087e14865d9451771546aad2
+        version: git+https://github.com/hayase-app/native.git#8e9d865f111e356a087e14865d9451771546aad2
       rollup-plugin-license:
         specifier: ^3.6.0
         version: 3.6.0(picomatch@4.0.3)(rollup@4.55.1)
@@ -591,11 +588,6 @@ packages:
 
   '@mediabunny/ac3@1.40.1':
     resolution: {integrity: sha512-A9aUZnQ1tNia2i9TZjOzAPVi4sOXRsnozXtq3WMsoGbco6yBPgIZLOWPVugwpJMQglVSAPARlgH+chpzNAkHOg==}
-    peerDependencies:
-      mediabunny: ^1.0.0
-
-  '@mediabunny/flac-encoder@1.40.1':
-    resolution: {integrity: sha512-tQtaggUUvF8C+DX3b6g+AOV1krSEyB1oUHjyeRnMCyQxanXMSN0Kp2SLQLKfy+9yn9jRbXrscwgKRtEIngtwlg==}
     peerDependencies:
       mediabunny: ^1.0.0
 
@@ -1014,8 +1006,8 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
-  anitomyscript@https://codeload.github.com/thaunknown/anitomyscript/tar.gz/fc00888d69ba59258167f2fac9e86576b29863b7:
-    resolution: {tarball: https://codeload.github.com/thaunknown/anitomyscript/tar.gz/fc00888d69ba59258167f2fac9e86576b29863b7}
+  anitomyscript@git+https://github.com/thaunknown/anitomyscript.git#fc00888d69ba59258167f2fac9e86576b29863b7:
+    resolution: {commit: fc00888d69ba59258167f2fac9e86576b29863b7, repo: https://github.com/thaunknown/anitomyscript.git, type: git}
     version: 2.0.10
 
   ansi-regex@5.0.1:
@@ -1976,8 +1968,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jassub@2.4.3:
-    resolution: {integrity: sha512-G29tqwIBO2gQUrOj3pJMRGktfUOWeOyPWfm1Sl49Q6whcmkFufmQWpZjRGtSANEfJ4BIwYLE+xHudVHH8n1Yiw==}
+  jassub@2.5.0:
+    resolution: {integrity: sha512-X0CEiI1sQiuO1xGl6B3+MiD+7AEbY9Xd5eCIXF2iy+dhg6Pv4GKb3j/MGTBuiSVNlTnvQX0RIVzjtWq0UpGBng==}
 
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
@@ -2151,8 +2143,8 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
-  native@https://codeload.github.com/hayase-app/native/tar.gz/8e9d865f111e356a087e14865d9451771546aad2:
-    resolution: {tarball: https://codeload.github.com/hayase-app/native/tar.gz/8e9d865f111e356a087e14865d9451771546aad2}
+  native@git+https://github.com/hayase-app/native.git#8e9d865f111e356a087e14865d9451771546aad2:
+    resolution: {commit: 8e9d865f111e356a087e14865d9451771546aad2, repo: https://github.com/hayase-app/native.git, type: git}
     version: 1.0.0
 
   natural-compare@1.4.0:
@@ -2251,8 +2243,8 @@ packages:
     resolution: {integrity: sha512-tkAQEw8ysMzmkhgw8k+1U/iPhWNhykKnSk4Rd5zLoPJCuJaGRPo6YposrZgaxHKzDHdDWWZvE/Sk7hsL2X/CpQ==}
     engines: {node: '>=18'}
 
-  p2pt@https://codeload.github.com/ThaUnknown/p2pt/tar.gz/9ad7a56ed6ee43f5664ebad33b803702ee349316:
-    resolution: {tarball: https://codeload.github.com/ThaUnknown/p2pt/tar.gz/9ad7a56ed6ee43f5664ebad33b803702ee349316}
+  p2pt@git+https://github.com/ThaUnknown/p2pt.git#9ad7a56ed6ee43f5664ebad33b803702ee349316:
+    resolution: {commit: 9ad7a56ed6ee43f5664ebad33b803702ee349316, repo: https://github.com/ThaUnknown/p2pt.git, type: git}
     version: 1.5.1
 
   package-json-from-dist@1.0.1:
@@ -3320,10 +3312,6 @@ snapshots:
     dependencies:
       mediabunny: 1.40.1
 
-  '@mediabunny/flac-encoder@1.40.1(mediabunny@1.40.1)':
-    dependencies:
-      mediabunny: 1.40.1
-
   '@melt-ui/svelte@0.76.2(svelte@5.46.4)':
     dependencies:
       '@floating-ui/core': 1.7.0
@@ -3756,7 +3744,7 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  anitomyscript@https://codeload.github.com/thaunknown/anitomyscript/tar.gz/fc00888d69ba59258167f2fac9e86576b29863b7: {}
+  anitomyscript@git+https://github.com/thaunknown/anitomyscript.git#fc00888d69ba59258167f2fac9e86576b29863b7: {}
 
   ansi-regex@5.0.1: {}
 
@@ -4889,7 +4877,7 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jassub@2.4.3:
+  jassub@2.5.0:
     dependencies:
       abslink: 1.1.6
       lfa-ponyfill: 1.1.0
@@ -5031,7 +5019,7 @@ snapshots:
 
   nanoid@5.1.5: {}
 
-  native@https://codeload.github.com/hayase-app/native/tar.gz/8e9d865f111e356a087e14865d9451771546aad2:
+  native@git+https://github.com/hayase-app/native.git#8e9d865f111e356a087e14865d9451771546aad2:
     dependencies:
       '@types/chromecast-caf-receiver': 6.0.26
 
@@ -5133,7 +5121,7 @@ snapshots:
 
   p-map@7.0.4: {}
 
-  p2pt@https://codeload.github.com/ThaUnknown/p2pt/tar.gz/9ad7a56ed6ee43f5664ebad33b803702ee349316:
+  p2pt@git+https://github.com/ThaUnknown/p2pt.git#9ad7a56ed6ee43f5664ebad33b803702ee349316:
     dependencies:
       bittorrent-tracker: 10.0.12
       uint8-util: 2.2.6

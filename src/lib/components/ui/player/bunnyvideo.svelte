@@ -2,8 +2,7 @@
 
 <script lang='ts'>
   import { registerAc3Decoder } from '@mediabunny/ac3'
-  import { registerFlacEncoder } from '@mediabunny/flac-encoder'
-  import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource, canEncodeAudio } from 'mediabunny'
+  import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
 
   import Subs from './subtitles'
@@ -414,17 +413,6 @@
           source: new UrlSource(src),
           formats: ALL_FORMATS
         })
-      } else {
-        registerAc3Decoder()
-
-        try {
-          const canEncodeFlac = await canEncodeAudio('flac')
-          if (!canEncodeFlac) {
-            registerFlacEncoder()
-          }
-        } catch {
-          registerFlacEncoder()
-        }
       }
 
       playbackTimeAtStart = clamp(currentTime)
@@ -439,7 +427,7 @@
   function setupBackend (canvas: HTMLCanvasElement, src: string) {
     context = canvas.getContext('2d', { desynchronized: true, alpha: false })
     if (!context) handleBackendError(new Error('2D canvas context is unavailable for MediaBunny playback.'))
-
+    registerAc3Decoder()
     load(true)
     return {
       destroy,
@@ -495,24 +483,9 @@
   function createSubs (canvas: HTMLCanvasElement) {
     subtitles = new Subs(undefined, otherFiles, current, canvas)
 
-    let once = true
-
     const loop = async (_: number, meta: VideoFrameCallbackMetadata) => {
       if (!subtitles) return
 
-      if (once && subtitles.jassub) {
-        once = false
-        subtitles.jassub.resize = async function (force, a, b, c, d) {
-          await this.renderer._resizeCanvas(
-            this._videoWidth,
-            this._videoHeight,
-            this._videoWidth,
-            this._videoHeight
-          )
-
-          if (this._lastDemandTime) await this._demandRender(force)
-        }
-      }
       await subtitles.jassub?.ready
       subtitles.jassub?.manualRender(meta)
 
