@@ -427,11 +427,13 @@
   native.setActionHandler('seekforward', () => seek(Number($settings.playerSeek)))
   native.setActionHandler('previoustrack', () => prev?.())
   native.setActionHandler('nexttrack', () => next?.())
-  // about://flags/#auto-picture-in-picture-for-video-playback
-  native.setActionHandler('enterpictureinpicture', () => {
-    goto('/app/player')
-    pip.pip(true)
-  })
+  try {
+    // about://flags/#auto-picture-in-picture-for-video-playback
+    native.setActionHandler('enterpictureinpicture', () => {
+      goto('/app/player')
+      pip.pip(true)
+    })
+  } catch (e) {}
 
   let openPath: (path: string[]) => Promise<void>
 
