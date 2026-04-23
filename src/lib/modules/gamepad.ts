@@ -47,7 +47,11 @@ let connectedCount = 0
 
 function dispatch (type: 'keydown' | 'keyup', { key, code }: ButtonMap, repeat = false) {
   inputType.value = 'dpad'
-  document.dispatchEvent(new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true, repeat }))
+  // Dispatch on the focused element so it bubbles up through per-node listeners
+  // (e.g. the Enter handler in navigate.ts click/hover actions) and finally
+  // reaches the document-level listener used by navigate/keybinds.
+  const target = (document.activeElement as HTMLElement | null) ?? document.body
+  target.dispatchEvent(new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true, repeat }))
 }
 
 function handleButton (gamepadIndex: number, buttonIndex: number, isDown: boolean, now: number, map: ButtonMap) {
