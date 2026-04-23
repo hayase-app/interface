@@ -1,5 +1,15 @@
 import { inputType } from './navigate'
 
+// Mirror the active input type onto the document root so CSS can force
+// focus-visible styling when navigation comes from d-pad/gamepad — Chromium's
+// :focus-visible modality heuristic is unreliable with synthetic KeyboardEvents
+// and the { focusVisible: true } option of element.focus() is not honoured in
+// every Electron build.
+inputType.subscribe((type) => {
+  if (typeof document === 'undefined') return
+  document.documentElement.dataset.input = type
+})
+
 // Standard Gamepad mapping per W3C spec
 // https://www.w3.org/TR/gamepad/#remapping
 type ButtonMap = { key: string, code: string }
