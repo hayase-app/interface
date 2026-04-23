@@ -51,7 +51,15 @@ function dispatch (type: 'keydown' | 'keyup', { key, code }: ButtonMap, repeat =
   // (e.g. the Enter handler in navigate.ts click/hover actions) and finally
   // reaches the document-level listener used by navigate/keybinds.
   const target = (document.activeElement as HTMLElement | null) ?? document.body
-  target.dispatchEvent(new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true, repeat }))
+  const event = new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true, repeat })
+  target.dispatchEvent(event)
+
+  // Synthetic events have isTrusted=false, so the browser skips default
+  // activation behaviour (following <a href>, submitting <button type=submit>).
+  // Emulate it explicitly for Enter on keydown when nothing called preventDefault.
+  if (type === 'keydown' && key === 'Enter' && !event.defaultPrevented && target !== document.body) {
+    target.click()
+  }
 }
 
 function handleButton (gamepadIndex: number, buttonIndex: number, isDown: boolean, now: number, map: ButtonMap) {
