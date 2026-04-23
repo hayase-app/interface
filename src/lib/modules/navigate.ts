@@ -300,7 +300,7 @@ function focusElement (element?: HTMLElement | null) {
     const input = element
     input.readOnly = true
   }
-  element.focus()
+  element.focus({ focusVisible: true } as FocusOptions)
   if (isInput) setTimeout(() => { element.readOnly = false })
   element.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' })
 
