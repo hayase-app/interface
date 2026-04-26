@@ -2,6 +2,7 @@
 
 <script lang='ts'>
   import { registerAc3Decoder } from '@mediabunny/ac3'
+  import { bufferedAsyncMap } from 'buffered-async-iterable'
   import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
 
@@ -13,7 +14,6 @@
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
   import { settings } from '$lib/modules/settings'
-  import { filterAsync } from '$lib/utils'
 
   class DummyTrack implements Track {
     kind
@@ -205,7 +205,7 @@
       videoFrameIterator = nextFrame = null
     } catch {}
 
-    const iterator = videoFrameIterator = videoSink.canvases(time)
+    const iterator = videoFrameIterator = bufferedAsyncMap(videoSink.canvases(time), async e => e, { bufferSize: (Number($settings.playerSeek) + 0.5) * 24 }) as AsyncGenerator<WrappedCanvas, void, unknown>
 
     const firstResult = await iterator.next()
     if (firstResult.done) return safeTime
@@ -228,12 +228,14 @@
     readyState = 0
     await clearIterators()
 
-    const playbackVideoTracks = await filterAsync(await input.getVideoTracks(), track => track.canDecode())
+    // const playbackVideoTracks = await filterAsync(await input.getVideoTracks(), track => track.canDecode())
+    const playbackVideoTracks = await input.getVideoTracks()
     if (!playbackVideoTracks.length) {
       handleBackendError(new Error('No playable video tracks found.'))
       return
     }
-    const playbackAudioTracks = await filterAsync(await input.getAudioTracks(), track => track.canDecode())
+    // const playbackAudioTracks = await filterAsync(await input.getAudioTracks(), track => track.canDecode())
+    const playbackAudioTracks = await input.getAudioTracks()
 
     selectedAudioId ??= (playbackAudioTracks.find(track => track.languageCode === $settings.audioLanguage) ?? playbackAudioTracks.find(track => track.languageCode === 'jpn'))?.id.toString()
 
