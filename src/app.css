@@ -197,7 +197,8 @@ a {
   /* repeating-linear-gradient(40deg, #5554 0 5px, #1114 0 10px); */
 }
 
-*:focus-visible {
+*:focus-visible,
+html[data-input='dpad'] *:focus {
   outline: none;
   border-image: fill 0 linear-gradient(#8885, #8885);
 }
