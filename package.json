@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.296",
+	"version": "6.4.299",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@10.28.0",
@@ -110,7 +110,8 @@
 			"bufferutil",
 			"esbuild",
 			"node-datachannel",
-			"utf-8-validate"
+			"utf-8-validate",
+			"wrtc"
 		]
 	}
 }

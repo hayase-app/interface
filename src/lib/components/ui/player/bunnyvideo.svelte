@@ -13,7 +13,6 @@
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
   import { settings } from '$lib/modules/settings'
-  import { filterAsync } from '$lib/utils'
 
   class DummyTrack implements Track {
     kind
@@ -50,6 +49,36 @@
 
     set enabled (value: boolean) {
       this.selected = value
+    }
+  }
+
+  async function * bufferAhead<T> (
+    source: AsyncIterable<T>,
+    bufferSize: number
+  ): AsyncGenerator<T> {
+    const iter = source[Symbol.asyncIterator]()
+    const pending: Array<Promise<IteratorResult<T>>> = []
+    let done = false
+
+    const enqueue = () => {
+      if (!done) pending.push(iter.next())
+    }
+
+    for (let i = 0; i < bufferSize; i++) enqueue()
+
+    try {
+      while (pending.length > 0) {
+        const result = await pending.shift()!
+        if (result.done) { done = true; break }
+        enqueue()
+        yield result.value
+      }
+    } finally {
+      done = true
+      await iter.return?.()
+      // Drain in-flight promises so they don't float after cancellation.
+      // Errors are suppressed — the source is being torn down regardless.
+      await Promise.allSettled(pending)
     }
   }
 
@@ -135,6 +164,8 @@
 
   $: canvasSource = canvas
 
+  const bufferAheadCount = (Number($settings.playerSeek) + 0.5) * 24
+
   function setCurrentTime (nextCurrentTime: number = playbackTimeAtStart) {
     currentTime = nextCurrentTime
     lastObservedCurrentTime = nextCurrentTime
@@ -205,7 +236,7 @@
       videoFrameIterator = nextFrame = null
     } catch {}
 
-    const iterator = videoFrameIterator = videoSink.canvases(time)
+    const iterator = videoFrameIterator = bufferAhead(videoSink.canvases(time), bufferAheadCount)
 
     const firstResult = await iterator.next()
     if (firstResult.done) return safeTime
@@ -228,12 +259,14 @@
     readyState = 0
     await clearIterators()
 
-    const playbackVideoTracks = await filterAsync(await input.getVideoTracks(), track => track.canDecode())
+    // const playbackVideoTracks = await filterAsync(await input.getVideoTracks(), track => track.canDecode())
+    const playbackVideoTracks = await input.getVideoTracks()
     if (!playbackVideoTracks.length) {
       handleBackendError(new Error('No playable video tracks found.'))
       return
     }
-    const playbackAudioTracks = await filterAsync(await input.getAudioTracks(), track => track.canDecode())
+    // const playbackAudioTracks = await filterAsync(await input.getAudioTracks(), track => track.canDecode())
+    const playbackAudioTracks = await input.getAudioTracks()
 
     selectedAudioId ??= (playbackAudioTracks.find(track => track.languageCode === $settings.audioLanguage) ?? playbackAudioTracks.find(track => track.languageCode === 'jpn'))?.id.toString()
 
@@ -249,7 +282,7 @@
       gain.connect(audioCtx.destination)
     }
 
-    videoSink = new CanvasSink(selectedVideo, { poolSize: 2, fit: 'contain' })
+    videoSink = new CanvasSink(selectedVideo, { poolSize: bufferAheadCount + 1, fit: 'contain' })
     audioSink = selectedAudio && new AudioBufferSink(selectedAudio)
 
     playbackTimeAtStart = clamp(currentTime)
