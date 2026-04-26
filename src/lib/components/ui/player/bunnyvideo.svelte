@@ -427,7 +427,7 @@
   }
 
   function setupBackend (canvas: HTMLCanvasElement, src: string) {
-    context = canvas.getContext('2d', { desynchronized: true, alpha: false })
+    context = canvas.getContext('2d', { desynchronized: false, alpha: false })
     if (!context) handleBackendError(new Error('2D canvas context is unavailable for MediaBunny playback.'))
     registerAc3Decoder()
     load(true)
