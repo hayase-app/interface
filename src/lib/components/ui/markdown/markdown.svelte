@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { OverType } from 'overtype'
+  import OverType from 'overtype'
 
   import { cn } from '$lib/utils'
 
@@ -7,7 +7,7 @@
   export let value = ''
   export { className as class }
 
-  export let placeholder: string | undefined | null = undefined
+  export let placeholder: string | undefined = undefined
 
   function markdown (el: HTMLDivElement) {
     const [editor] = new OverType(el, {
@@ -45,11 +45,11 @@
       onChange: (val: string) => {
         value = val
       }
-    }) as unknown as [InstanceType<typeof OverType>]
+    })
 
     return {
       destroy () {
-        editor.destroy()
+        editor!.destroy()
       }
     }
   }

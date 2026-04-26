@@ -1,9 +1,11 @@
 <script lang='ts'>
   import { Drawer as DrawerPrimitive } from 'vaul-svelte'
 
+  import type { DialogTitleProps } from 'bits-ui'
+
   import { cn } from '$lib/utils.js'
 
-  type $$Props = DrawerPrimitive.TitleProps
+  type $$Props = DialogTitleProps
 
   export let el: $$Props['el'] = undefined
   let className: $$Props['class'] = undefined

@@ -31,6 +31,7 @@
     "outDir": "./dist",
     "maxNodeModuleJsDepth": 3,
     "allowSyntheticDefaultImports": true,
+    "noUncheckedSideEffectImports": false,
     "composite": true,
     "plugins": [
       {
