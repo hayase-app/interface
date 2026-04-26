@@ -164,7 +164,7 @@
 
   $: canvasSource = canvas
 
-  const bufferAheadCount = (Number($settings.playerSeek) + 0.5) * 24
+  const bufferAheadCount = Math.min((Number($settings.playerSeek) + 0.5) * 24, 40)
 
   function setCurrentTime (nextCurrentTime: number = playbackTimeAtStart) {
     currentTime = nextCurrentTime
@@ -191,7 +191,11 @@
   function getBackendPlaybackTime () {
     if (!audioCtx) return 0
 
-    return clamp(playbackTimeAtStart + clamp(audioCtx.currentTime - audioContextStartTime! - (audioCtx.baseLatency + audioCtx.outputLatency)), 0, duration)
+    // const baseLatency = audioCtx.baseLatency
+    // const outputLatency = audioCtx.outputLatency
+    const contextStart = audioContextStartTime ?? audioCtx.currentTime
+
+    return clamp(playbackTimeAtStart + clamp(audioCtx.currentTime - contextStart), 0, duration)
   }
 
   async function waitForBackendAudioHeadroom (timestamp: number) {
