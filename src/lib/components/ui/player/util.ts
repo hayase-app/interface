@@ -64,7 +64,7 @@ export async function screenshot (video: CanvasImageSource, videoWidth: number, 
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'screenshot.png'
+    a.download = `screenshot_${Date.now()}.png`
     a.click()
     URL.revokeObjectURL(url)
   }
