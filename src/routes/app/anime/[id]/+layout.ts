@@ -1,3 +1,4 @@
+import { error } from '@sveltejs/kit'
 import { get } from 'svelte/store'
 
 import type { LayoutLoad } from './$types'
@@ -19,9 +20,13 @@ export const load: LayoutLoad = async ({ params, fetch }) => {
     eps = await episodes(parentID, fetch)
   }
 
-  return {
-    eps,
-    // mappings: await mappings,
-    anime: await store
+  try {
+    return {
+      eps,
+      // mappings: await mappings,
+      anime: await store
+    }
+  } catch (err) {
+    return error(500, err as Error)
   }
 }
