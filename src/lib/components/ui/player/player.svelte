@@ -652,6 +652,48 @@
       type: 'icon',
       id: 'subtitle_delay_plus',
       desc: 'Increase Subtitle Delay'
+    },
+    Gamepad3: {
+      fn: (e) => cycleSubtitles(e),
+      icon: Captions,
+      type: 'icon',
+      id: 'gamepad_subtitles',
+      desc: 'Cycle Subtitles (Gamepad Y)'
+    },
+    Gamepad4: {
+      fn: () => prev?.(),
+      icon: SkipBack,
+      type: 'icon',
+      id: 'gamepad_prev',
+      desc: 'Previous Episode (Gamepad LB)'
+    },
+    Gamepad5: {
+      fn: () => next?.(),
+      icon: SkipForward,
+      type: 'icon',
+      id: 'gamepad_next',
+      desc: 'Next Episode (Gamepad RB)'
+    },
+    Gamepad6: {
+      fn: () => seek(-Number($settings.playerSeek)),
+      icon: Rewind,
+      type: 'icon',
+      id: 'gamepad_rewind',
+      desc: 'Rewind (Gamepad LT)'
+    },
+    Gamepad7: {
+      fn: () => seek(Number($settings.playerSeek)),
+      icon: FastForward,
+      type: 'icon',
+      id: 'gamepad_forward',
+      desc: 'Seek (Gamepad RT)'
+    },
+    Gamepad9: {
+      fn: () => fullscreen(),
+      icon: Maximize,
+      type: 'icon',
+      id: 'gamepad_fullscreen',
+      desc: 'Toggle Fullscreen (Gamepad Start)'
     }
   })
 

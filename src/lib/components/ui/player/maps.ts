@@ -1,4 +1,4 @@
-export type KeyCode = '' | 'Again' | 'AltLeft' | 'AltRight' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'AudioVolumeDown' | 'AudioVolumeMute' | 'AudioVolumeUp' | 'Backquote' | 'Backslash' | 'Backspace' | 'BracketLeft' | 'BracketRight' | 'BrowserBack' | 'BrowserFavorites' | 'BrowserForward' | 'BrowserHome' | 'BrowserRefresh' | 'BrowserSearch' | 'BrowserStop' | 'CapsLock' | 'Comma' | 'ContextMenu' | 'ControlLeft' | 'ControlRight' | 'Convert' | 'Copy' | 'Cut' | 'Delete' | 'Digit0' | 'Digit1' | 'Digit2' | 'Digit3' | 'Digit4' | 'Digit5' | 'Digit6' | 'Digit7' | 'Digit8' | 'Digit9' | 'Eject' | 'End' | 'Enter' | 'Equal' | 'F1' | 'F10' | 'F11' | 'F12' | 'F13' | 'F14' | 'F15' | 'F16' | 'F17' | 'F18' | 'F19' | 'F2' | 'F20' | 'F21' | 'F22' | 'F23' | 'F24' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'Find' | 'Help' | 'Home' | 'Insert' | 'IntlBackslash' | 'IntlRo' | 'IntlYen' | 'KanaMode' | 'KeyA' | 'KeyB' | 'KeyC' | 'KeyD' | 'KeyE' | 'KeyF' | 'KeyG' | 'KeyH' | 'KeyI' | 'KeyJ' | 'KeyK' | 'KeyL' | 'KeyM' | 'KeyN' | 'KeyO' | 'KeyP' | 'KeyQ' | 'KeyR' | 'KeyS' | 'KeyT' | 'KeyU' | 'KeyV' | 'KeyW' | 'KeyX' | 'KeyY' | 'KeyZ' | 'Lang1' | 'Lang2' | 'Lang3' | 'Lang4' | 'Lang5' | 'LaunchApp1' | 'LaunchApp2' | 'LaunchMail' | 'MediaPlayPause' | 'MediaSelect' | 'MediaStop' | 'MediaTrackNext' | 'MediaTrackPrevious' | 'MetaLeft' | 'MetaRight' | 'Minus' | 'NonConvert' | 'NumLock' | 'Numpad0' | 'Numpad1' | 'Numpad2' | 'Numpad3' | 'Numpad4' | 'Numpad5' | 'Numpad6' | 'Numpad7' | 'Numpad8' | 'Numpad9' | 'NumpadAdd' | 'NumpadComma' | 'NumpadDecimal' | 'NumpadDivide' | 'NumpadEnter' | 'NumpadEqual' | 'NumpadMultiply' | 'NumpadParenLeft' | 'NumpadParenRight' | 'NumpadSubtract' | 'Open' | 'PageDown' | 'PageUp' | 'Paste' | 'Pause' | 'Period' | 'Power' | 'PrintScreen' | 'Quote' | 'ScrollLock' | 'Select' | 'Semicolon' | 'ShiftLeft' | 'ShiftRight' | 'Slash' | 'Sleep' | 'Space' | 'Tab' | 'Undo' | 'WakeUp' | 'Escape'
+export type KeyCode = '' | 'Again' | 'AltLeft' | 'AltRight' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'AudioVolumeDown' | 'AudioVolumeMute' | 'AudioVolumeUp' | 'Backquote' | 'Backslash' | 'Backspace' | 'BracketLeft' | 'BracketRight' | 'BrowserBack' | 'BrowserFavorites' | 'BrowserForward' | 'BrowserHome' | 'BrowserRefresh' | 'BrowserSearch' | 'BrowserStop' | 'CapsLock' | 'Comma' | 'ContextMenu' | 'ControlLeft' | 'ControlRight' | 'Convert' | 'Copy' | 'Cut' | 'Delete' | 'Digit0' | 'Digit1' | 'Digit2' | 'Digit3' | 'Digit4' | 'Digit5' | 'Digit6' | 'Digit7' | 'Digit8' | 'Digit9' | 'Eject' | 'End' | 'Enter' | 'Equal' | 'F1' | 'F10' | 'F11' | 'F12' | 'F13' | 'F14' | 'F15' | 'F16' | 'F17' | 'F18' | 'F19' | 'F2' | 'F20' | 'F21' | 'F22' | 'F23' | 'F24' | 'F3' | 'F4' | 'F5' | 'F6' | 'F7' | 'F8' | 'F9' | 'Find' | 'Gamepad0' | 'Gamepad1' | 'Gamepad2' | 'Gamepad3' | 'Gamepad4' | 'Gamepad5' | 'Gamepad6' | 'Gamepad7' | 'Gamepad8' | 'Gamepad9' | 'Gamepad10' | 'Gamepad11' | 'Gamepad12' | 'Gamepad13' | 'Gamepad14' | 'Gamepad15' | 'Gamepad16' | 'Gamepad17' | 'Help' | 'Home' | 'Insert' | 'IntlBackslash' | 'IntlRo' | 'IntlYen' | 'KanaMode' | 'KeyA' | 'KeyB' | 'KeyC' | 'KeyD' | 'KeyE' | 'KeyF' | 'KeyG' | 'KeyH' | 'KeyI' | 'KeyJ' | 'KeyK' | 'KeyL' | 'KeyM' | 'KeyN' | 'KeyO' | 'KeyP' | 'KeyQ' | 'KeyR' | 'KeyS' | 'KeyT' | 'KeyU' | 'KeyV' | 'KeyW' | 'KeyX' | 'KeyY' | 'KeyZ' | 'Lang1' | 'Lang2' | 'Lang3' | 'Lang4' | 'Lang5' | 'LaunchApp1' | 'LaunchApp2' | 'LaunchMail' | 'MediaPlayPause' | 'MediaSelect' | 'MediaStop' | 'MediaTrackNext' | 'MediaTrackPrevious' | 'MetaLeft' | 'MetaRight' | 'Minus' | 'NonConvert' | 'NumLock' | 'Numpad0' | 'Numpad1' | 'Numpad2' | 'Numpad3' | 'Numpad4' | 'Numpad5' | 'Numpad6' | 'Numpad7' | 'Numpad8' | 'Numpad9' | 'NumpadAdd' | 'NumpadComma' | 'NumpadDecimal' | 'NumpadDivide' | 'NumpadEnter' | 'NumpadEqual' | 'NumpadMultiply' | 'NumpadParenLeft' | 'NumpadParenRight' | 'NumpadSubtract' | 'Open' | 'PageDown' | 'PageUp' | 'Paste' | 'Pause' | 'Period' | 'Power' | 'PrintScreen' | 'Quote' | 'ScrollLock' | 'Select' | 'Semicolon' | 'ShiftLeft' | 'ShiftRight' | 'Slash' | 'Sleep' | 'Space' | 'Tab' | 'Undo' | 'WakeUp' | 'Escape'
 
 declare class KeyboardLayoutMap extends Map<KeyCode, string> { }
 
@@ -250,7 +250,17 @@ export const keys: Partial<Record<KeyCode, {dark?: boolean, name: KeyCode, size?
   ArrowRight: {
     dark: true,
     name: 'ArrowRight'
-  }
+  },
+  Gamepad0: { dark: true, name: 'Gamepad0' },
+  Gamepad1: { dark: true, name: 'Gamepad1' },
+  Gamepad2: { name: 'Gamepad2' },
+  Gamepad3: { name: 'Gamepad3' },
+  Gamepad4: { name: 'Gamepad4' },
+  Gamepad5: { name: 'Gamepad5' },
+  Gamepad6: { name: 'Gamepad6' },
+  Gamepad7: { name: 'Gamepad7' },
+  Gamepad8: { name: 'Gamepad8' },
+  Gamepad9: { name: 'Gamepad9' }
 }
 // char => code for navigator.keyboard API
 export const codeMap: Record<string, KeyCode> = {

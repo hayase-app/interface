@@ -7,7 +7,14 @@ interface ButtonMap { key: string, code: string }
 const BUTTON_MAP: Record<number, ButtonMap> = {
   0: { key: 'Enter', code: 'Enter' }, // A / Cross
   1: { key: 'Escape', code: 'Escape' }, // B / Circle
-  9: { key: 'Escape', code: 'Escape' }, // Start -> treat as back/menu for now
+  2: { key: 'Gamepad2', code: 'Gamepad2' }, // X / Square
+  3: { key: 'Gamepad3', code: 'Gamepad3' }, // Y / Triangle
+  4: { key: 'Gamepad4', code: 'Gamepad4' }, // LB / L1
+  5: { key: 'Gamepad5', code: 'Gamepad5' }, // RB / R1
+  6: { key: 'Gamepad6', code: 'Gamepad6' }, // LT / L2
+  7: { key: 'Gamepad7', code: 'Gamepad7' }, // RT / R2
+  8: { key: 'Gamepad8', code: 'Gamepad8' }, // Select / Back / View
+  9: { key: 'Gamepad9', code: 'Gamepad9' }, // Start / Forward / Menu
   12: { key: 'ArrowUp', code: 'ArrowUp' },
   13: { key: 'ArrowDown', code: 'ArrowDown' },
   14: { key: 'ArrowLeft', code: 'ArrowLeft' },
