@@ -2,7 +2,7 @@
   import '../app.css'
   import '@fontsource-variable/nunito'
   import '@fontsource/geist-mono'
-  import '$lib/modules/navigate'
+  import '$lib/modules/gamepad'
   import { ProgressBar } from '@prgm/sveltekit-progress-bar'
   import { setContext } from 'svelte'
   import { toast } from 'svelte-sonner'
