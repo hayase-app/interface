@@ -135,7 +135,7 @@
   let presentedFrames = 0
   const frameCallbacks = new Map<number, VideoFrameRequestCallback>()
 
-  let input = new Input({
+  const input = new Input({
     source: new UrlSource(src),
     formats: ALL_FORMATS
   })
@@ -333,7 +333,7 @@
         setCurrentTime(playbackTime)
         dispatch('timeupdate')
       }
-      if (nextFrame && nextFrame.timestamp <= getBackendPlaybackTime()) {
+      if (nextFrame && nextFrame.timestamp <= playbackTime) {
         const frameToPresent = nextFrame
         nextFrame = null
         presentBackendFrame(frameToPresent)
@@ -442,16 +442,8 @@
     dispatch('fallback', error)
   }
 
-  export async function load (skipDestroy = false) {
+  export async function load () {
     try {
-      if (!skipDestroy) {
-        await destroy()
-        input = new Input({
-          source: new UrlSource(src),
-          formats: ALL_FORMATS
-        })
-      }
-
       playbackTimeAtStart = clamp(currentTime)
       setCurrentTime()
 
@@ -465,7 +457,7 @@
     context = canvas.getContext('2d', { desynchronized: true, alpha: false })
     if (!context) handleBackendError(new Error('2D canvas context is unavailable for MediaBunny playback.'))
     registerAc3Decoder()
-    load(true)
+    load()
     return {
       destroy,
       update (src: string) {
