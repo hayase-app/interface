@@ -1,6 +1,4 @@
 <script lang='ts'>
-  import { persisted } from 'svelte-persisted-store'
-
   import { dev } from '$app/environment'
   import SettingCard from '$lib/components/SettingCard.svelte'
   import { Button } from '$lib/components/ui/button'
@@ -15,8 +13,6 @@
   async function selectPlayer () {
     $settings.playerPath = await native.selectPlayer()
   }
-
-  const hideOverlays = persisted('hideOverlays', false)
 </script>
 
 {#if ('queryLocalFonts' in self)}
@@ -91,9 +87,6 @@
 {#if SUPPORTS.isAndroid || SUPPORTS.isIOS || dev}
   <SettingCard let:id title='EXPERIMENTAL: Custom Player Backend' description='Use a custom video player backend nstead of the built-in HTML5 video element. This can improve compatibility on some devices such as support for multi-track or more audio codecs, but is still experimental and might cause issues.'>
     <Switch {id} bind:checked={$settings.bunnyPlayer} />
-  </SettingCard>
-  <SettingCard let:id title='Testing: Force disable video overlays' description='Forcefully disable video overlays for testing rendering performance.'>
-    <Switch {id} bind:checked={$hideOverlays} />
   </SettingCard>
 {/if}
 

@@ -750,8 +750,6 @@
 
   let clientWidth = 0
   let clientHeight = 0
-
-  const hideOverlays = persisted('hideOverlays', false)
 </script>
 
 <svelte:document bind:fullscreenElement bind:visibilityState use:holdToFF={'key'} />
@@ -840,7 +838,7 @@
       on:pointermove={() => resetMove()}
     />
   {/if}
-  {#if !isMiniplayer && !$hideOverlays}
+  {#if !isMiniplayer}
     <div class='absolute size-full flex items-center justify-center top-0 pointer-events-none'>
       <DownloadStats {immersed} />
       {#if seeking}
@@ -988,7 +986,7 @@
         </div>
       </div>
     </div>
-  {:else if !$hideOverlays}
+  {:else}
     <div class='absolute w-full left-0 bottom-0 flex justify-center'>
       <Button variant='ghost' class='drop-shadow-[0_0_7px_#000] mb-1 relative' size='icon' on:pointerdown={e => { e.stopPropagation(); playPause() }}>
         {#if paused}

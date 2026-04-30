@@ -4,7 +4,6 @@
   import { registerAc3Decoder } from '@mediabunny/ac3'
   import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
-  import { persisted } from 'svelte-persisted-store'
 
   import Subs from './subtitles'
 
@@ -53,38 +52,8 @@
     }
   }
 
-  async function * bufferAhead<T> (
-    source: AsyncIterable<T>,
-    bufferSize: number
-  ): AsyncGenerator<T> {
-    const iter = source[Symbol.asyncIterator]()
-    const pending: Array<Promise<IteratorResult<T>>> = []
-    let done = false
-
-    const enqueue = () => {
-      if (!done) pending.push(iter.next())
-    }
-
-    for (let i = 0; i < bufferSize; i++) enqueue()
-
-    try {
-      while (pending.length > 0) {
-        const result = await pending.shift()!
-        if (result.done) { done = true; break }
-        enqueue()
-        yield result.value
-      }
-    } finally {
-      done = true
-      await iter.return?.()
-      // Drain in-flight promises so they don't float after cancellation.
-      // Errors are suppressed — the source is being torn down regardless.
-      await Promise.allSettled(pending)
-    }
-  }
-
   function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
-    return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min))
+    return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
   }
 
   export let src = ''
@@ -113,7 +82,7 @@
 
   export let canvasSource: CanvasImageSource
   export let current: ResolvedFile
-  export let otherFiles: TorrentFile[]
+  export let otherFiles: TorrentFile[] = []
 
   $: ended = duration > 0 && currentTime >= duration
 
@@ -164,9 +133,9 @@
   let context: CanvasRenderingContext2D | null | undefined
   let asyncId = 0
 
-  $: canvasSource = canvas
+  let firstTimeStamp = 0
 
-  const bufferAheadCount = Math.min((Number($settings.playerSeek) + 0.5) * 24, 40)
+  $: canvasSource = canvas
 
   function setCurrentTime (nextCurrentTime: number = playbackTimeAtStart) {
     currentTime = nextCurrentTime
@@ -257,7 +226,7 @@
 
     if (asyncId !== currentAsyncId) return safeTime
 
-    const iterator = videoFrameIterator = bufferAhead(videoSink.canvases(time), bufferAheadCount)
+    const iterator = videoFrameIterator = videoSink.canvases(time)
 
     const firstResult = await iterator.next()
     if (firstResult.done || asyncId !== currentAsyncId) return safeTime
@@ -289,6 +258,8 @@
     // const playbackAudioTracks = await filterAsync(await input.getAudioTracks(), track => track.canDecode())
     const playbackAudioTracks = await input.getAudioTracks()
 
+    const tracks = [...playbackVideoTracks, ...playbackAudioTracks]
+
     selectedAudioId ??= (playbackAudioTracks.find(track => track.languageCode === $settings.audioLanguage) ?? playbackAudioTracks.find(track => track.languageCode === 'jpn'))?.id.toString()
 
     audioTracks = playbackAudioTracks.map(t => new DummyTrack(t))
@@ -297,22 +268,25 @@
     const selectedVideo = playbackVideoTracks.find(track => `${track.id}` === selectedVideoId) ?? playbackVideoTracks[0]!
     const selectedAudio = playbackAudioTracks.find(track => `${track.id}` === selectedAudioId) ?? playbackAudioTracks[0]
 
-    if (!audioCtx || !gain || (selectedAudio && audioCtx.sampleRate !== selectedAudio.sampleRate)) {
-      audioCtx = new AudioContext({ sampleRate: selectedAudio?.sampleRate, latencyHint: 'playback' })
+    const sampleRate = await selectedAudio?.getSampleRate()
+
+    if (!audioCtx || !gain || (audioCtx.sampleRate !== sampleRate)) {
+      audioCtx = new AudioContext({ sampleRate })
       gain = audioCtx.createGain()
       gain.connect(audioCtx.destination)
     }
 
-    videoSink = new CanvasSink(selectedVideo, { poolSize: bufferAheadCount + 1, fit: 'contain' })
+    videoSink = new CanvasSink(selectedVideo, { poolSize: 2, fit: 'contain', alpha: false })
     audioSink = selectedAudio && new AudioBufferSink(selectedAudio)
 
-    playbackTimeAtStart = clamp(currentTime)
+    videoWidth = await selectedVideo.getDisplayWidth()
+    videoHeight = await selectedVideo.getDisplayHeight()
 
-    videoWidth = selectedVideo.displayWidth
-    videoHeight = selectedVideo.displayHeight
+    playbackTimeAtStart = clamp(currentTime, firstTimeStamp)
+    firstTimeStamp = clamp(await input.getFirstTimestamp(tracks))
 
-    duration = await input.computeDuration()
-    setCurrentTime(clamp(startTime, 0, duration || 0))
+    duration = await input.getDurationFromMetadata(tracks, { skipLiveWait: true }) ?? await input.computeDuration(tracks, { skipLiveWait: true })
+    setCurrentTime(clamp(startTime, 0, duration))
 
     if (initial) dispatch('loadedmetadata')
     readyState = 1
@@ -392,7 +366,9 @@
       node.connect(gain!)
       // node.playbackRate.value = playbackRate
 
-      const startTimestamp = audioContextStartTime + (timestamp - playbackTimeAtStart)
+      let startTimestamp = audioContextStartTime + (timestamp - playbackTimeAtStart)
+
+      startTimestamp = Math.round(audioCtx.sampleRate * startTimestamp) / audioCtx.sampleRate
       if (startTimestamp >= audioCtx.currentTime) {
         node.start(startTimestamp)
       } else {
@@ -499,7 +475,7 @@
     }
   }
 
-  $: target = clamp(currentTime, 0, duration || 0)
+  $: target = clamp(currentTime, firstTimeStamp, duration || 0)
   $: if (Math.abs(target - lastObservedCurrentTime) > 0.001) {
     lastObservedCurrentTime = target
     seekBackendTo(target).catch(handleBackendError)
@@ -573,8 +549,6 @@
       }
     }
   }
-
-  const hideOverlays = persisted('hideOverlays', false)
 </script>
 
 <canvas
@@ -590,6 +564,4 @@
   width={videoWidth}
   height={videoHeight}
 />
-{#if !$hideOverlays}
-  <canvas class='size-full object-contain pointer-events-none absolute inset-0' use:createSubs />
-{/if}
+<canvas class='size-full object-contain pointer-events-none absolute inset-0' use:createSubs />
