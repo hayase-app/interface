@@ -8,7 +8,10 @@ export default tseslint.config(
   ...config({
     ..._globals.browser,
     ..._globals.worker,
-    ..._globals.serviceworker
+    ..._globals.serviceworker,
+    AudioWorkletProcessor: false,
+    sampleRate: false,
+    registerProcessor: false
   }),
   {
     languageOptions: {

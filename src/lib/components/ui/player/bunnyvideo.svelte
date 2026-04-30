@@ -5,7 +5,7 @@
   import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
 
-  import audioWorkletUrl from './audioWorklet.ts?url'
+  import audioWorkletUrl from './audioWorklet.ts?worker&url'
   import Subs from './subtitles'
 
   import type { ResolvedFile } from './resolver'
