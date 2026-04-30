@@ -177,6 +177,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^6.2.4
         version: 6.2.4(svelte@5.55.5(@typescript-eslint/types@8.59.0))(vite@7.3.1(@types/node@25.6.0)(jiti@2.6.1)(terser@5.43.1)(yaml@2.6.0))
+      '@types/audioworklet':
+        specifier: ^0.0.99
+        version: 0.0.99
       '@types/debug':
         specifier: ^4.1.13
         version: 4.1.13
@@ -201,6 +204,9 @@ importers:
       eslint-config-standard-universal:
         specifier: ^1.0.10
         version: 1.0.10(@typescript-eslint/parser@8.59.0(eslint@9.17.0(jiti@2.6.1))(typescript@6.0.3))(jiti@2.6.1)
+      globals:
+        specifier: ^17.5.0
+        version: 17.5.0
       gql.tada:
         specifier: ^1.9.2
         version: 1.9.2(@gql.tada/svelte-support@1.0.2(svelte@5.55.5(@typescript-eslint/types@8.59.0))(typescript@6.0.3))(graphql@16.10.0)(typescript@6.0.3)
@@ -825,6 +831,9 @@ packages:
 
   '@thaunknown/web-irc@1.0.3':
     resolution: {integrity: sha512-gzTDs6+sAfkpuEB1IbVwBfu5btEt2D/0RGP+PwUPITIOZjZOpZLjs3d4ipvzl9eq+76otuudopmIlSD0pUT4Mw==}
+
+  '@types/audioworklet@0.0.99':
+    resolution: {integrity: sha512-c4HDvMhLRc+LAXxfOzVFwLfAx834AO6IsQS9mil0hKYyGS1i3JxYCcy7pQVzYw61VSvvBJp2d7tO546CChGE1A==}
 
   '@types/chromecast-caf-receiver@6.0.26':
     resolution: {integrity: sha512-f+9ocSKTTK1YZUXTznyunnJ2y4JlpUtda5TrL8TtW7ciI77HJiLhxsqDLNgXlZ6muCJGHS+rYp20HdV/bcAS0g==}
@@ -3546,6 +3555,8 @@ snapshots:
       grapheme-splitter: 1.0.4
       streamx: 2.20.1
       uint8-util: 2.2.6
+
+  '@types/audioworklet@0.0.99': {}
 
   '@types/chromecast-caf-receiver@6.0.26': {}
 

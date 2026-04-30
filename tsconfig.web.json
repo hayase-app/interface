@@ -42,7 +42,11 @@
       }
     ],
     "typeRoots": [
-      "./src/types"
+      "./src/types",
+      "./node_modules/@types"
+    ],
+    "types": [
+      "audioworklet"
     ]
   },
   "typeAcquisition": {

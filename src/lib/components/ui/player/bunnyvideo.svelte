@@ -5,6 +5,7 @@
   import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
 
+  import audioWorkletUrl from './audioWorklet.ts?url'
   import Subs from './subtitles'
 
   import type { ResolvedFile } from './resolver'
@@ -52,35 +53,35 @@
     }
   }
 
-  async function * bufferAhead<T> (
-    source: AsyncIterable<T>,
-    bufferSize: number
-  ): AsyncGenerator<T> {
-    const iter = source[Symbol.asyncIterator]()
-    const pending: Array<Promise<IteratorResult<T>>> = []
-    let done = false
+  // async function * bufferAhead<T> (
+  //   source: AsyncIterable<T>,
+  //   bufferSize: number
+  // ): AsyncGenerator<T> {
+  //   const iter = source[Symbol.asyncIterator]()
+  //   const pending: Array<Promise<IteratorResult<T>>> = []
+  //   let done = false
 
-    const enqueue = () => {
-      if (!done) pending.push(iter.next())
-    }
+  //   const enqueue = () => {
+  //     if (!done) pending.push(iter.next())
+  //   }
 
-    for (let i = 0; i < bufferSize; i++) enqueue()
+  //   for (let i = 0; i < bufferSize; i++) enqueue()
 
-    try {
-      while (pending.length > 0) {
-        const result = await pending.shift()!
-        if (result.done) { done = true; break }
-        enqueue()
-        yield result.value
-      }
-    } finally {
-      done = true
-      await iter.return?.()
-      // Drain in-flight promises so they don't float after cancellation.
-      // Errors are suppressed — the source is being torn down regardless.
-      await Promise.allSettled(pending)
-    }
-  }
+  //   try {
+  //     while (pending.length > 0) {
+  //       const result = await pending.shift()!
+  //       if (result.done) { done = true; break }
+  //       enqueue()
+  //       yield result.value
+  //     }
+  //   } finally {
+  //     done = true
+  //     await iter.return?.()
+  //     // Drain in-flight promises so they don't float after cancellation.
+  //     // Errors are suppressed — the source is being torn down regardless.
+  //     await Promise.allSettled(pending)
+  //   }
+  // }
 
   function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
     return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
@@ -152,7 +153,6 @@
 
   let audioCtx: AudioContext | null = null
   let gain: GainNode | null = null
-  const audioNodeQueue = new Set<AudioBufferSourceNode>()
 
   let audioContextStartTime: number | null = null
   let playbackTimeAtStart = clamp(currentTime)
@@ -180,14 +180,14 @@
     cancelAnimationFrame(rafHandle)
     rafHandle = 0
 
-    for (const node of audioNodeQueue) {
-      try {
-        node.stop()
-      } catch {}
-    }
-
-    audioNodeQueue.clear()
+    samplesSent = 0
+    samplesConsumed = 0
+    workletNode?.port.postMessage({ type: 'flush' })
   }
+
+  let workletNode: AudioWorkletNode | undefined
+  let samplesSent = 0
+  let samplesConsumed = 0
 
   function getBackendPlaybackTime () {
     if (!audioCtx) return 0
@@ -198,15 +198,16 @@
       const contextStart = audioContextStartTime ?? audioCtx.currentTime
 
       return clamp(playbackTimeAtStart + clamp(audioCtx.currentTime - contextStart - baseLatency), 0, duration)
-    } else {
-      return playbackTimeAtStart
     }
+
+    return playbackTimeAtStart
   }
 
-  async function waitForBackendAudioHeadroom (timestamp: number) {
+  async function waitForBackendAudioHeadroom () {
     await new Promise<void>((resolve) => {
       const id = setInterval(() => {
-        if (timestamp - getBackendPlaybackTime() < 1) {
+        const bufferedSeconds = (samplesSent - samplesConsumed) / audioCtx!.sampleRate
+        if (bufferedSeconds < 2) {
           clearInterval(id)
           resolve()
         }
@@ -256,7 +257,7 @@
 
     if (asyncId !== currentAsyncId) return safeTime
 
-    const iterator = videoFrameIterator = bufferAhead(videoSink.canvases(time), 10)
+    const iterator = videoFrameIterator = videoSink.canvases(time)
 
     const firstResult = await iterator.next()
     if (firstResult.done || asyncId !== currentAsyncId) return safeTime
@@ -304,9 +305,22 @@
       audioCtx = new AudioContext({ sampleRate })
       gain = audioCtx.createGain()
       gain.connect(audioCtx.destination)
+      await audioCtx.audioWorklet.addModule(audioWorkletUrl)
+
+      workletNode = new AudioWorkletNode(audioCtx, 'audio-stream-processor', {
+        numberOfInputs: 0,
+        numberOfOutputs: 1,
+        outputChannelCount: [await selectedAudio?.getNumberOfChannels() ?? 2]
+      })
+
+      workletNode.port.onmessage = ({ data }) => {
+        if (data.type === 'progress') samplesConsumed = data.samplesConsumed
+      }
+
+      workletNode.connect(gain)
     }
 
-    videoSink = new CanvasSink(selectedVideo, { poolSize: 12, fit: 'contain', alpha: false })
+    videoSink = new CanvasSink(selectedVideo, { poolSize: 2, fit: 'contain', alpha: false })
     audioSink = selectedAudio && new AudioBufferSink(selectedAudio)
 
     videoWidth = await selectedVideo.getDisplayWidth()
@@ -342,7 +356,7 @@
     audioContextStartTime = audioCtx.currentTime
     playbackTimeAtStart = currentTime
 
-    audioBufferIterator = bufferAhead(audioSink!.buffers(currentTime), 3)
+    audioBufferIterator = audioSink!.buffers(currentTime)
 
     const loop = async () => {
       rafHandle = requestAnimationFrame(loop)
@@ -388,27 +402,25 @@
 
     if (!rafHandle) loop()
 
-    for await (const { buffer, timestamp } of audioBufferIterator) {
+    for await (const { buffer } of audioBufferIterator) {
       if (paused) break
 
-      const node = audioCtx.createBufferSource()
-      node.buffer = buffer
-      node.connect(gain!)
-      // node.playbackRate.value = playbackRate
+      const frames = buffer.length
+      const channelData = Array.from({ length: buffer.numberOfChannels }, (_, c) => {
+        const arr = new Float32Array(frames)
+        buffer.copyFromChannel(arr, c)
+        return arr
+      })
 
-      let startTimestamp = audioContextStartTime + (timestamp - playbackTimeAtStart)
+      workletNode!.port.postMessage(
+        { type: 'push', channelData },
+        channelData.map(a => a.buffer)
+      )
 
-      startTimestamp = Math.round(audioCtx.sampleRate * startTimestamp) / audioCtx.sampleRate
-      if (startTimestamp >= audioCtx.currentTime) {
-        node.start(startTimestamp)
-      } else {
-        node.start(audioCtx.currentTime, audioCtx.currentTime - startTimestamp)
-      }
+      samplesSent += frames
 
-      audioNodeQueue.add(node)
-      node.onended = () => audioNodeQueue.delete(node)
-
-      if (timestamp - getBackendPlaybackTime() >= 1) await waitForBackendAudioHeadroom(timestamp)
+      const bufferedSeconds = (samplesSent - samplesConsumed) / audioCtx.sampleRate
+      if (bufferedSeconds >= 2) await waitForBackendAudioHeadroom()
     }
   }
 

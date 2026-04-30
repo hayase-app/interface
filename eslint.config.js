@@ -1,10 +1,15 @@
 import config from 'eslint-config-standard-universal'
+import _globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 import svelteConfig from './svelte.config.js'
 
 export default tseslint.config(
-  ...config(),
+  ...config({
+    ..._globals.browser,
+    ..._globals.worker,
+    ..._globals.serviceworker
+  }),
   {
     languageOptions: {
       parserOptions: {
