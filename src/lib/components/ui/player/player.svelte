@@ -415,7 +415,7 @@
 
   $: playbackIndex = Math.max(0, Math.floor(currentTime / thumbnailer.interval))
 
-  $: if (readyState && !seekIndex) thumbnailer._paintThumbnail(canvasSource, playbackIndex, videoWidth, videoHeight)
+  $: if (readyState > 1 && !seekIndex) thumbnailer._paintThumbnail(canvasSource, playbackIndex, videoWidth, videoHeight)
 
   $: native.setMediaSession(mediaInfo.session, mediaInfo.media.id, safeduration)
   $: native.setPositionState({ duration: safeduration, position: Math.min(Math.max(0, currentTime), safeduration), playbackRate: $playbackRate }, readyState === 0 ? 'none' : paused ? 'paused' : 'playing')
@@ -728,7 +728,7 @@
   function saveAnimeProgress () {
     if (!mediaInfo.media.id || !mediaInfo.episode) return
 
-    if (buffering || paused || readyState < 4) return
+    if (buffering || paused) return
 
     setAnimeProgress(mediaInfo.media.id, { episode: mediaInfo.episode, currentTime, safeduration })
   }

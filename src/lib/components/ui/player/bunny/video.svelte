@@ -15,7 +15,7 @@
     ])
 
     if (!ac3) await import('@mediabunny/ac3').then(({ registerAc3Decoder }) => registerAc3Decoder())
-    if (!flac || SUPPORTS.isIOS) await import('./flac').then(({ registerFlacDecoder }) => registerFlacDecoder())
+    if (!flac) await import('./flac').then(({ registerFlacDecoder }) => registerFlacDecoder())
   }
 </script>
 
@@ -72,35 +72,35 @@
     }
   }
 
-  // async function * bufferAhead<T> (
-  //   source: AsyncIterable<T>,
-  //   bufferSize: number
-  // ): AsyncGenerator<T> {
-  //   const iter = source[Symbol.asyncIterator]()
-  //   const pending: Array<Promise<IteratorResult<T>>> = []
-  //   let done = false
+  async function * bufferAhead<T> (
+    source: AsyncIterable<T>,
+    bufferSize: number
+  ): AsyncGenerator<T> {
+    const iter = source[Symbol.asyncIterator]()
+    const pending: Array<Promise<IteratorResult<T>>> = []
+    let done = false
 
-  //   const enqueue = () => {
-  //     if (!done) pending.push(iter.next())
-  //   }
+    const enqueue = () => {
+      if (!done) pending.push(iter.next())
+    }
 
-  //   for (let i = 0; i < bufferSize; i++) enqueue()
+    for (let i = 0; i < bufferSize; i++) enqueue()
 
-  //   try {
-  //     while (pending.length > 0) {
-  //       const result = await pending.shift()!
-  //       if (result.done) { done = true; break }
-  //       enqueue()
-  //       yield result.value
-  //     }
-  //   } finally {
-  //     done = true
-  //     await iter.return?.()
-  //     // Drain in-flight promises so they don't float after cancellation.
-  //     // Errors are suppressed — the source is being torn down regardless.
-  //     await Promise.allSettled(pending)
-  //   }
-  // }
+    try {
+      while (pending.length > 0) {
+        const result = await pending.shift()!
+        if (result.done) { done = true; break }
+        enqueue()
+        yield result.value
+      }
+    } finally {
+      done = true
+      await iter.return?.()
+      // Drain in-flight promises so they don't float after cancellation.
+      // Errors are suppressed — the source is being torn down regardless.
+      await Promise.allSettled(pending)
+    }
+  }
 
   function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
     return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
@@ -211,7 +211,7 @@
   function getBackendPlaybackTime () {
     if (!audioCtx) return 0
 
-    if (readyState >= 3 && !paused) {
+    if (!paused) {
       const baseLatency = audioCtx.baseLatency
       // const outputLatency = audioCtx.outputLatency
       const contextStart = audioContextStartTime ?? audioCtx.currentTime
@@ -276,7 +276,7 @@
 
     if (asyncId !== currentAsyncId) return safeTime
 
-    const iterator = videoFrameIterator = videoSink.canvases(time)
+    const iterator = videoFrameIterator = bufferAhead(videoSink.canvases(time), 3)
 
     const firstResult = await iterator.next()
     if (firstResult.done || asyncId !== currentAsyncId) return safeTime
@@ -339,7 +339,7 @@
       workletNode.connect(gain)
     }
 
-    videoSink = new CanvasSink(selectedVideo, { poolSize: 2, fit: 'contain', alpha: false })
+    videoSink = new CanvasSink(selectedVideo, { poolSize: 5, fit: 'contain', alpha: false })
     audioSink = selectedAudio && new AudioBufferSink(selectedAudio)
 
     videoWidth = await selectedVideo.getDisplayWidth()
@@ -406,8 +406,14 @@
             const playbackTime = getBackendPlaybackTime()
             if (candidate.timestamp <= playbackTime) {
               presentBackendFrame(candidate)
+              readyState = 1
+              await audioCtx?.suspend()
             } else {
+              if (audioCtx?.state === 'suspended') {
+                await audioCtx.resume()
+              }
               nextFrame = candidate
+              readyState = 3
               return
             }
           }
