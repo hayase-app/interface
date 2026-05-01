@@ -1,20 +1,38 @@
 <svelte:options accessors={true} />
 
+<script lang='ts' context='module'>
+  import { canDecodeAudio } from 'mediabunny'
+
+  import { SUPPORTS } from '$lib/modules/settings'
+
+  let loadPromise: Promise<void> | null = null
+
+  async function loadCodecs () {
+    const [ac3, flac] = await Promise.all([
+      canDecodeAudio('ac3'),
+      canDecodeAudio('flac')
+    // canDecodeAudio('aac'),
+    ])
+
+    if (!ac3) await import('@mediabunny/ac3').then(({ registerAc3Decoder }) => registerAc3Decoder())
+    if (!flac || SUPPORTS.isIOS) await import('./flac').then(({ registerFlacDecoder }) => registerFlacDecoder())
+  }
+</script>
+
 <script lang='ts'>
-  import { registerAc3Decoder } from '@mediabunny/ac3'
-  import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource, canDecodeAudio } from 'mediabunny'
+  import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
-  import { toast } from 'svelte-sonner'
+
+  import Subs from '../subtitles'
 
   import audioWorkletUrl from './audioWorklet.ts?worker&url'
-  import Subs from './subtitles'
 
-  import type { ResolvedFile } from './resolver'
-  import type { Track } from '../../../../app'
+  import type { Track } from '../../../../../app'
+  import type { ResolvedFile } from '../resolver'
   import type { TorrentFile } from 'native'
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
-  import { debug, settings, SUPPORTS } from '$lib/modules/settings'
+  import { settings } from '$lib/modules/settings'
 
   class DummyTrack implements Track {
     kind
@@ -171,18 +189,6 @@
   function setCurrentTime (nextCurrentTime: number = playbackTimeAtStart) {
     currentTime = nextCurrentTime
     lastObservedCurrentTime = nextCurrentTime
-  }
-
-  if ($debug) {
-    canDecodeAudio('flac').then(result => {
-      toast('FLAC decode support:' + result)
-    })
-    canDecodeAudio('ac3').then(result => {
-      toast('AC3 decode support:' + result)
-    })
-    canDecodeAudio('aac').then(result => {
-      toast('AAC decode support:' + result)
-    })
   }
 
   $: if (gain) {
@@ -509,6 +515,7 @@
 
   export async function load () {
     try {
+      await loadPromise
       playbackTimeAtStart = clamp(currentTime)
       setCurrentTime()
 
@@ -521,8 +528,9 @@
   function setupBackend (canvas: HTMLCanvasElement, src: string) {
     context = canvas.getContext('2d', { desynchronized: true, alpha: false })
 
+    loadPromise ??= loadCodecs()
+
     if (!context) handleBackendError(new Error('2D canvas context is unavailable for MediaBunny playback.'))
-    registerAc3Decoder()
     load()
     return {
       destroy,

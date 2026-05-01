@@ -767,7 +767,7 @@
   on:drop={e => subtitles?.handleTransfer(e)}
 >
   {#if useMediaBunnyPlayback}
-    {#await import('./bunnyvideo.svelte') then BunnyVideo}
+    {#await import('./bunny/video.svelte') then BunnyVideo}
       <BunnyVideo.default
         src={mediaInfo.file.url}
         {immersed}
