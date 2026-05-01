@@ -20,7 +20,7 @@
 </script>
 
 <script lang='ts'>
-  import { AudioBufferSink, CanvasSink, Input, type InputTrack, type WrappedAudioBuffer, type WrappedCanvas, ALL_FORMATS, UrlSource } from 'mediabunny'
+  import { AudioBufferSink, type VideoSample, VideoSampleSink, Input, type InputTrack, type WrappedAudioBuffer, ALL_FORMATS, UrlSource } from 'mediabunny'
   import { createEventDispatcher } from 'svelte'
 
   import Subs from '../subtitles'
@@ -72,10 +72,7 @@
     }
   }
 
-  async function * bufferAhead<T> (
-    source: AsyncIterable<T>,
-    bufferSize: number
-  ): AsyncGenerator<T> {
+  async function * bufferAhead<T> (source: AsyncIterable<T>, bufferSize: number): AsyncGenerator<T> {
     const iter = source[Symbol.asyncIterator]()
     const pending: Array<Promise<IteratorResult<T>>> = []
     let done = false
@@ -96,11 +93,15 @@
     } finally {
       done = true
       await iter.return?.()
-      // Drain in-flight promises so they don't float after cancellation.
-      // Errors are suppressed — the source is being torn down regardless.
       await Promise.allSettled(pending)
     }
   }
+
+  // async function * mapAsyncGenerator <T, U> (generator: AsyncIterable<T, void, unknown>, map: (t: T) => U): AsyncGenerator<U, void, unknown> {
+  //   for await (const item of generator) {
+  //     yield map(item)
+  //   }
+  // }
 
   function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
     return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
@@ -164,11 +165,11 @@
   let selectedVideoId: string | undefined
 
   let audioSink: AudioBufferSink | undefined
-  let videoSink: CanvasSink | undefined
+  let videoSink: VideoSampleSink | undefined
 
   let audioBufferIterator: AsyncGenerator<WrappedAudioBuffer, void, unknown> | null = null
-  let videoFrameIterator: AsyncGenerator<WrappedCanvas, void, unknown> | null = null
-  let nextFrame: WrappedCanvas | null = null
+  let videoFrameIterator: AsyncGenerator<VideoSample, void, unknown> | null = null
+  let nextFrame: VideoSample | null = null
 
   let audioCtx: AudioContext | null = null
   let gain: GainNode | null = null
@@ -234,10 +235,11 @@
     })
   }
 
-  function presentBackendFrame (frame: WrappedCanvas) {
+  function presentBackendFrame (frame: VideoSample) {
     presentedFrames += 1
-    context!.drawImage(frame.canvas, 0, 0)
+    context!.drawImage(frame.toCanvasImageSource(), 0, 0)
     nextFrame = null
+    frame.close()
 
     if (!frameCallbacks.size) return
 
@@ -276,7 +278,17 @@
 
     if (asyncId !== currentAsyncId) return safeTime
 
-    const iterator = videoFrameIterator = bufferAhead(videoSink.canvases(time), 3)
+    // const iterator = videoFrameIterator = bufferAhead(mapAsyncGenerator(videoSink.samples(time), s => {
+    //   const uint8ClampedArray = new Uint8ClampedArray(s.allocationSize({ format: 'RGBA' }))
+    //   s.copyTo(uint8ClampedArray, { format: 'RGBA' })
+    //   s.close()
+    //   return {
+    //     timestamp: s.timestamp,
+    //     data: new ImageData(uint8ClampedArray, videoWidth, videoHeight)
+    //   }
+    // }), 5)
+
+    const iterator = videoFrameIterator = bufferAhead(videoSink.samples(time), 3)
 
     const firstResult = await iterator.next()
     if (firstResult.done || asyncId !== currentAsyncId) return safeTime
@@ -339,7 +351,7 @@
       workletNode.connect(gain)
     }
 
-    videoSink = new CanvasSink(selectedVideo, { poolSize: 5, fit: 'contain', alpha: false })
+    videoSink = new VideoSampleSink(selectedVideo)
     audioSink = selectedAudio && new AudioBufferSink(selectedAudio)
 
     videoWidth = await selectedVideo.getDisplayWidth()
@@ -406,12 +418,10 @@
             const playbackTime = getBackendPlaybackTime()
             if (candidate.timestamp <= playbackTime) {
               presentBackendFrame(candidate)
+              if (readyState === 1) await audioCtx?.suspend()
               readyState = 1
-              await audioCtx?.suspend()
             } else {
-              if (audioCtx?.state === 'suspended') {
-                await audioCtx.resume()
-              }
+              if (audioCtx?.state === 'suspended') await audioCtx.resume()
               nextFrame = candidate
               readyState = 3
               return
@@ -438,14 +448,9 @@
       })
 
       if (SUPPORTS.isIOS) {
-        workletNode!.port.postMessage(
-          { type: 'push', channelData }
-        )
+        workletNode!.port.postMessage({ type: 'push', channelData })
       } else {
-        workletNode!.port.postMessage(
-          { type: 'push', channelData },
-          channelData.map(a => a.buffer)
-        )
+        workletNode!.port.postMessage({ type: 'push', channelData }, channelData.map(a => a.buffer))
       }
 
       samplesSent += frames
