@@ -29,7 +29,8 @@ class AudioStreamProcessor extends AudioWorkletProcessor {
         const n = Math.min(available, blockSize - written)
 
         for (let c = 0; c < out.length; c++) {
-          const src = chunk.channelData[c] ?? chunk.channelData[0]!
+          const src = chunk.channelData[c] ?? chunk.channelData[0]
+          if (!src) continue
           out[c]!.set(src.subarray(this._offset, this._offset + n), written)
         }
 

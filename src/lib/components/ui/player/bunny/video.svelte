@@ -108,9 +108,6 @@
   }
 
   export let src = ''
-  export let immersed = false
-  export let isMiniplayer = false
-  export let fitWidth = false
   export let holdToFF: ((node: HTMLElement, type: 'pointer') => { destroy: () => void })
 
   export let videoWidth = 0
@@ -323,6 +320,7 @@
     const sampleRate = await selectedAudio?.getSampleRate()
 
     if (!audioCtx || !gain || (audioCtx.sampleRate !== sampleRate)) {
+      await audioCtx?.close()
       audioCtx = new AudioContext({ sampleRate })
       gain = audioCtx.createGain()
       gain.connect(audioCtx.destination)

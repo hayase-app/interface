@@ -93,7 +93,7 @@
       <SettingCard class='bg-transparent' let:id title='Use DNS Over HTTPS' description='Enables DNS Over HTTPS, useful if your ISP blocks certain domains.'>
         <Switch {id} bind:checked={$settings.enableDoH} />
       </SettingCard>
-      <SettingCard let:id title='DNS Over HTTPS URL' description='What URL to use for querying DNS Over HTTPS.'>
+      <SettingCard class='bg-transparent' let:id title='DNS Over HTTPS URL' description='What URL to use for querying DNS Over HTTPS.'>
         <Input type='url' bind:value={$settings.doHURL} {id} class='w-80 shrink-0 bg-background' />
       </SettingCard>
     {:else}
