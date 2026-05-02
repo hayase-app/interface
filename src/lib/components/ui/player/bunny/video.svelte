@@ -97,12 +97,6 @@
     }
   }
 
-  // async function * mapAsyncGenerator <T, U> (generator: AsyncIterable<T, void, unknown>, map: (t: T) => U): AsyncGenerator<U, void, unknown> {
-  //   for await (const item of generator) {
-  //     yield map(item)
-  //   }
-  // }
-
   function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
     return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
   }
@@ -435,10 +429,12 @@
         return arr
       })
 
+      const data = { type: 'push', channelData, srcRate: buffer.sampleRate } as const
+
       if (SUPPORTS.isIOS) {
-        workletNode!.port.postMessage({ type: 'push', channelData })
+        workletNode!.port.postMessage(data)
       } else {
-        workletNode!.port.postMessage({ type: 'push', channelData }, channelData.map(a => a.buffer))
+        workletNode!.port.postMessage(data, channelData.map(a => a.buffer))
       }
 
       samplesSent += frames
