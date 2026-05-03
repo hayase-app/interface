@@ -189,6 +189,7 @@ export default class Subtitles {
       events.add(subtitle, event)
       if (Number(this.current.value) === trackNumber) {
         await this.jassub?.ready
+        if (this.jassub?._destroyed) return
         this.jassub?.renderer.createEvent(event)
       }
     }).catch(console.error)
@@ -198,6 +199,7 @@ export default class Subtitles {
       const urls = filtered.map(a => a.url)
       this.fonts.push(...urls)
       await this.jassub?.ready
+      if (this.jassub?._destroyed) return
       await this.jassub?.renderer.addFonts(urls)
     }).catch(console.error)
   }
