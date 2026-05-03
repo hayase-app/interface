@@ -54,6 +54,17 @@
   onDestroy(() => {
     clearInterval(timeout)
   })
+  const params = new URLSearchParams({
+    autoplay: '1',
+    controls: '0',
+    disablekb: '1',
+    loop: '1',
+    playlist: id,
+    cc_lang_pref: 'ja',
+    rel: '0',
+    playsinline: '1',
+    mute: '1'
+  })
 </script>
 
 <svelte:window on:message={ytMessage} />
@@ -84,10 +95,9 @@
     class:hide
     title='trailer'
     allow='autoplay'
-    allowfullscreen
     bind:this={frame}
     on:load={initFrame}
-    src='https://www.youtube-nocookie.com/embed/{id}?enablejsapi=1&autoplay=1&controls=0&mute=1&disablekb=1&loop=1&playlist={id}&cc_lang_pref=ja'
+    src='https://www.youtube-nocookie.com/embed/{id}?{params}&enablejsapi=1'
   />
 </div>
 <div class='size-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
@@ -97,8 +107,7 @@
     class:hide
     title='trailer'
     allow='autoplay'
-    allowfullscreen
-    src='https://www.youtube-nocookie.com/embed/{id}?autoplay=1&controls=0&mute=1&disablekb=1&loop=1&playlist={id}&cc_lang_pref=ja'
+    src='https://www.youtube-nocookie.com/embed/{id}?{params}'
   />
 </div>
 

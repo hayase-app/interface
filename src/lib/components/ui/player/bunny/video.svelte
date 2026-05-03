@@ -32,6 +32,7 @@
   import type { TorrentFile } from 'native'
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
+  import { customDoubleClick } from '$lib/modules/navigate'
   import { settings } from '$lib/modules/settings'
 
   class DummyTrack implements Track {
@@ -139,6 +140,7 @@
     loadedmetadata: undefined
     timeupdate: undefined
     fallback: Error
+    dblclick: MouseEvent
   }>()
 
   let lastSyncPaused = paused
@@ -306,12 +308,13 @@
 
     if (!audioCtx || !gain || (audioCtx.sampleRate !== sampleRate)) {
       await audioCtx?.close()
-      audioCtx = SUPPORTS.isIOS ? new AudioContext() : new AudioContext({ sampleRate })
-      gain = audioCtx.createGain()
-      gain.connect(audioCtx.destination)
-      await audioCtx.audioWorklet.addModule(audioWorkletUrl)
+      const ctx = audioCtx = new AudioContext({ sampleRate })
+      gain = ctx.createGain()
+      gain.connect(ctx.destination)
+      await ctx.audioWorklet.addModule(audioWorkletUrl)
+      if (audioCtx !== ctx) return
 
-      workletNode = new AudioWorkletNode(audioCtx, 'audio-stream-processor', {
+      workletNode = new AudioWorkletNode(ctx, 'audio-stream-processor', {
         numberOfInputs: 0,
         numberOfOutputs: 1,
         outputChannelCount: [await selectedAudio?.getNumberOfChannels() ?? 2]
@@ -625,6 +628,7 @@
 
 <canvas
   use:holdToFF={'pointer'}
+  use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: e => dispatch('dblclick', e) }}
   bind:this={canvas}
   bind:clientWidth
   bind:clientHeight

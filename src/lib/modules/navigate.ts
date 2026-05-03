@@ -363,3 +363,23 @@ export function dragScroll (node: HTMLElement) {
 
   return { destroy: () => ctrl.abort() }
 }
+
+export function customDoubleClick (node: HTMLElement, { cb, condition }: { condition: boolean, cb: (_: MouseEvent) => unknown }) {
+  const ctrl = new AbortController()
+  let _condition = condition
+  let lastDbl = 0
+
+  node.addEventListener('click', e => {
+    if (!_condition) return
+    const now = Date.now()
+    if (now - lastDbl < 500) {
+      cb(e)
+    }
+    lastDbl = now
+  }, ctrl)
+
+  return {
+    destroy: () => ctrl.abort(),
+    update: ({ condition: newCondition }: { condition: boolean, cb: (_: MouseEvent) => unknown }) => { _condition = newCondition }
+  }
+}

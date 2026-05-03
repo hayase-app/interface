@@ -56,7 +56,7 @@
   import { authAggregator } from '$lib/modules/auth'
   import { isPlaying } from '$lib/modules/idle'
   import native from '$lib/modules/native'
-  import { click, inputType, keywrap } from '$lib/modules/navigate'
+  import { click, customDoubleClick, inputType, keywrap } from '$lib/modules/navigate'
   import { settings, SUPPORTS } from '$lib/modules/settings'
   import { w2globby } from '$lib/modules/w2g/lobby'
   import { getAnimeProgress, setAnimeProgress } from '$lib/modules/watchProgress'
@@ -830,6 +830,7 @@
       bind:this={video}
       on:click={() => isMiniplayer ? goto('/app/player') : playPause()}
       on:dblclick={fullscreen}
+      use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: fullscreen }}
       on:loadeddata={checkAudio}
       on:loadedmetadata={loadAnimeProgress}
       on:timeupdate={checkSkippableChapters}
@@ -863,7 +864,7 @@
         </div>
       {/if}
       <Options {wrapper} bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'
-        class='{($settings.minimalPlayerUI || SUPPORTS.isAndroid || SUPPORTS.isIOS) ? 'inline-flex' : 'mobile:inline-flex hidden'} p-3 size-12 absolute z-[1] top-4 left-4 bg-black/20 pointer-events-auto transition-opacity delay-150 select:opacity-100 {immersed && 'opacity-0'}' />
+        class='{($settings.minimalPlayerUI || SUPPORTS.isAndroid || SUPPORTS.isIOS) ? 'inline-flex' : 'mobile:inline-flex hidden'} p-3 size-12 absolute z-[1] top-4 right-4 bg-black/20 pointer-events-auto transition-opacity delay-150 select:opacity-100 {immersed && 'opacity-0'}' />
       {#if fastForwarding}
         <div class='absolute top-10 font-bold text-sm animate-[fade-in_.4s_ease] flex items-center leading-none bg-black/60 px-4 py-2 rounded-2xl'>x2 <FastForward class='ml-2' size='12' fill='currentColor' /></div>
       {/if}
@@ -884,8 +885,8 @@
           </Button>
         </div>
         <div class='size-full mobile:flex hidden justify-between absolute'>
-          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(-Number($settings.playerSeek))} use:holdToFF={'pointer'} />
-          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(Number($settings.playerSeek))} use:holdToFF={'pointer'} />
+          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(-Number($settings.playerSeek))} use:holdToFF={'pointer'} use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: () => seek(-Number($settings.playerSeek)) }} />
+          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(Number($settings.playerSeek))} use:holdToFF={'pointer'} use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: () => seek(Number($settings.playerSeek)) }} />
         </div>
       {/if}
       {#if buffering}
@@ -901,11 +902,11 @@
       </ProgressButton>
     {/if}
     <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity delay-150 select:opacity-100' class:opacity-0={immersed}>
-      <div class='flex justify-between gap-12 items-end'>
+      <div class='flex items-end gap-1'>
         <div class='flex flex-col gap-2 text-left cursor-pointer'>
           <EpisodesModal portal={wrapper} {mediaInfo} />
         </div>
-        <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg'>
+        <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg ml-auto'>
           <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, $chapters) || ''}</div>
           <div class='ml-auto self-end text-sm leading-none font-light text-nowrap' use:click={toggleTimeFormat}>
             {#if $timeFormat === 'positive'}
@@ -915,6 +916,17 @@
             {/if}
           </div>
         </div>
+        <Button class='relative animated-icon shrink-0 -mb-2 p-0 size-8 {(SUPPORTS.isAndroid || SUPPORTS.isIOS) ? 'flex' : 'mobile:flex hidden'}' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)} data-up='#player-seekbar'>
+          {#if fullscreenElement}
+            <div transition:scaleBlurFade class='absolute'>
+              <Minimize size='16px' class='p-0.5' strokeWidth='2.5' />
+            </div>
+          {:else}
+            <div transition:scaleBlurFade class='absolute'>
+              <Maximize size='16px' class='p-0.5' strokeWidth='2.5' />
+            </div>
+          {/if}
+        </Button>
       </div>
       <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} chapters={$chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
       <div class='justify-between gap-2 {($settings.minimalPlayerUI || SUPPORTS.isAndroid || SUPPORTS.isIOS) ? 'hidden' : 'mobile:hidden flex'}'>

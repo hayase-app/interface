@@ -33,6 +33,7 @@
 
   import type Thumbnailer from './thumbnailer'
 
+  import { customDoubleClick } from '$lib/modules/navigate'
   import { SUPPORTS } from '$lib/modules/settings'
   import { toTS } from '$lib/utils'
 
@@ -127,16 +128,6 @@
   export let thumbnailer: Thumbnailer
 
   $: seekIndex = Math.max(0, Math.floor(seekTime / thumbnailer.interval))
-
-  let lastDbl = 0
-  function customDoubleClick (e: MouseEvent) {
-    if (!SUPPORTS.isAndroidTV) return
-    const now = Date.now()
-    if (now - lastDbl < 500) {
-      dispatch('dblclick', e)
-    }
-    lastDbl = now
-  }
 </script>
 
 <div class='w-full flex cursor-pointer relative group/seekbar touch-none !transform-none' class:!cursor-grab={seeking}
@@ -145,7 +136,7 @@
   data-down='#player-play-pause-button'
   data-up='#episode-list-button'
   on:keydown
-  on:click={customDoubleClick}
+  use:customDoubleClick={{ condition: SUPPORTS.isAndroidTV, cb: e => dispatch('dblclick', e) }}
   bind:this={seekbar}
   on:pointerdown={startSeeking}
   on:pointerup={endSeeking}
