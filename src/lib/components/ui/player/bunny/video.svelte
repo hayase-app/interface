@@ -315,7 +315,7 @@
 
     if (!audioCtx || !gain || (audioCtx.sampleRate !== sampleRate)) {
       await audioCtx?.close()
-      audioCtx = new AudioContext({ sampleRate })
+      audioCtx = SUPPORTS.isIOS ? new AudioContext() : new AudioContext({ sampleRate })
       gain = audioCtx.createGain()
       gain.connect(audioCtx.destination)
       await audioCtx.audioWorklet.addModule(audioWorkletUrl)
