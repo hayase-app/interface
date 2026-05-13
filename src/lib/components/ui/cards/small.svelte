@@ -12,29 +12,45 @@
   import { goto } from '$app/navigation'
   import { coverMedium, format, title } from '$lib/modules/anilist/util'
   import { list } from '$lib/modules/auth'
-  import { hover } from '$lib/modules/navigate'
+  import { click } from '$lib/modules/navigate'
 
   export let media: Media
 
   let hidden = true
+  let stillTimer: ReturnType<typeof setTimeout> | undefined
 
   function onclick () {
     goto(`/app/anime/${media.id}`)
   }
-  function onhover (state: boolean) {
-    hidden = !state
+  function onmouseleave () {
+    clearTimeout(stillTimer)
+    hidden = true
+  }
+  function onmousemove () {
+    if (hidden) {
+      clearTimeout(stillTimer)
+      stillTimer = setTimeout(() => {
+        hidden = false
+      }, 15)
+    }
   }
 
   $: status = list(media)
 </script>
 
-<div class='text-white p-4 cursor-pointer shrink-0 relative pointer-events-auto [content-visibility:auto] [contain-intrinsic-size:auto_152px_auto_290.4px]' class:![content-visibility:visible]={!hidden} class:z-40={!hidden} use:hover={[onclick, onhover]}>
-  {#if !hidden}
-    <PreviewCard {media} />
-  {/if}
+<div class='text-white p-4 cursor-pointer shrink-0 relative pointer-events-auto [content-visibility:auto] [contain-intrinsic-size:auto_152px_auto_290.4px]' class:![content-visibility:visible]={!hidden} class:z-40={!hidden} use:click={onclick}>
   <div class='item w-[9.5rem] flex flex-col'>
-    <div class='h-[13.5rem]'>
-      <Load src={coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
+    <div
+      on:mousemove={() => onmousemove()}
+      on:mouseleave={() => onmouseleave()}
+      role='none'
+    >
+      {#if !hidden}
+        <PreviewCard {media} />
+      {/if}
+      <div class='h-[13.5rem]'>
+        <Load src={coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
+      </div>
     </div>
     <div class='pt-3 font-black text-[.8rem] line-clamp-2'>
       {#if status}
