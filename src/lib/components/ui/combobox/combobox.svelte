@@ -91,44 +91,46 @@
       <!-- this hacky thing is required for dialog root focus trap... pitiful -->
       <div class='h-0 w-full' tabindex='0' />
       <Command.Input {placeholder} autofocus={false} class='h-9 placeholder:opacity-50' />
-      <Command.Empty>No results found.</Command.Empty>
-      {#if $inputType === 'dpad'}
-        <Command.Group class='shrink-0' alwaysRender={true}>
-          <Command.Item
-            alwaysRender={true}
-            class='cursor-pointer'
-            onSelect={() => {
-              closeAndFocusTrigger(ids.trigger)
-            }}
-            value='close'>
-            <X class='mr-2 h-4 w-4' />
-            Close
-          </Command.Item>
+      <Command.List>
+        <Command.Empty>No results found.</Command.Empty>
+        {#if $inputType === 'dpad'}
+          <Command.Group class='shrink-0' alwaysRender={true}>
+            <Command.Item
+              alwaysRender={true}
+              class='cursor-pointer'
+              onSelect={() => {
+                closeAndFocusTrigger(ids.trigger)
+              }}
+              value='close'>
+              <X class='mr-2 h-4 w-4' />
+              Close
+            </Command.Item>
+          </Command.Group>
+          <Command.Separator />
+        {/if}
+        <Command.Group class='overflow-y-auto'>
+          {#each items as item (item.value)}
+            <Command.Item
+              class={cn('cursor-pointer', !multiple && 'flex-row-reverse justify-between')}
+              value={item.value}
+              onSelect={() => {
+                handleSelect(item, ids.trigger)
+              }}>
+              <div
+                class={cn(
+                  'flex h-4 w-4 items-center justify-center rounded-sm border-primary',
+                  multiple ? 'border mr-2' : 'ml-2',
+                  value.find(({ value }) => value === item.value)
+                    ? 'bg-primary text-primary-foreground'
+                    : 'opacity-50 [&_svg]:invisible'
+                )}>
+                <Check className={cn('h-4 w-4')} />
+              </div>
+              {item.label}
+            </Command.Item>
+          {/each}
         </Command.Group>
-        <Command.Separator />
-      {/if}
-      <Command.Group class='overflow-y-auto'>
-        {#each items as item (item.value)}
-          <Command.Item
-            class={cn('cursor-pointer', !multiple && 'flex-row-reverse justify-between')}
-            value={item.value}
-            onSelect={() => {
-              handleSelect(item, ids.trigger)
-            }}>
-            <div
-              class={cn(
-                'flex h-4 w-4 items-center justify-center rounded-sm border-primary',
-                multiple ? 'border mr-2' : 'ml-2',
-                value.find(({ value }) => value === item.value)
-                  ? 'bg-primary text-primary-foreground'
-                  : 'opacity-50 [&_svg]:invisible'
-              )}>
-              <Check className={cn('h-4 w-4')} />
-            </div>
-            {item.label}
-          </Command.Item>
-        {/each}
-      </Command.Group>
+      </Command.List>
     </Command.Root>
   </Popover.Content>
 </Popover.Root>
