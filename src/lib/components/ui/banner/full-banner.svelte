@@ -95,9 +95,9 @@
         {#await episodesCached(current.id) then metadata}
           {@const src = metadata?.logos.sort((a, b) => b.vote_average - a.vote_average).find(i => i.iso_639_1 === 'en' && i.aspect_ratio > 1.2)?.file_path}
           {#if src}
-            <a class='w-full flex justify-center lg:justify-start'>
+            <div class='w-full flex justify-center lg:justify-start'>
               <Load {src} alt={title(current)} class='drop-shadow-lg w-[30rem]' />
-            </a>
+            </div>
           {:else}
             {title(current)}
           {/if}

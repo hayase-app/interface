@@ -34,7 +34,4 @@
     transform: translateY(2px);
     transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
   }
-  div {
-    display: inline-block;
-  }
 </style>

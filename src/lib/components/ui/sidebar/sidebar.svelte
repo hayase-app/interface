@@ -34,10 +34,10 @@
 <svelte:window use:outsideclick />
 
 {#if !$breakpoints.md}
-  <div class='shrink-0 z-50 bg-black absolute left-4 {isPlayer ? 'top-4' : 'bottom-4'} w-14 h-[52px] flex rounded-md items-end justify-end overflow-clip transition-[width,height] group-fullscreen/fullscreen:hidden' class:!w-[152px]={open} class:!h-[140px]={open} bind:this={container}>
+  <div class='shrink-0 z-50 bg-black absolute left-4 {isPlayer ? 'top-4' : 'bottom-4'} size-[64px] flex rounded-md items-end justify-end overflow-clip transition-[width,height] group-fullscreen/fullscreen:hidden' class:!size-[176px]={open} bind:this={container}>
     <div class='p-2 grid grid-cols-3 gap-2 shrink-0'>
       <slot />
-      <Button variant='ghost' class='px-2 w-full relative' on:click={() => { open = !open }}>
+      <Button variant='ghost' class='px-2 relative shrink-0' size='icon-lg' on:click={() => { open = !open }}>
         {#if open}
           <X size={18} fill='currentColor' class='pointer-events-none' />
         {:else}
