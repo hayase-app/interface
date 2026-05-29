@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.4.372",
+	"version": "6.4.373",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@10.28.0",

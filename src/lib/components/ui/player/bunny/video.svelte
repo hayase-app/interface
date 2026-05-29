@@ -202,6 +202,8 @@
   let samplesSent = 0
   let samplesConsumed = 0
 
+  let lastAudioPushTime = 0
+
   function getBackendPlaybackTime () {
     if (!audioCtx) return 0
 
@@ -372,6 +374,11 @@
       rafHandle = requestAnimationFrame(loop)
 
       const playbackTime = getBackendPlaybackTime()
+
+      if (audioCtx && !paused && audioCtx.state === 'running' && performance.now() - lastAudioPushTime > 500) {
+        audioCtx.suspend()
+      }
+
       const timeChanged = Math.abs(currentTime - playbackTime) > 0.001
 
       if (timeChanged) {
@@ -394,8 +401,8 @@
             if (asyncId !== currentAsyncId) return
 
             const candidate = nextResult.value
-            const playbackTime = getBackendPlaybackTime()
-            if (candidate.timestamp <= playbackTime) {
+            const frameTime = getBackendPlaybackTime()
+            if (candidate.timestamp <= frameTime) {
               presentBackendFrame(candidate)
               if (readyState === 1) await audioCtx?.suspend()
               readyState = 1
@@ -420,6 +427,13 @@
     for await (const { buffer } of audioBufferIterator) {
       if (paused || asyncId !== currentAsyncId) break
 
+      if (audioCtx?.state === 'suspended') {
+        lastAudioPushTime = performance.now()
+        await audioCtx.resume()
+        audioContextStartTime = audioCtx.currentTime
+        playbackTimeAtStart = currentTime
+      }
+
       const frames = buffer.length
       const channelData = Array.from({ length: buffer.numberOfChannels }, (_, c) => {
         const arr = new Float32Array(frames)
@@ -436,6 +450,7 @@
       }
 
       samplesSent += frames
+      lastAudioPushTime = performance.now()
 
       const bufferedSeconds = (samplesSent - samplesConsumed) / audioCtx.sampleRate
       if (bufferedSeconds >= 2) {
