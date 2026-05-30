@@ -44,7 +44,7 @@
 
   $: scale = SUPPORTS.isAndroidTV ? $settings.uiScale / devicePixelRatio : (SUPPORTS.isAndroid || SUPPORTS.isIOS) ? $settings.uiScale : 1
 
-  const scriptSrc = dev ? "'self' 'unsafe-eval' 'unsafe-inline' blob:" : "'self' blob:"
+  const scriptSrc = dev ? "'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' blob:" : "'self' 'wasm-unsafe-eval' blob:"
   const content = `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' blob: https: data:; font-src 'self'; connect-src 'self' https: wss:; frame-src 'self' https://www.youtube-nocookie.com; worker-src 'self' blob:; media-src 'self' https://v.animethemes.moe http://localhost blob: https://remotion.media; object-src 'none'; base-uri 'self'; form-action 'self'`
 </script>
 
