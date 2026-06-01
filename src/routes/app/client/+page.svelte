@@ -1,7 +1,6 @@
 <script lang='ts'>
-  import { Overview } from '$lib/components/ui/torrentclient'
-</script>
+  import { goto } from '$app/navigation'
+  import { breakpoints } from '$lib/utils'
 
-<div class='flex flex-col h-full overflow-y-scroll'>
-  <Overview />
-</div>
+  $: if ($breakpoints.md) goto('/app/client/overview/', { replaceState: true })
+</script>

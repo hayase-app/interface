@@ -5,11 +5,16 @@
   import { Globe } from '$lib/components/ui/torrentclient'
   import { dragScroll } from '$lib/modules/navigate'
   import { SUPPORTS } from '$lib/modules/settings'
+  import { cn } from '$lib/utils'
 
   const items = [
     {
       title: 'Overview',
-      href: '/app/client/'
+      href: '/app/client/overview/',
+      overview: {
+        title: 'Torrent Client',
+        desc: 'Monitor your torrents, and configure settings for your torrent client.'
+      }
     },
     {
       title: 'Files',
@@ -53,6 +58,8 @@
     title: 'Torrent Client',
     desc: 'Monitor your torrents, and configure settings for your torrent client.'
   }
+
+  $: current = $page.url.pathname === '/app/client/'
 </script>
 
 <div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col min-w-0'>
@@ -66,7 +73,7 @@
   </div>
   <Separator class='my-3 md:my-6 max-w-[1440px] mx-auto' />
   <div class='flex flex-col lg:flex-row gap-x-12 grow min-h-0 overflow-y-auto lg:justify-center' use:dragScroll>
-    <aside class='lg:grow lg:max-w-60 flex flex-col sticky top-0 w-full bg-black z-20'>
+    <aside class={cn('lg:grow lg:max-w-60 flex flex-col sticky top-0 w-full bg-black z-20 h-full', !current && 'hidden md:flex')}>
       <SettingsNav {items} />
       <div class='mt-auto text-xs text-muted-foreground px-4 sm:px-2 py-3 md:py-5 flex-row lg:flex-col font-light gap-0.5 gap-x-4 flex-wrap hidden sm:flex'>
         <div>WebTorrent v2.8.4</div>
