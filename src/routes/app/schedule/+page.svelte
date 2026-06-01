@@ -267,7 +267,7 @@
       {#each dayList as { date, number } (date)}
         {@const sameMonth = isSameMonth(now, date)}
         <div>
-          <div class='flex flex-col text-xs py-3 h-24' class:opacity-30={!sameMonth}>
+          <div class='flex flex-col text-xs py-3 h-24 lg:h-48' class:opacity-30={!sameMonth}>
             <div class={cn('w-6 h-6 flex items-center justify-center font-bold mx-3', isToday(date) && 'bg-[rgb(61,180,242)] rounded-full')}>
               {number}
             </div>
