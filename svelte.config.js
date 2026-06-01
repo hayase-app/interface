@@ -116,7 +116,7 @@ const config = {
       directives: {
         'default-src': ['self'],
         'script-src': ['self', 'wasm-unsafe-eval', 'blob:'],
-        'style-src': ['self'],
+        'style-src': ['self', 'unsafe-inline'],
         'img-src': ['self', 'blob:', 'https:', 'data:'],
         'font-src': ['self'],
         'connect-src': ['self', 'https:', 'wss:', 'http://localhost:*'],
