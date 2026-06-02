@@ -3,7 +3,7 @@
   import { get } from 'svelte/store'
   import { persisted } from 'svelte-persisted-store'
 
-  import { keys, layout, type KeyCode, codeMap } from './maps.ts'
+  import { keys, layout, type KeyCode, codeMap, getKeyLabel } from './maps.ts'
 
   type Bind <T extends Record<string, unknown> = Record<string, unknown>> = T & {
     fn: (e: MouseEvent | KeyboardEvent) => void
@@ -72,7 +72,7 @@
 <script lang='ts'>
   export let clickable = false
 
-  export let pointerOver: (bind: Bind | undefined) => void
+  export let pointerOver: (bind: Bind | undefined, label: string) => void
 
   let dragged: HTMLDivElement | null = null
   function draggable (node: HTMLDivElement, code: KeyCode) {
@@ -121,16 +121,19 @@
 <div class='svelte-keybinds' on:pointerleave>
   {#each Object.values(keys) as key (key.name)}
     {@const { size, dark, name } = key}
+    {@const label = getKeyLabel(name)}
     <div
       class:dark
       draggable={!!$binds[name]}
       data-code={name}
+      data-label={label}
+      title={label}
       class='w-{size ?? 50}'
       {...$$restProps}
       use:draggable={name}
-      on:pointerover={() => pointerOver($binds[name])}
+      on:pointerover={() => pointerOver($binds[name], label)}
       on:click={(e) => clickable && runBind(e, name)}>
-      <slot prop={$binds[name]} />
+      <slot prop={$binds[name]} keyLabel={label} />
     </div>
   {/each}
 </div>

@@ -311,3 +311,12 @@ if (navigator.keyboard) {
     }
   })
 }
+
+const charMap: Partial<Record<KeyCode, string>> = {}
+for (const [char, code] of Object.entries(codeMap)) {
+  charMap[code] = char
+}
+
+export function getKeyLabel (code: KeyCode): string {
+  return (charMap[code] ?? code).replace(/^Key/, '').replace(/^Digit/, '').replace(/^Arrow/, '')
+}
