@@ -15,7 +15,9 @@
 
 <script lang='ts'>
   import SettingCard from '$lib/components/SettingCard.svelte'
+  import { Button } from '$lib/components/ui/button'
   import { SingleCombo } from '$lib/components/ui/combobox'
+  import * as Dialog from '$lib/components/ui/dialog'
   import { Slider } from '$lib/components/ui/slider'
   import { Switch } from '$lib/components/ui/switch'
   // import { Textarea } from '$lib/components/ui/textarea'
@@ -35,9 +37,34 @@
   }
 
   let value = [$settings.uiScale]
+  let prevScale = $settings.uiScale
+  let dialogOpen = false
+  let countdown = 10
+  let countdownInterval: ReturnType<typeof setInterval>
 
   function saveScale () {
+    prevScale = $settings.uiScale
     $settings.uiScale = value[0]!
+    dialogOpen = true
+    countdown = 10
+    clearInterval(countdownInterval)
+    countdownInterval = setInterval(() => {
+      countdown--
+      if (countdown <= 0) revertScale()
+    }, 1000)
+  }
+
+  function keep () {
+    clearInterval(countdownInterval)
+    prevScale = $settings.uiScale
+    dialogOpen = false
+  }
+
+  function revertScale () {
+    clearInterval(countdownInterval)
+    $settings.uiScale = prevScale
+    value = [prevScale]
+    dialogOpen = false
   }
 
   const titleTypes = {
@@ -85,3 +112,18 @@
       <Switch bind:checked={$settings.idleAnimation} on:click={native.restart} {id} />
     </SettingCard> -->
 {/if}
+
+<Dialog.Root portal='#root' bind:open={dialogOpen}>
+  <Dialog.Content class='max-w-md w-full bg-black'>
+    <Dialog.Header>
+      <Dialog.Title class='font-weight-bold font-bold'>Keep this UI scale?</Dialog.Title>
+      <Dialog.Description>
+        The interface zoom has been changed. Reverting to the previous scale in {countdown} seconds.
+      </Dialog.Description>
+    </Dialog.Header>
+    <Dialog.Footer>
+      <Button variant='destructive' on:click={revertScale}>Revert</Button>
+      <Button on:click={keep}>Keep Changes</Button>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog.Root>
