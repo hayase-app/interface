@@ -6,27 +6,21 @@
 
   import { Button, iconSizes } from '../button'
 
+  import ExtensionCard from './ExtensionCard.svelte'
   import ExtensionSettings from './ExtensionSettings.svelte'
 
   import StatusDot from '$lib/components/StatusDot.svelte'
   import { Input } from '$lib/components/ui/input'
   import * as Tabs from '$lib/components/ui/tabs'
   import * as Tooltip from '$lib/components/ui/tooltip'
-  import { MANIFEST_VERSION, savedConfigs, storage } from '$lib/modules/extensions'
-  import { codeToEmoji } from '$lib/utils'
-
-  const typeMap = {
-    nzb: 'NZB',
-    torrent: 'Torrent',
-    subtitle: 'Subtitle'
-  }
+  import { savedConfigs, storage } from '$lib/modules/extensions'
   let value = 'extensions'
 
   let extensionInput = ''
 
   let importPromise = Promise.resolve()
 
-  export function importExtension (ext = extensionInput) {
+  function importExtension (ext = extensionInput) {
     importPromise = (async () => {
       try {
         await storage.import(ext)
@@ -74,95 +68,49 @@
   <Tabs.Content value='extensions' class='mt-0' tabindex={-1}>
     <div class='flex flex-col gap-y-2 justify-center'>
       {#each Object.entries($savedConfigs) as [id, config] (id)}
-        <div class='bg-neutral-950 px-4 py-3 rounded-md flex flex-row space-x-3 justify-between w-full'>
-          <div class='flex flex-col space-y-3'>
-            <div class='flex flex-row space-x-3'>
-              <img src={config.icon} alt='ico' class='size-10 rounded-md bg-neutral-900' loading='lazy' decoding='async' />
-              <div class='flex flex-col'>
-                <div class='text-md font-bold'>
-                  {#await test(id)}
-                    <Tooltip.Root>
-                      <Tooltip.Trigger class='inline' tabindex={-1}>
-                        <StatusDot variant='PENDING' />
-                      </Tooltip.Trigger>
-                      <Tooltip.Content class='max-w-full w-52'>
-                        This extension is currently being tested for online status.
-                      </Tooltip.Content>
-                    </Tooltip.Root>
-                  {:then res}
-                    <Tooltip.Root>
-                      <Tooltip.Trigger class='inline' tabindex={-1}>
-                        <StatusDot variant='COMPLETED' />
-                      </Tooltip.Trigger>
-                      <Tooltip.Content class='max-w-full w-52'>
-                        {#if res === true || res == null}
-                          This extension is online and reachable.
-                        {:else if res === false}
-                          This extension is offline and unreachable, but the extension expects this.
-                        {:else}
-                          {res}
-                        {/if}
-                      </Tooltip.Content>
-                    </Tooltip.Root>
-                  {:catch error}
-                    <Tooltip.Root>
-                      <Tooltip.Trigger class='inline' tabindex={-1}>
-                        <StatusDot variant='DROPPED' />
-                      </Tooltip.Trigger>
-                      <Tooltip.Content class='max-w-full w-52'>
-                        {#if error === false}
-                          This extension is offline and unreachable.
-                        {:else}
-                          {error.message ?? error.stack ?? error}
-                        {/if}
-                      </Tooltip.Content>
-                    </Tooltip.Root>
-                  {/await}
-                  {config.name}
-                </div>
-                <div class='text-xs text-muted-foreground'>
-                  {id}
-                </div>
-              </div>
-            </div>
-            <div class='[flex-wrap:balance] w-full justify-start gap-2 flex text-neutral-300 text-sm'>
-              {#if config.deprecated}
-                <div class='rounded px-3 py-0.5 font-bold bg-yellow-800 leading-snug text-nowrap'>
-                  Deprecated
-                </div>
-              {:else if config.manifestVersion !== MANIFEST_VERSION}
-                <div class='rounded px-3 py-0.5 font-bold bg-red-900 leading-snug text-nowrap'>
-                  Outdated
-                </div>
-              {/if}
-              <div class='rounded px-3 py-0.5 font-bold bg-neutral-900 leading-snug text-nowrap'>
-                {config.version}
-              </div>
-              <div class='rounded px-3 py-0.5 font-bold bg-neutral-900 leading-snug text-nowrap'>
-                {typeMap[config.type]}
-              </div>
-              <div class='rounded px-3 py-0.5 font-bold bg-neutral-900 leading-snug text-nowrap capitalize'>
-                {config.accuracy} Accuracy
-              </div>
-              {#if config.ratio}
-                <div class='rounded px-3 py-0.5 font-bold bg-neutral-900 leading-snug text-nowrap'>
-                  {config.ratio} Ratio
-                </div>
-              {/if}
-              <div class='rounded px-3 py-0.5 font-bold bg-neutral-900 leading-snug text-nowrap capitalize'>
-                {config.media}
-              </div>
-              {#if config.languages}
-                <div class='font-twemoji text-xl leading-none content-center line-clamp-1'>
-                  {#each config.languages as lang, i (i)}
-                    {codeToEmoji(lang)}
-                  {/each}
-                </div>
-              {/if}
-            </div>
+        <ExtensionCard {config}>
+          <div slot='leading'>
+            {#await test(id)}
+              <Tooltip.Root>
+                <Tooltip.Trigger class='inline' tabindex={-1}>
+                  <StatusDot variant='PENDING' />
+                </Tooltip.Trigger>
+                <Tooltip.Content class='max-w-full w-52'>
+                  This extension is currently being tested for online status.
+                </Tooltip.Content>
+              </Tooltip.Root>
+            {:then res}
+              <Tooltip.Root>
+                <Tooltip.Trigger class='inline' tabindex={-1}>
+                  <StatusDot variant='COMPLETED' />
+                </Tooltip.Trigger>
+                <Tooltip.Content class='max-w-full w-52'>
+                  {#if res === true || res == null}
+                    This extension is online and reachable.
+                  {:else if res === false}
+                    This extension is offline and unreachable, but the extension expects this.
+                  {:else}
+                    {res}
+                  {/if}
+                </Tooltip.Content>
+              </Tooltip.Root>
+            {:catch error}
+              <Tooltip.Root>
+                <Tooltip.Trigger class='inline' tabindex={-1}>
+                  <StatusDot variant='DROPPED' />
+                </Tooltip.Trigger>
+                <Tooltip.Content class='max-w-full w-52'>
+                  {#if error === false}
+                    This extension is offline and unreachable.
+                  {:else}
+                    {error.message ?? error.stack ?? error}
+                  {/if}
+                </Tooltip.Content>
+              </Tooltip.Root>
+            {/await}
           </div>
-          <ExtensionSettings {config} />
-        </div>
+          <ExtensionSettings slot='actions' {config} />
+        </ExtensionCard>
       {:else}
         <div class='px-4 py-6 gap-y-4 flex flex-col items-center'>
           <div class='text-bold text-2xl'>

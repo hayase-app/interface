@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation'
   import SearchModal from '$lib/components/SearchModal.svelte'
   import { BannerImage } from '$lib/components/ui/banner'
+  import { extensionInstalURL, InstallPrompt } from '$lib/components/ui/extensions'
   import { Player } from '$lib/components/ui/player'
   import { Sidebar } from '$lib/components/ui/sidebar'
   import Sidebarlist from '$lib/components/ui/sidebar/sidebarlist.svelte'
@@ -18,6 +19,8 @@
 
   native.navigate(({ target, value }) => {
     if (!(target in NAVIGATE_TARGETS)) return
+
+    if (target === 'extensions') return extensionInstalURL.set(value ?? '')
 
     const targetValue = NAVIGATE_TARGETS[target as keyof typeof NAVIGATE_TARGETS]
     goto(`/app/${targetValue}/${value ?? ''}`)
@@ -49,6 +52,9 @@
 
 <BannerImage class='absolute top-0 left-0' />
 <SearchModal />
+{#if $extensionInstalURL}
+  <InstallPrompt />
+{/if}
 <div class='flex flex-row grow h-full overflow-clip group/fullscreen min-h-0 z-[1]' id='episodeListTarget'>
   <Sidebar>
     <Sidebarlist />

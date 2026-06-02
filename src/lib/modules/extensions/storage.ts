@@ -48,7 +48,7 @@ const jsonurl = (url: string) => {
   return `${processed}/index.json`
 }
 
-const jsurl = (url: string) => {
+export const jsurl = (url: string) => {
   if (url.startsWith('http')) return url
   const parsedUrl = new URL(url)
 
@@ -64,7 +64,7 @@ const jsurl = (url: string) => {
   throw new Error('Invalid URL')
 }
 
-const safejson = async <T> (url: string): Promise<T | null> => {
+export const safejson = async <T> (url: string): Promise<T | null> => {
   try {
     const res = await fetch(jsonurl(url))
     return await res.json()
@@ -73,7 +73,7 @@ const safejson = async <T> (url: string): Promise<T | null> => {
   }
 }
 
-const safejs = async (url: string): Promise<string | null> => {
+export const safejs = async (url: string): Promise<string | null> => {
   try {
     const res = await fetch(jsurl(url))
     return await res.text()

@@ -171,6 +171,8 @@ body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
   user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   font-family: 'Nunito Variable'
 }
 
@@ -181,6 +183,8 @@ a {
 
 #episodeListTarget:fullscreen {
   user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
 }
 
 @keyframes load-in {
@@ -266,6 +270,11 @@ details,
 
 .sr-only {
   display: none !important;
+}
+
+.flex-wrap-balance {
+  flex-wrap: wrap;
+  flex-wrap: balance;
 }
 
 .flex-center {
