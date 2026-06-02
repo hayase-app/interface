@@ -264,7 +264,7 @@
     const create = () => {
       if (deband) return
       try {
-        deband = new VideoDeband(video)
+        deband = new VideoDeband(video, { alpha: false, powerPreference: 'high-performance' })
         deband.canvas.classList.add('deband-canvas', 'w-full', 'h-full', 'pointer-events-none', 'object-contain')
         video.before(deband.canvas)
       } catch (e) {
