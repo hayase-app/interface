@@ -85,8 +85,8 @@
       </Dialog.Root>
       <div class='flex flex-col gap-4 items-center md:items-start justify-end w-full'>
         <div class='flex flex-col gap-1.5 text-center md:text-start w-full'>
-          <h2 class='line-clamp-1 text-base md:text-lg font-light text-muted-foreground select-text'>{media.title?.romaji?.toLowerCase().trim() === title(media).toLowerCase().trim() ? nativeTitle : romajiTitle}</h2>
-          <h1 class='font-black text-3xl md:text-4xl line-clamp-2 text-white select-text'>{title(media)}</h1>
+          <h2 class='line-clamp-1 text-base md:text-lg font-light text-muted-foreground select-all'>{media.title?.romaji?.toLowerCase().trim() === title(media).toLowerCase().trim() ? nativeTitle : romajiTitle}</h2>
+          <h1 class='font-black text-3xl md:text-4xl line-clamp-2 text-white select-all'>{title(media)}</h1>
           <div class='flex-wrap w-full justify-start md:pt-1 gap-2 hidden md:flex'>
             <div class='rounded px-3.5 font-bold bg-custom text-contrast'>
               {of(media) ?? duration(media) ?? 'N/A'}
