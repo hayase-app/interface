@@ -9,6 +9,7 @@
   import { client } from '$lib/modules/anilist'
   import { episodes as eps } from '$lib/modules/anizip'
   import { click } from '$lib/modules/navigate'
+  import { SUPPORTS } from '$lib/modules/settings'
 
   export let portal: HTMLElement
   let episodeListOpen = false
@@ -17,7 +18,7 @@
 
   const stopProgressBar = getContext<() => void>('stop-progress-bar')
   beforeNavigate(({ cancel }) => {
-    if (episodeListOpen) {
+    if (episodeListOpen && (!SUPPORTS.isMobile || SUPPORTS.isIPad)) {
       episodeListOpen = false
       cancel()
       stopProgressBar()

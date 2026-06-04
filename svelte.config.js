@@ -117,6 +117,7 @@ const config = {
         'default-src': ['self'],
         'script-src': ['self', 'wasm-unsafe-eval', 'blob:', 'trusted-types-eval'],
         'style-src': ['self', 'unsafe-inline'],
+        'style-src-attr': ['unsafe-inline'],
         'img-src': ['self', 'blob:', 'https:', 'data:'],
         'font-src': ['self'],
         'connect-src': ['self', 'https:', 'wss:', 'http://localhost:*'],

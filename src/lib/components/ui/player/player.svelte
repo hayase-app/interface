@@ -185,7 +185,7 @@
   onNavigate(({ to }) => {
     if (to?.route.id === '/app/player') {
       // force fullscreen on mobile
-      if (SUPPORTS.isMobile) return fullscreen()
+      if (SUPPORTS.isMobile && !SUPPORTS.isIPad) return fullscreen()
     } else {
       // exit fullscreen when navigating away from player
       if (fullscreenElement) return fullscreen()
@@ -194,7 +194,7 @@
 
   // exiting fullscreen on mobile navigates back since its a "back" gesture
   function checkMobileFullscreen () {
-    if (!document.fullscreenElement && SUPPORTS.isMobile && !isMiniplayer) history.back()
+    if (!document.fullscreenElement && SUPPORTS.isAndroid && !isMiniplayer) history.back()
   }
 
   function checkAudio () {

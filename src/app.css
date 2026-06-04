@@ -159,11 +159,9 @@ canvas {
   font-family: 'Twemoji';
 }
 
-@supports not (-webkit-touch-callout: none) {
-  ::selection {
-    background: #1f375a6b;
-    color: #3cabfa;
-  }
+::selection {
+  background: #1f375a6b;
+  color: #3cabfa;
 }
 
 html,
