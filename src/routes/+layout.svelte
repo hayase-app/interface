@@ -55,6 +55,11 @@
     extensionInstalURL.set(sanitizeExtensionUrl(new URL(value, 'http://localhost').searchParams.get('url') ?? value))
   })
 
+  // iOS makes ALL elements selectable if there's a CSP defined... insane
+  function blockSelect (e: Event) {
+    if (SUPPORTS.isIOS) e.preventDefault()
+  }
+
   let fullscreenElement: Element | undefined
 
   // horrific hack, but on iPadOS, disabling insets causes lock to be RESPECTED, even tho spec says on Tablets it should be ignored, re-enabling insets correcly ignores lock!
@@ -65,7 +70,7 @@
   <meta name='viewport' content='width={scale <= 1 ? 'device-width' : 1}, initial-scale={scale}, minimum-scale={scale}, maximum-scale={scale}, user-scalable=no, viewport-fit=cover' />
 </svelte:head>
 
-<svelte:document bind:fullscreenElement />
+<svelte:document bind:fullscreenElement on:selectstart={blockSelect} />
 
 <div class={cn('size-full flex flex-col bg-black relative overflow-clip')} id='root' data-input={$inputType} on:contextmenu|preventDefault>
   <ProgressBar zIndex={100} bind:complete {displayThresholdMs} />
