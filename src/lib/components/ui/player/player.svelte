@@ -179,7 +179,7 @@
   function fullscreen () {
     return fullscreenElement ? document.exitFullscreen() : document.getElementById('episodeListTarget')!.requestFullscreen({ navigationUI: 'hide' })
   }
-  $: fullscreenElement ? screen.orientation.lock?.('landscape') : screen.orientation.unlock?.()
+  $: if (fullscreenElement) screen.orientation.lock?.('landscape')
 
   beforeNavigate(({ to }) => {
     if (fullscreenElement && to?.route.id !== '/app/player') fullscreen()

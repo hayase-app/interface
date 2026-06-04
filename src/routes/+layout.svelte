@@ -33,7 +33,7 @@
   })
 
   onNavigate((navigation) => {
-    if (!document.startViewTransition) return
+    if (!document.startViewTransition || SUPPORTS.isIOS) return
 
     return new Promise((resolve) => {
       document.startViewTransition(async () => {
@@ -49,11 +49,17 @@
     if (target !== 'extensions' || !value) return
     extensionInstalURL.set(sanitizeExtensionUrl(new URL(value, 'http://localhost').searchParams.get('url') ?? value))
   })
+
+  let fullscreenElement: Element | undefined
+
+  $: if (!fullscreenElement) screen.orientation.lock?.('portrait')
 </script>
 
 <svelte:head>
   <meta name='viewport' content='width={scale <= 1 ? 'device-width' : 1}, initial-scale={scale}, minimum-scale={scale}, maximum-scale={scale}, user-scalable=no, viewport-fit=cover' />
 </svelte:head>
+
+<svelte:document bind:fullscreenElement />
 
 <div class={cn('size-full flex flex-col bg-black relative overflow-clip')} id='root' data-input={$inputType} on:contextmenu|preventDefault>
   <ProgressBar zIndex={100} bind:complete {displayThresholdMs} />
