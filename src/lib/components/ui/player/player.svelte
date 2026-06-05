@@ -179,7 +179,8 @@
   function fullscreen () {
     return fullscreenElement ? document.exitFullscreen() : document.getElementById('episodeListTarget')!.requestFullscreen({ navigationUI: 'hide' })
   }
-  $: if (fullscreenElement) screen.orientation.lock?.('landscape').catch(() => {})
+  // $: if (fullscreenElement) screen.orientation.lock?.('landscape').catch(() => {})
+  $: fullscreenElement ? screen.orientation.lock?.('landscape') : screen.orientation.unlock?.()
 
   // return the promises for cleaner UI transitions while navigating
   onNavigate(({ to }) => {
