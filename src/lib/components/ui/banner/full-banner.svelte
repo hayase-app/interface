@@ -42,20 +42,13 @@
     return current ? shuffled.indexOf(current) : 0
   }
 
-  function schedule (index: number) {
-    return setTimeout(() => {
-      current = shuffled[index % shuffled.length]
-      timeout = schedule(index + 1)
-    }, 15000)
+  function advance () {
+    current = shuffled[(currentIndex() + 1) % shuffled.length]
   }
-
-  let timeout = schedule(currentIndex() + 1)
 
   function setCurrent (media: Media) {
     if (current === media) return
-    clearTimeout(timeout)
     current = media
-    timeout = schedule(currentIndex() + 1)
   }
   function tabindex (node: HTMLElement) {
     node.tabIndex = -1
@@ -150,7 +143,7 @@
       {@const active = current === media}
       <div class='pt-2 pb-4' class:cursor-pointer={!active} use:click={() => setCurrent(media)} use:tabindex>
         <div class='bg-white/20 mr-2 progress-badge overflow-clip rounded' class:active style='height: 4px;' style:width={active ? '3rem' : '1.5rem'}>
-          <div class='progress-content h-full transform-gpu w-full' class:bg-custom={active} />
+          <div class='progress-content h-full transform-gpu w-full group-hover/banner:![transform:translate3d(0,0,0)] group-hover/banner:![animation-play-state:paused]' class:bg-custom={active} on:animationend={active ? advance : undefined} />
         </div>
       </div>
     {/each}
@@ -167,10 +160,10 @@
 
   @keyframes fill {
     from {
-      transform: translate3d(-100%, var(--tw-translate-y), 0);
+      transform: translate3d(-100%, 0, 0);
     }
     to {
-      transform: translate3d(0%, var(--tw-translate-y), 0);
+      transform: translate3d(0%, 0, 0);
     }
   }
 </style>
