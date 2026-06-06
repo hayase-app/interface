@@ -4,19 +4,23 @@
 </script>
 
 <script lang='ts'>
+  import { basename, extname } from 'path'
+
   import Interface from './interface.svelte'
 
   import { irc } from '$lib/modules/irc/lobby'
 
   const viewer = client.client.viewer
 
-  let ident: { nick: string, id: string, pfpid: string, type: 'al' | 'guest' } = { nick: 'Guest-' + crypto.randomUUID().slice(0, 6), id: crypto.randomUUID().slice(0, 6), pfpid: '0', type: 'guest' }
+  let ident: { nick: string, id: string, pfpid: string, type: 'al' | 'guest', ext: string, prefix: string } = { nick: 'Guest-' + crypto.randomUUID().slice(0, 6), id: crypto.randomUUID().slice(0, 6), pfpid: '', ext: '', prefix: '', type: 'guest' }
 
   if ($viewer?.viewer) {
-    const url = $viewer.viewer.avatar?.large ?? ''
-    const id = '' + $viewer.viewer.id
-    const pfpid = url.slice(url.lastIndexOf('/') + 2 + id.length + 1)
-    ident = { nick: $viewer.viewer.name, id, pfpid, type: 'al' }
+    const url = $viewer.viewer.avatar?.large ?? '' // /path/b11111-aaaaaaa.png
+    const id = '' + $viewer.viewer.id // 11111
+    const ext = extname(url) // .png
+    const base = basename(url, ext) // b11111-aaaaaaa
+    const pfpid = base.slice(id.length + 2) // aaaaaaa
+    ident = { nick: $viewer.viewer.name, id, pfpid, type: 'al', ext: ext.slice(1), prefix: base[0] ?? '' }
   }
 
   $irc ??= MessageClient.new(ident)

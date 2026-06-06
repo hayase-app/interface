@@ -16,26 +16,20 @@
   export let client: MessageClient
 
   let message = ''
-  let rows = 1
 
   function sendMessage () {
-    if (message.trim()) {
-      client.say(message.trim())
+    const trim = message.trim()
+    if (trim) {
+      client.say(trim)
       message = ''
-      rows = 1
     }
   }
 
   async function checkInput (e: KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey && message.trim()) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
-    } else {
-      rows = message.split('\n').length || 1
     }
-  }
-  function updateRows () {
-    rows = message.split('\n').length || 1
   }
 
   $: users = client.users
@@ -60,7 +54,7 @@
   </div>
   <div class='flex md:flex-row flex-col-reverse size-full min-h-0'>
     <div class='flex flex-col justify-end overflow-clip flex-grow px-4 pb-4 h-full min-h-0'>
-      <div class='h-full overflow-y-scroll min-h-0 w-full [overflow-anchor:auto] content-end'>
+      <div class='h-full overflow-y-scroll min-h-0 w-full flex flex-col-reverse'>
         <Messages messages={client.messages} />
       </div>
       <div class='flex mt-4 gap-2'>
@@ -69,11 +63,10 @@
         </Button>
         <Textarea
           bind:value={message}
-          class='h-auto px-3 w-full flex-grow-1 resize-none min-h-0 border-0 bg-background select:bg-accent select:text-accent-foreground'
-          {rows}
+          class='h-auto px-3 w-full flex-grow-1 resize-none min-h-0 border-0 bg-background select:bg-accent select:text-accent-foreground [field-sizing:content]'
           autocomplete='off'
           maxlength={256}
-          placeholder='Message' on:keydown={checkInput} on:input={updateRows} />
+          placeholder='Message' on:keydown={checkInput} />
         <Button on:click={sendMessage} size='icon' class='mt-auto border-0' variant='outline'>
           <SendHorizontal size={18} />
         </Button>

@@ -18,14 +18,17 @@ export interface IRCChatUser {
   nick: string
   id: string
   pfpid: string
+  prefix: string
+  ext: string
   type: UserType
 }
-export function getPFP (user: Pick<IRCChatUser, 'id' | 'pfpid' | 'type'>) {
-  if (user.type === 'al') {
-    return `https://s4.anilist.co/file/anilistcdn/user/avatar/medium/b${user.id}-${user.pfpid}`
-  } else {
-    return 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png'
+const EXT_MAP: Record<string, string> = { j: 'jpg', p: 'png', w: 'webp', g: 'gif' }
+
+export function getPFP (user: Pick<IRCChatUser, 'id' | 'pfpid' | 'type' | 'prefix' | 'ext'>) {
+  if (user.type === 'al' && user.id && user.pfpid && user.prefix && user.ext) {
+    return `https://s4.anilist.co/file/anilistcdn/user/avatar/large/${user.prefix}${user.id}-${user.pfpid}.${user.ext}`
   }
+  return 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png'
 }
 
 export interface IRCUser { nick: string, ident: string, hostname: string, modes: string[], tags: object }
@@ -55,14 +58,20 @@ type IRCEvents = {
   connected: []
 }
 
-function ircUserToChatUser ({ id, pfpid, type, nick }: IRCChatUser): ChatUser {
-  return { id, avatar: { large: getPFP({ id, pfpid, type }) }, name: nick, mediaListOptions: null }
+function ircUserToChatUser ({ id, pfpid, type, nick, prefix, ext }: IRCChatUser): ChatUser {
+  return { id, avatar: { large: getPFP({ id, pfpid, type, prefix, ext }) }, name: nick }
 }
 
 function ircIdentToChatUser (user: IRCUser): ChatUser {
-  const [nick, pfpid, pfpex] = user.nick.split('_') as [string, string, string]
-  const [type, id] = user.ident.split('_') as ['al' | 'guest', string]
-  return ircUserToChatUser({ id, pfpid: `${pfpid}.${pfpex}`, type, nick })
+  const [pfp, ...rest] = user.nick.split('_')
+  const [type, id] = user.ident.split('_')
+  const nick = rest.join('_') || user.nick
+
+  if (type !== 'al' || pfp == null) return { id: id ?? '0', avatar: { large: 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png' }, name: nick }
+
+  const extLetter = pfp[0] ?? ''
+  const prefix = pfp[1] ?? ''
+  return ircUserToChatUser({ id: id ?? '0', prefix, pfpid: pfp.slice(2), type: 'al', nick, ext: EXT_MAP[extLetter] ?? extLetter })
 }
 
 export default class MessageClient {
@@ -108,7 +117,7 @@ export default class MessageClient {
           message: priv.message,
           user: this.users.value[priv.ident]!,
           type: 'incoming',
-          date: new Date(priv.time)
+          date: priv.time ? new Date(priv.time) : new Date()
         }
 
         if (page.route.id !== '/app/chat' && !msg.user.name.startsWith('Guest-')) {
@@ -118,7 +127,7 @@ export default class MessageClient {
             componentProps: { msg }
           })
         }
-        this.messages.update(messages => [...messages, msg])
+        this.messages.update(messages => [...messages, msg].slice(-150))
       } catch (e) {
         // some1 sent a message without encryption
         console.error(e)
@@ -133,12 +142,12 @@ export default class MessageClient {
       user: ircUserToChatUser(this.ident),
       message,
       date: new Date(),
-      type: 'outgoing'
-    }])
+      type: 'outgoing' as const
+    }].slice(-150))
   }
 
-  static async new ({ nick, id, pfpid, type }: IRCChatUser) {
-    const client = new this({ nick, id, pfpid, type })
+  static async new ({ nick, id, pfpid, type, prefix, ext }: IRCChatUser) {
+    const client = new this({ nick, id, pfpid, type, prefix, ext })
 
     await new Promise<void>(resolve => {
       client.irc.once('connected', resolve)
@@ -153,7 +162,7 @@ export default class MessageClient {
         path: '',
         password: '',
         account: {},
-        nick: `${nick.replaceAll('_', '')}_${pfpid.replace('.', '_')}`,
+        nick: `${ext[0]}${prefix}${pfpid}_${nick.replace('.', '')}`,
         username: `${type}_${id}`,
         gecos: 'https://kiwiirc.com/',
         encoding: 'utf8',
