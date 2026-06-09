@@ -108,8 +108,8 @@ export default new class MALSync {
   auth = persisted<MALOAuth | undefined>('malAuth', undefined)
   viewer = persisted<ResultOf<typeof UserFrag> | undefined>('malViewer', undefined)
   userlist = writable<Record<string, ResultOf<typeof FullMediaList>>>({}) // al id to al mapped mal entry
-  malToAL: Record<string, string> = {}
-  ALToMal: Record<string, string> = {}
+  malToAL = persisted<Record<string, string>>('malToAL', {})
+  ALToMal = persisted<Record<string, string>>('ALToMal', {})
 
   continueIDs = readable<number[]>([], set => {
     let oldvalue: number[] = []
@@ -301,6 +301,8 @@ export default new class MALSync {
   logout () {
     localStorage.removeItem('malViewer')
     localStorage.removeItem('malAuth')
+    localStorage.removeItem('malToAL')
+    localStorage.removeItem('ALToMal')
     native.restart()
   }
 
@@ -370,18 +372,29 @@ export default new class MALSync {
 
     debug('MAL user list loaded with', data.length, 'entries and IDs:', ids)
 
-    const malToAl = await client.malIdsCompound(ids)
+    const cached = get(this.malToAL)
+
+    const unknown = ids.filter(id => !cached[id])
+    debug('Fetching MAL compound IDs for', unknown.length, 'unknown entries')
+    const malToAl = await client.malIdsCompound(unknown)
+
     for (const item of data) {
       const malId = item.node.id
-      const alId = malToAl[malId] ?? await this._getAlId(malId)
+      const alId = cached[malId] ?? malToAl[malId] ?? await this._getAlId(malId)
 
       if (!alId) continue
 
-      this.malToAL[malId] = alId.toString()
-      this.ALToMal[alId] = malId.toString()
-
+      cached[malId] = alId.toString()
       entryMap[alId] = this._malEntryToAl(item.node.my_list_status, item.node.id)
     }
+
+    this.malToAL.set(cached)
+
+    const rev: Record<string, string> = {}
+    for (const [malId, alId] of Object.entries(cached)) {
+      rev[alId] = malId
+    }
+    this.ALToMal.set(rev)
 
     debug('MAL user list entries mapped to AL IDs:', Object.keys(entryMap))
 
@@ -400,24 +413,25 @@ export default new class MALSync {
   }
 
   async _getMalId (alId: number): Promise<string | undefined> {
-    const malId = this.ALToMal[alId]
+    const malId = get(this.ALToMal)[alId]
     if (malId) return malId
 
     const res = await mappings(alId)
     if (!res?.mal_id) return
 
-    this.ALToMal[alId] = res.mal_id.toString()
-    return res.mal_id.toString()
+    const malIdStr = res.mal_id.toString()
+    this.ALToMal.update(m => ({ ...m, [alId]: malIdStr }))
+    this.malToAL.update(m => ({ ...m, [malIdStr]: alId.toString() }))
+    return malIdStr
   }
 
   async _getAlId (malId: number): Promise<string | undefined> {
-    const alId = this.malToAL[malId]
+    const alId = get(this.malToAL)[malId]
     if (alId) return alId
 
     const res = await mappingsByMalId(malId)
     if (!res?.anilist_id) return
 
-    this.malToAL[malId] = res.anilist_id.toString()
     return res.anilist_id.toString()
   }
 

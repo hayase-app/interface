@@ -166,35 +166,43 @@ class AnilistClient {
     return Object.entries(searchResults).map(([filename, id]) => [filename, search.data!.Page!.media!.find(media => media?.id === id)]) as Array<[string, Media | undefined]>
   }
 
-  async malIdsCompound (ids: number[]) {
-    if (!ids.length) return {}
+  async malIdsCompound (malids: number[]) {
+    if (!malids.length) return {}
 
-    // chunk every 50
-    let fragmentQueries = ''
+    const result: Record<number, number> = {}
 
-    for (let i = 0; i < ids.length; i += 50) {
-      fragmentQueries += /* gql */`
-        v${i}: Page(perPage: 50, page: ${Math.floor(i / 50) + 1}) {
-          media(idMal_in: $ids, type: ANIME) {
-            ...med
-          }
-        },
-      `
+    for (let k = 0; k < malids.length; k += 3500) {
+      const ids = malids.slice(k, k + 3500)
+      let fragmentQueries = ''
+
+      for (let i = 0; i < ids.length; i += 50) {
+        fragmentQueries += /* gql */`
+          v${i}: Page(perPage: 50, page: ${Math.floor(i / 50) + 1}) {
+            media(idMal_in: $ids, type: ANIME) {
+              ...med
+            }
+          },
+        `
+      }
+
+      const query = _gql/* gql */`
+        query($ids: [Int]) {
+          ${fragmentQueries}
+        }
+        
+        fragment med on Media {
+          id,
+          idMal
+        }`
+
+      const res = await this.client.query<Record<string, { media: Array<{ id: number, idMal: number }> }>>(query, { ids })
+
+      for (const { idMal, id } of Object.values(res.data ?? {}).flatMap(({ media }) => media)) {
+        result[idMal] = id
+      }
     }
 
-    const query = _gql/* gql */`
-    query($ids: [Int]) {
-      ${fragmentQueries}
-    }
-    
-    fragment med on Media {
-      id,
-      idMal
-    }`
-
-    const res = await this.client.query<Record<string, { media: Array<{ id: number, idMal: number }>}>>(query, { ids })
-
-    return Object.fromEntries(Object.values(res.data ?? {}).flatMap(({ media }) => media).map(media => [media.idMal, media.id]))
+    return result
   }
 
   schedule (ids?: number[], onList: boolean | null = true) {
