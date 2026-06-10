@@ -374,12 +374,3 @@
     {/if}
   </Dialog.Content>
 </Dialog.Root>
-
-<style>
-  .banner {
-    background: linear-gradient(90deg, hsla(from var(--background, #000) h s l / 1) 32%, hsla(from var(--background, #000) h s l / 0.9) 100%);
-  }
-  .banner-2 {
-    background: linear-gradient(hsla(from var(--background, #000) h s l / 0.8) 0%, hsla(from var(--background, #000) h s l / 0.8) 90%, var(--background, #000) 100%);
-  }
-</style>
