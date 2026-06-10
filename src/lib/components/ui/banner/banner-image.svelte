@@ -49,10 +49,10 @@
     left: 0 ; bottom: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(75% 65% at 59.18% 34.97%, color-mix(in srgb, var(--background, #000) 16%, transparent) 30.56%, var(--background, #000) 100%);
+    background: radial-gradient(75% 65% at 59.18% 34.97%, hsla(from var(--background, #000) h s l / 0.16) 30.56%, var(--background, #000) 100%);
   }
 
   :global(.banner-gr-sm::after) {
-    background: radial-gradient(75% 65% at 50% 34.97%, color-mix(in srgb, var(--background, #000) 16%, transparent) 30.56%, var(--background, #000) 100%) !important;
+    background: radial-gradient(75% 65% at 50% 34.97%, hsla(from var(--background, #000) h s l / 0.16) 30.56%, var(--background, #000) 100%) !important;
   }
 </style>
