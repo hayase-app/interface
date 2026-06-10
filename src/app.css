@@ -408,14 +408,14 @@ body:has(.custom-fullscreen)> :not(:has(.custom-fullscreen), .custom-fullscreen)
 
 .custom-bg {
   /* this is very hacky, but removes jagged edges */
-  background: repeating-linear-gradient(40deg, hsla(from var(--border, #111) h s l / 0.27) 0, hsla(from var(--border, #555) h s l / 0.33) 1px, hsla(from var(--border, #555) h s l / 0.33) 5px, hsla(from var(--border, #111) h s l / 0.07) 6px, hsla(from var(--popover, #111) h s l / 0.07) 10px);
+  background: repeating-linear-gradient(40deg, #1114 0, #5554 1px, #5554 5px, #1114 6px, #1114 10px);
   /* repeating-linear-gradient(40deg, #5554 0 5px, #1114 0 10px); */
 }
 
 *:focus-visible,
 [data-input='dpad'] *:focus {
   outline: none;
-  border-image: fill 0 linear-gradient(hsla(from var(--border, #888) h s l / 0.53), hsla(from var(--border, #888) h s l / 0.53));
+  border-image: fill 0 linear-gradient(hsla(from var(--ring, #888) h s l / 0.53), hsla(from var(--ring, #888) h s l / 0.53));
 }
 
 *::-webkit-scrollbar {
