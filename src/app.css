@@ -155,7 +155,7 @@
 .theme-light {
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 0%);
-  --muted: hsl(0 0% 80%);
+  --muted: hsl(0 0% 92.16%);
   --muted-foreground: hsl(0 0% 27.8431%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 0%);
@@ -167,7 +167,7 @@
   --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(0 0% 92.1569%);
   --secondary-foreground: hsl(0 0% 0%);
-  --accent: hsl(0 0% 70.9804%);
+  --accent: hsl(0 0% 83.14%);
   --accent-foreground: hsl(0 0% 0%);
   --destructive: hsl(0 62.8205% 30.5882%);
   --destructive-foreground: hsl(0 0% 100%);
