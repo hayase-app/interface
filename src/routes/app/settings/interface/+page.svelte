@@ -82,7 +82,7 @@
 
   const themes = [
     { value: 'default', label: 'Default' },
-    { value: 'rose', label: 'Rose' },
+    { value: 'light', label: 'Light' },
     { value: 'ocean', label: 'Ocean' },
     { value: 'forest', label: 'Forest' },
     { value: 'amber', label: 'Amber' },
