@@ -54,6 +54,7 @@
   $: for (const [key, hex] of Object.entries($settings.customThemeColors)) {
     document.documentElement.style.setProperty(key, hex)
   }
+  $: document.documentElement.className = 'dark bg-black theme-' + $settings.theme
 
   native.navigate(({ target, value }) => {
     if (target !== 'extensions' || !value) return
@@ -77,7 +78,7 @@
 
 <svelte:document bind:fullscreenElement />
 
-<div class={cn('size-full flex flex-col bg-background relative overflow-clip', 'theme-' + $settings.theme)} id='root' data-input={$inputType} on:contextmenu|preventDefault>
+<div class={cn('size-full flex flex-col bg-background relative overflow-clip')} id='root' data-input={$inputType} on:contextmenu|preventDefault>
   <ProgressBar zIndex={100} bind:complete {displayThresholdMs} />
   <Toaster position='top-right' expand={true} />
 
