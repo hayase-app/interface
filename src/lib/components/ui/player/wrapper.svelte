@@ -21,7 +21,7 @@
   $: isMiniplayer = $page.route.id !== '/app/player'
 
   function openPlayer () {
-    goto('/app/player/')
+    goto('/#/app/player')
   }
 
   let wrapper: HTMLDivElement
@@ -66,7 +66,7 @@
   }
   function endDragging ({ pointerId, clientX, clientY }: PointerEvent) {
     if (!isMiniplayer) return
-    if (!dragging) goto('/app/player/')
+    if (!dragging) goto('/#/app/player')
     const istop = window.innerHeight / 2 - clientY >= 0
     const isleft = window.innerWidth / 2 - clientX >= 0
     $bottom = istop ? '-100vb' : '0px'

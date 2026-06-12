@@ -448,7 +448,7 @@
   try {
     // about://flags/#auto-picture-in-picture-for-video-playback
     native.setActionHandler('enterpictureinpicture', () => {
-      goto('/app/player')
+      goto('/#/app/player')
       pip.pip(true)
     })
   } catch (e) {}
@@ -817,7 +817,7 @@
         bind:playbackRate={$playbackRate}
         bind:volume={exponentialVolume}
         on:fallback={handleMediaBunnyFallback}
-        on:click={() => isMiniplayer ? goto('/app/player') : playPause()}
+        on:click={() => isMiniplayer ? goto('/#/app/player') : playPause()}
         on:dblclick={fullscreen}
         on:loadeddata={checkAudio}
         on:loadedmetadata={loadAnimeProgress}
@@ -853,7 +853,7 @@
       bind:playbackRate={$playbackRate}
       bind:volume={exponentialVolume}
       bind:this={video}
-      on:click={() => isMiniplayer ? goto('/app/player') : playPause()}
+      on:click={() => isMiniplayer ? goto('/#/app/player') : playPause()}
       on:dblclick={fullscreen}
       use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: fullscreen }}
       on:loadeddata={checkAudio}

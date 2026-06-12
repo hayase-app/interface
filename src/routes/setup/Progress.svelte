@@ -16,13 +16,13 @@
       <div class='bg-foreground size-full transform-gpu' style:--tw-translate-x='-{STEP_PERCENTAGE[step]}%' />
     </div>
     <div class='w-20 flex flex-col items-center z-10 shrink-0'>
-      <Badge class='w-12 h-12 rounded-[50%] flex justify-center' href='../storage/' tabindex='-1'><HardDrive /></Badge>
+      <Badge class='w-12 h-12 rounded-[50%] flex justify-center' href='/#/setup/storage' tabindex='-1'><HardDrive /></Badge>
       <div class='mt-3 font-bold'>
         Storage
       </div>
     </div>
     <div class='w-20 flex flex-col items-center z-10 shrink-0 {step > 0 ? 'text-foreground' : 'text-muted-foreground'}'>
-      <Badge variant={step > 0 ? 'default' : 'secondary'} class='w-12 h-12 rounded-[50%] flex justify-center {step > 0 ? 'text-background' : 'text-muted-foreground'}' href={step > 1 ? '../network/' : undefined} tabindex='-1'><Network /></Badge>
+      <Badge variant={step > 0 ? 'default' : 'secondary'} class='w-12 h-12 rounded-[50%] flex justify-center {step > 0 ? 'text-background' : 'text-muted-foreground'}' href={step > 1 ? '/#/setup/network' : undefined} tabindex='-1'><Network /></Badge>
       <div class='mt-3 font-bold'>
         Network
       </div>

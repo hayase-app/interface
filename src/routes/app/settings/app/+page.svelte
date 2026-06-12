@@ -93,7 +93,7 @@
 </SettingCard>
 
 <SettingCard title='Debug page' description='Go to the debug page to access additional debugging features.'>
-  <Button href='/app/debug' class='btn btn-primary font-bold'>Go to Debug Page</Button>
+  <Button href='/#/app/debug' class='btn btn-primary font-bold'>Go to Debug Page</Button>
 </SettingCard>
 
 {#if !SUPPORTS.isAndroid && !SUPPORTS.isIOS}

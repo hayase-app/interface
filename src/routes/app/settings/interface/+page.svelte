@@ -81,10 +81,10 @@
   }
 
   const themes = [
-    { value: 'default', label: 'Default' },
+    { value: 'default', label: 'Blackout' },
     { value: 'light', label: 'Light' },
-    { value: 'ocean', label: 'Ocean' },
-    { value: 'forest', label: 'Forest' },
+    { value: 'catppuccin', label: 'Catppuccin' },
+    { value: 'dracula', label: 'Dracula' },
     { value: 'amber', label: 'Amber' },
     { value: 'lavender', label: 'Lavender' },
     { value: 'system', label: 'System' },

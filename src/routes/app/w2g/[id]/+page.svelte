@@ -45,7 +45,7 @@
   $: processedUsers = Object.values($users).map(({ user }) => user)
 
   function quit () {
-    goto('/app/home/')
+    goto('/#/app/home')
     $w2globby?.destroy()
   }
   function invite () {
@@ -66,7 +66,7 @@
   </div>
   <div class='flex md:flex-row flex-col-reverse size-full min-h-0'>
     <div class='flex flex-col justify-end overflow-clip flex-grow px-4 pb-4 h-full min-h-0'>
-      <div class='h-full overflow-y-scroll min-h-0 w-full [overflow-anchor:auto] content-end'>
+      <div class='h-full overflow-y-scroll min-h-0 w-full flex flex-col-reverse'>
         <Messages {messages} />
       </div>
       <div class='flex mt-4 gap-2'>

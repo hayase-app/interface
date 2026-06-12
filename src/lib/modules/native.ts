@@ -49,7 +49,7 @@ const dummyFiles = [
 //   dummyPeerInfo.push(makeRandomPeer())
 // }
 
-function makeAuth<T> (popup: Window | null, callback: (data: { hash: string, search: string }) => T | undefined) {
+function makeAuth<T> (popup: Window | null, callback: (data: string) => T | undefined) {
   return new Promise<T>((resolve, reject) => {
     if (!popup) return reject(new Error('Failed to open popup'))
     const destroy = (err: Error) => {
@@ -73,17 +73,17 @@ export default Object.assign<Native, Partial<Native>>({
   authAL: (url: string) => {
     return makeAuth(
       open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582'),
-      ({ hash }) => {
-        if (hash.startsWith('#access_token=')) {
-          return Object.fromEntries(new URLSearchParams(hash.replace('#', '?')).entries()) as unknown as AuthResponse
+      search => {
+        if (search.startsWith('?al&access_token=')) {
+          return Object.fromEntries(new URLSearchParams(search).entries()) as unknown as AuthResponse
         }
       }
     )
   },
   authMAL: (url: string) => {
     return makeAuth(
-      open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582'),
-      ({ search }) => {
+      open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=540,height=782'),
+      search => {
         if (search.startsWith('?code=')) {
           return Object.fromEntries(new URLSearchParams(search).entries()) as unknown as { code: string, state: string }
         }

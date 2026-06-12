@@ -109,7 +109,7 @@
     const media = await client.single(mediaID)
     if (!media.data?.Media) return // TODO: log this?
     server.playHash(hash, media.data.Media, episode)
-    goto('/app/player/')
+    goto('/#/app/player')
   }
 
   const { filterValue } = pluginStates.filter

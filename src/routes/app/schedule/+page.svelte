@@ -183,7 +183,7 @@
                     {#each episodes as episode, i (i)}
                       {@const status = _list(episode)}
                       {@const progress = _progress(episode) ?? 0}
-                      <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
+                      <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/#/app/anime/{episode.id}'>
                         <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                           {#if status}
                             {#if progress >= episode.episode}
@@ -211,7 +211,7 @@
                   {@const progress = _progress(episode) ?? 0}
                   <Tooltip.Root openDelay={100}>
                     <Tooltip.Trigger class='text-muted-foreground w-full text-left px-3 mt-1.5' let:builder asChild>
-                      <ButtonPrimitive.Root builders={[builder]} class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/app/anime/{episode.id}'>
+                      <ButtonPrimitive.Root builders={[builder]} class={cn('flex items-center h-4 w-full group mt-1.5 px-3', +episode.airTime < Date.now() && 'opacity-30')} href='/#/app/anime/{episode.id}'>
                         <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                           {#if status}
                             {#if progress >= episode.episode}
@@ -240,7 +240,7 @@
                       {#each episodes.slice(5) as episode, i (i)}
                         {@const status = _list(episode)}
                         {@const progress = _progress(episode) ?? 0}
-                        <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group', +episode.airTime < Date.now() && 'text-muted-foreground')} href='/app/anime/{episode.id}'>
+                        <ButtonPrimitive.Root class={cn('flex items-center h-4 w-full group', +episode.airTime < Date.now() && 'text-muted-foreground')} href='/#/app/anime/{episode.id}'>
                           <div class='font-medium text-nowrap text-ellipsis overflow-hidden pr-2' title={episode.title?.userPreferred}>
                             {#if status}
                               {#if progress >= episode.episode}

@@ -32,7 +32,7 @@
     }, displayThresholdMs)
   })
 
-  onNavigate(({ to, complete, delta, from }) => {
+  onNavigate(({ to, complete, delta }) => {
     if (
       !document.startViewTransition ||
       (SUPPORTS.isIOS && delta != null) || // iOS has their own animations for back/forward navigation that conflict with view transitions, sasuga Apple
