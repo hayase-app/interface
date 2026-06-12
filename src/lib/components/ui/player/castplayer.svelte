@@ -43,7 +43,7 @@
   $: isMiniplayer = $page.route.id !== '/app/player'
 
   function openPlayer () {
-    if (isMiniplayer) goto('/app/player/')
+    if (isMiniplayer) goto('/#/app/player')
   }
   const startTime = Date.now()
 

@@ -45,7 +45,7 @@
   $: processedUsers = Object.values($users).map(({ user }) => user)
 
   function quit () {
-    goto('/app/home/')
+    goto('/#/app/home')
     $w2globby?.destroy()
   }
   function invite () {

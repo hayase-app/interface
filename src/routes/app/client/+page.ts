@@ -5,6 +5,6 @@ import { breakpoints } from '$lib/utils'
 
 export function load () {
   if (browser && breakpoints.value.md) {
-    return redirect(307, '/app/client/overview/')
+    return redirect(307, '/#/app/client/overview')
   }
 }

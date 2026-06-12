@@ -108,7 +108,7 @@
   <div class='flex justify-center'>
     <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>Debug Page</h2>
-      <p class='text-muted-foreground'>If you're here because you're looking for support with Hayase, you're in the right place! Otherwise, you might want to check the <a href='/app/settings' class='text-blue-500 hover:underline'>settings</a> page.</p>
+      <p class='text-muted-foreground'>If you're here because you're looking for support with Hayase, you're in the right place! Otherwise, you might want to check the <a href='/#/app/settings' class='text-blue-500 hover:underline'>settings</a> page.</p>
     </div>
   </div>
   <SettingCard title='App and Device Info' description='Save app and device debug info and capabilities, such as GPU information, GPU capabilities, version information and settings to a file.'>
