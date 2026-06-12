@@ -82,7 +82,7 @@
 
   const themes = [
     { value: 'default', label: 'Blackout' },
-    { value: 'rose', label: 'Rose' },
+    { value: 'light', label: 'Light' },
     { value: 'catppuccin', label: 'Catppuccin' },
     { value: 'dracula', label: 'Dracula' },
     { value: 'amber', label: 'Amber' },

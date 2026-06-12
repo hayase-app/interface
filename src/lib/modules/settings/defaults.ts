@@ -42,7 +42,7 @@ export default {
   androidStorageType: 'cache',
   showHentai: false,
   hideSpoilers: false,
-  theme: 'default' as 'default' | 'rose' | 'catppuccin' | 'dracula' | 'amber' | 'lavender' | 'system' | 'custom',
+  theme: 'default' as 'default' | 'light' | 'catppuccin' | 'dracula' | 'amber' | 'lavender' | 'system' | 'custom',
   customThemeColors: {
     '--custom-background': '#000000',
     '--custom-foreground': '#fafafa',
