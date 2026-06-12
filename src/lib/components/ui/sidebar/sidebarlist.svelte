@@ -54,34 +54,34 @@
 <svelte:document bind:visibilityState />
 
 <BannerImage class='absolute top-0 left-0 w-14 -z-10 hidden md:block' />
-<Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-foreground ml-2 cursor-pointer', isMac && 'mt-3')} on:click={() => goto('/app/home/')} />
+<Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-foreground ml-2 cursor-pointer', isMac && 'mt-3')} on:click={() => goto('/#/app/home')} />
 {#if SUPPORTS.isAndroidTV}
-  <SidebarButton href='/app/player/' class='hidden md:flex py-0'>
+  <SidebarButton href='/#/app/player' class='hidden md:flex py-0'>
     <Play size={16} />
   </SidebarButton>
 {/if}
-<SidebarButton href='/app/home/' class='animated-icon' {size}>
+<SidebarButton href='/#/app/home' class='animated-icon' {size}>
   <Home size={18} />
 </SidebarButton>
-<SidebarButton href='/app/search/' class='animated-icon' {size}>
+<SidebarButton href='/#/app/search' class='animated-icon' {size}>
   <Search size={18} />
 </SidebarButton>
-<SidebarButton href='/app/schedule/' class='animated-icon' {size}>
+<SidebarButton href='/#/app/schedule' class='animated-icon' {size}>
   <Calendar size={18} />
 </SidebarButton>
-<SidebarButton href='/app/w2g/' class='animated-icon' {size}>
+<SidebarButton href='/#/app/w2g' class='animated-icon' {size}>
   <Users size={18} />
   {#if $w2globby}
     <StatusDot class='top-1 right-1 absolute !me-0' variant='COMPLETED' />
   {/if}
 </SidebarButton>
-<SidebarButton href='/app/chat/' class='animated-icon' {size}>
+<SidebarButton href='/#/app/chat' class='animated-icon' {size}>
   <Messages size={18} />
   {#if $irc}
     <StatusDot class='top-1 right-1 absolute !me-0' variant='COMPLETED' />
   {/if}
 </SidebarButton>
-<SidebarButton href='/app/client/' class='animated-icon' id='sidebar-client' data-down='#sidebar-download,#sidebar-donate' {size}>
+<SidebarButton href='/#/app/client' class='animated-icon' id='sidebar-client' data-down='#sidebar-download,#sidebar-donate' {size}>
   <Download size={18} />
 </SidebarButton>
 {#if updateProgress}
@@ -139,11 +139,11 @@
 <Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' {size} on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
   <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_1rem_#fa68b6]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
 </Button>
-<SidebarButton href='/app/settings/' class='animated-icon !transition-none' {size}>
+<SidebarButton href='/#/app/settings' class='animated-icon !transition-none' {size}>
   <Bolt size={18} />
 </SidebarButton>
-<SidebarButton href='/app/profile/' class='hidden md:flex' {size}>
-  <!-- <SidebarButton href='/app/profile/' class='hidden md:flex py-0 animated-icon'> -->
+<SidebarButton href='/#/app/profile' class='hidden md:flex animated-icon' {size}>
+  <!-- <SidebarButton href='/#/app/profile' class='hidden md:flex py-0 animated-icon'> -->
   {#if $viewer}
     <Avatar.Root class='size-6 rounded-md'>
       <Avatar.Image src={$viewer.avatar?.large ?? ''} alt={$viewer.name} />

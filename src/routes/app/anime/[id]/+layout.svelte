@@ -100,19 +100,19 @@
             <div class='rounded px-3.5 font-bold bg-custom text-contrast'>
               {of(media) ?? duration(media) ?? 'N/A'}
             </div>
-            <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base' on:click={() => goto('/app/search', { state: { search: { format: [media.format] } } })}>
+            <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base' on:click={() => goto('/#/app/search', { state: { search: { format: [media.format] } } })}>
               {format(media)}
             </Button>
-            <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base' on:click={() => goto('/app/search', { state: { search: { status: [media.status] } } })}>
+            <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base' on:click={() => goto('/#/app/search', { state: { search: { status: [media.status] } } })}>
               {status(media)}
             </Button>
             {#if season(media)}
-              <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base capitalize' on:click={() => goto('/app/search', { state: { search: { season: media.season, seasonYear: media.seasonYear } } })}>
+              <Button class='rounded px-3.5 font-bold bg-custom select:!bg-custom-600 text-contrast h-6 py-0 text-base capitalize' on:click={() => goto('/#/app/search', { state: { search: { season: media.season, seasonYear: media.seasonYear } } })}>
                 {season(media)}
               </Button>
             {/if}
             {#if media.averageScore && !underPoweredSpoiler}
-              <Button class={cn('rounded px-3.5 font-bold text-contrast h-6 py-0 text-base', getBGColorForRating(spoiler ? 100 : media.averageScore))} on:click={() => goto('/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
+              <Button class={cn('rounded px-3.5 font-bold text-contrast h-6 py-0 text-base', getBGColorForRating(spoiler ? 100 : media.averageScore))} on:click={() => goto('/#/app/search', { state: { search: { sort: ['SCORE_DESC'] } } })}>
                 <span class={cn(spoiler && 'blur-[3px]')}>
                   {spoiler ? 50 : media.averageScore}%
                 </span>
@@ -189,7 +189,7 @@
     </div>
     <div class='flex gap-2 items-center justify-start self-start w-full overflow-x-auto' use:dragScroll>
       {#each media.genres ?? [] as genre (genre)}
-        <Button variant='secondary' class='select:!text-custom h-7 text-nowrap' on:click={() => goto('/app/search', { state: { search: { genre: [genre] } } })}>
+        <Button variant='secondary' class='select:!text-custom h-7 text-nowrap' on:click={() => goto('/#/app/search', { state: { search: { genre: [genre] } } })}>
           {genre}
         </Button>
       {/each}
@@ -201,7 +201,7 @@
           <Button variant='secondary' class={cn(
             'select:!text-custom h-7 text-nowrap bg-secondary/40 text-muted-foreground shadow-sm border-2 border-dashed border-secondary',
             underPoweredSpoiler && 'text-transparent select:text-muted-foreground'
-          )} on:click={() => goto('/app/search', { state: { search: { tag: [tag.name] } } })}>
+          )} on:click={() => goto('/#/app/search', { state: { search: { tag: [tag.name] } } })}>
             <span class={cn(spoiler && !underPoweredSpoiler && 'blur-[6px] select:blur-0 transition-[filter]')}>
               {tag.name}
             </span>

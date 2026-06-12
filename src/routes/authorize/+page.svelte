@@ -2,7 +2,9 @@
   import { Separator } from '$lib/components/ui/separator'
 
   const channel = new BroadcastChannel('hayase-auth')
-  channel.postMessage({ hash: location.hash, search: location.search })
+
+  channel.postMessage(new URL(location.hash.slice('#/authorize'.length), location.origin).search)
+
   channel.close()
   window.close()
 </script>

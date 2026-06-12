@@ -38,7 +38,7 @@
 
   async function quit () {
     client.destroy()
-    await goto('/app/home')
+    await goto('/#/app/home')
     $prevAgreed = false
     $irc = null
   }

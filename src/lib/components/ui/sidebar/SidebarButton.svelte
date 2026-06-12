@@ -18,14 +18,10 @@
   type $$Props = Props
   export let href: string | null | undefined = undefined
 
-  function matchPath (path: string, page: { url: URL }) {
-    return page.url.pathname.startsWith(path)
-  }
-
   let className: $$Props['class'] = undefined
   export { className as class }
 
-  $: isActive = href && matchPath(href, $page)
+  $: isActive = $page.route.id?.startsWith(href?.slice(2) ?? '')
 </script>
 
 <Button variant='ghost' {href} class={cn(className, 'px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none group/sidebar duration-300', isActive ? '!text-background' : 'text-foreground')} {...$$restProps}>

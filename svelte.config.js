@@ -131,11 +131,12 @@ const config = {
         'manifest-src': ['self']
       }
     },
-    // router: {
-    //   type: 'hash',
-    //   resolution: 'client'
-    // },
+    router: {
+      type: 'hash',
+      resolution: 'client'
+    },
     adapter: adapterWithFontPreload({
+      // this fallback override is intentional, as otherwise the font preload isnt included
       fallback: 'index.html',
       fontNames: ['nunito-latin-wght'],
       formats: ['woff2', 'woff']

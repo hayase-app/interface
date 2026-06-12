@@ -1,0 +1,26 @@
+diff --git a/src/core/postbuild/analyse.js b/src/core/postbuild/analyse.js
+index eda45829fb91e268d7032f0c5185b370f1c8e5f7..8c1fb3ecd3fccef0cd609ec60178dd6987166c0d 100644
+--- a/src/core/postbuild/analyse.js
++++ b/src/core/postbuild/analyse.js
+@@ -73,7 +73,7 @@ async function analyse({
+ 
+ 	// analyse nodes
+ 	for (const node of nodes) {
+-		if (hash && node.universal) {
++		if (hash && node.universal && false) {
+ 			const options = Object.keys(node.universal).filter((o) => o !== 'load');
+ 			if (options.length > 0) {
+ 				throw new Error(
+diff --git a/src/runtime/client/client.js b/src/runtime/client/client.js
+index 6c7b081442e74f5ea59df79ca86f833e0cadfd2b..bd694ea3f47e0ebbf5e6c6a48b2d50856efb3b0b 100644
+--- a/src/runtime/client/client.js
++++ b/src/runtime/client/client.js
+@@ -904,7 +904,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node
+ 	if (DEV) {
+ 		validate_page_exports(node.universal);
+ 
+-		if (node.universal && app.hash) {
++		if (node.universal && app.hash && false) {
+ 			const options = Object.keys(node.universal).filter((o) => o !== 'load');
+ 
+ 			if (options.length > 0) {

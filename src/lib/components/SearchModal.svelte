@@ -111,7 +111,7 @@
 
   function play ({ hash, link }: TorrentResult) {
     server.playHash(hash, $searchStore!.media, $searchStore!.episode, link)
-    goto('/app/player/')
+    goto('/#/app/player')
     close()
   }
 
@@ -174,7 +174,7 @@
   function findTorrentIdentifiers (identifier: string) {
     if (torrentRx.test(identifier) && $searchStore) {
       server.playIdentifier(identifier, $searchStore.media, $searchStore.episode)
-      goto('/app/player/')
+      goto('/#/app/player')
       close()
     }
   }
@@ -201,7 +201,7 @@
         if (file instanceof Blob) {
           if (file.type === 'application/x-bittorrent' || file.name.endsWith('.torrent')) {
             server.playIdentifier(new Uint8Array(await file.arrayBuffer()), $searchStore.media, $searchStore.episode)
-            goto('/app/player/')
+            goto('/#/app/player')
             close()
           }
         } else if (file.type === 'text/plain') {

@@ -275,7 +275,7 @@ export default new class MALSync {
     const state = crypto.randomUUID().replaceAll('-', '')
     const challenge = (crypto.randomUUID() + crypto.randomUUID()).replaceAll('-', '')
 
-    const redirect = SUPPORTS.isIOS ? 'hayase://authorize/' : dev ? 'http://localhost:7344/authorize' : 'https://hayase.app/authorize'
+    const redirect = SUPPORTS.isIOS ? 'hayase://authorize/' : dev ? 'http://localhost:7344' : 'https://hayase.app'
 
     const { code } = await native.authMAL(`${ENDPOINTS.API_AUTHORIZE}?response_type=code&client_id=${clientID}&state=${state}&code_challenge=${challenge}&code_challenge_method=plain&redirect_uri=${redirect}`)
 

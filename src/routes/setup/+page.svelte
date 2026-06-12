@@ -25,5 +25,5 @@
       I agree to the <a use:click={() => native.openURL(`${WEB_URL}/terms`)} class='text-foreground underline py-2 px-1'>Terms of Service</a> and <a use:click={() => native.openURL(`${WEB_URL}/privacy`)} class='text-foreground underline py-2 px-1'>Privacy Policy</a>
     </Label>
   </div>
-  <Button id='start-setup' class='text-lg font-bold shrink-0' disabled={!checked} size='lg' href={checked ? './storage' : undefined} data-sveltekit-replacestate>{!checked ? 'Accept terms to continue' : 'Start Setup'}</Button>
+  <Button id='start-setup' class='text-lg font-bold shrink-0' disabled={!checked} size='lg' href={checked ? '/#/setup/storage' : undefined} data-sveltekit-replacestate>{!checked ? 'Accept terms to continue' : 'Start Setup'}</Button>
 </div>

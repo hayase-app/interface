@@ -53,7 +53,7 @@
       {:else}
         {#each $threads.data?.threads?.threads ?? [] as thread, i (thread?.id ?? i)}
           {#if thread}
-            <a href='./thread/{thread.id}' class= 'select:scale-[1.05] select:shadow-lg scale-100 transition-[transform,box-shadow] duration-200 shrink-0 ease-out focus-visible:ring-ring focus-visible:ring-1 rounded-md bg-muted text-secondary-foreground select:bg-accent flex w-full max-h-28 relative overflow-hidden cursor-pointer'>
+            <a href='/#/app/anime/{media.id}/thread/{thread.id}' class= 'select:scale-[1.05] select:shadow-lg scale-100 transition-[transform,box-shadow] duration-200 shrink-0 ease-out focus-visible:ring-ring focus-visible:ring-1 rounded-md bg-muted text-secondary-foreground select:bg-accent flex w-full max-h-28 relative overflow-hidden cursor-pointer'>
               <div class='flex-grow py-3 px-4 flex flex-col'>
                 <div class='flex w-full justify-between text-[12.8px]'>
                   <Tooltip.Root>
