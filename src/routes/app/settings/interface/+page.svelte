@@ -81,7 +81,7 @@
   }
 
   const themes = [
-    { value: 'default', label: 'OLED' },
+    { value: 'default', label: 'Blackout' },
     { value: 'rose', label: 'Rose' },
     { value: 'catppuccin', label: 'Catppuccin' },
     { value: 'dracula', label: 'Dracula' },
