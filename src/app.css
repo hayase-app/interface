@@ -175,25 +175,25 @@
 }
 
 .theme-catppuccin {
-  --background: hsl(240 22.7% 8.6%);
-  --foreground: hsl(226.2 63.9% 88%);
-  --muted: hsl(240 21.1% 14.9%);
-  --muted-foreground: hsl(227.6 23.6% 71.8%);
-  --popover: hsl(240 21.1% 14.9%);
-  --popover-foreground: hsl(226.2 63.9% 88%);
-  --card: hsl(240 21.1% 14.9%);
-  --card-foreground: hsl(226.2 63.9% 88%);
-  --border: hsl(234.3 13.2% 31.2%);
-  --input: hsl(234.3 13.2% 31.2%);
-  --primary: hsl(23 92% 75.5%);
-  --primary-foreground: hsl(240 22.7% 8.6%);
-  --secondary: hsl(234.3 13.2% 31.2%);
-  --secondary-foreground: hsl(226.7 35.3% 80%);
-  --accent: hsl(240 21.3% 12%);
-  --accent-foreground: hsl(226.2 63.9% 88%);
-  --destructive: hsl(343.3 81.2% 74.9%);
-  --destructive-foreground: hsl(240 22.7% 8.6%);
-  --ring: hsl(227.6 23.6% 71.8%);
+  --background: hsl(240 21% 15%);
+  --foreground: hsl(226 64% 88%);
+  --muted: hsl(240 23% 9%);
+  --muted-foreground: hsl(228 24% 72%);
+  --popover: hsl(240 23% 9%);
+  --popover-foreground: hsl(226 64% 88%);
+  --card: hsl(240 23% 9%);
+  --card-foreground: hsl(226 64% 88%);
+  --border: hsl(234 13% 31%);
+  --input: hsl(234 13% 31%);
+  --primary: hsl(23 92% 75%);
+  --primary-foreground: hsl(240 23% 9%);
+  --secondary: hsl(234 13% 31%);
+  --secondary-foreground: hsl(226 64% 88%);
+  --accent: hsl(237 16% 23%);
+  --accent-foreground: hsl(226 64% 88%);
+  --destructive: hsl(343 81% 75%);
+  --destructive-foreground: hsl(240 23% 9%);
+  --ring: hsl(231 11% 47%);
 }
 
 .theme-dracula {
