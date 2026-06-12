@@ -193,7 +193,7 @@
   --accent-foreground: hsl(226 64% 88%);
   --destructive: hsl(343 81% 75%);
   --destructive-foreground: hsl(240 23% 9%);
-  --ring: hsl(231 11% 47%);
+  --ring: hsl(23 92% 75%);
 }
 
 .theme-dracula {
@@ -209,13 +209,13 @@
   --input: hsl(232 14% 31%);
   --primary: hsl(265 89% 78%);
   --primary-foreground: hsl(232 14% 11%);
-  --secondary: hsl(231 10% 29%);
+  --secondary: hsl(235 14% 15%);
   --secondary-foreground: hsl(60 30% 96%);
   --accent: hsl(232 14% 31%);
   --accent-foreground: hsl(60 30% 96%);
-  --destructive: hsl(12 71% 54%);
+  --destructive: hsl(6 66% 48%);
   --destructive-foreground: hsl(60 30% 96%);
-  --ring: hsl(225 27% 51%);
+  --ring: hsl(258 61% 60%);
 }
 
 .theme-amber {
