@@ -26,7 +26,7 @@
   })
 </script>
 
-<div class='text-foreground text-lg font-normal leading-none line-clamp-1 hover:text-muted-foreground hover:underline cursor-pointer text-shadow-lg' use:click={() => goto(`/app/anime/${mediaInfo.media.id}`)}>{mediaInfo.session.title}</div>
+<div class='text-foreground text-lg font-normal leading-none line-clamp-1 hover:text-muted-foreground hover:underline cursor-pointer text-shadow-lg' use:click={() => goto(`/#/app/anime/${mediaInfo.media.id}`)}>{mediaInfo.session.title}</div>
 <Sheet.Root {portal} bind:open={episodeListOpen}>
   <Sheet.Trigger id='episode-list-button' data-down='#player-seekbar' class='text-[rgba(217,217,217,0.6)] hover:text-muted-foreground text-sm leading-none font-light line-clamp-1 text-left hover:underline bg-transparent text-shadow-lg'>{mediaInfo.session.description}</Sheet.Trigger>
   <Sheet.Content class='w-full sm:w-[550px] p-0 max-w-full sm:max-size-full overflow-y-scroll flex flex-col !pb-0 shrink-0 gap-0 bg-background justify-between overflow-x-clip'>

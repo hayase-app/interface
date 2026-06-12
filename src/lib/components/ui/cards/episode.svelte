@@ -22,7 +22,7 @@
   let hidden = true
 
   function onclick () {
-    goto(`/app/anime/${media.id}`)
+    goto(`/#/app/anime/${media.id}`)
   }
   function onhover (state: boolean) {
     hidden = !state

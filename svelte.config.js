@@ -131,10 +131,10 @@ const config = {
         'manifest-src': ['self']
       }
     },
-    // router: {
-    //   type: 'hash',
-    //   resolution: 'client'
-    // },
+    router: {
+      type: 'hash',
+      resolution: 'client'
+    },
     adapter: adapterWithFontPreload({
       fallback: 'index.html',
       fontNames: ['nunito-latin-wght'],

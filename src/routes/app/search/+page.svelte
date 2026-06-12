@@ -153,7 +153,7 @@
       sort: [filter.sort?.[0]?.value ?? 'SEARCH_MATCH'] as Array<'TITLE_ROMAJI_DESC' | 'ID' | 'START_DATE_DESC' | 'SCORE_DESC' | 'POPULARITY_DESC' | 'TRENDING_DESC' | 'UPDATED_AT_DESC' | 'ID_DESC' | 'TITLE_ROMAJI' | 'TITLE_ENGLISH' | 'TITLE_ENGLISH_DESC' | null>
     }
 
-    tick().then(() => replaceState('', { search }))
+    tick().then(() => replaceState(location.href, { search }))
 
     return client.search(search)
   }

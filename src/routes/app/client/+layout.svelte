@@ -10,7 +10,7 @@
   const items = [
     {
       title: 'Overview',
-      href: '/app/client/overview/',
+      href: '/#/app/client/overview',
       overview: {
         title: 'Torrent Client',
         desc: 'Monitor your torrents, and configure settings for your torrent client.'
@@ -18,7 +18,7 @@
     },
     {
       title: 'Files',
-      href: '/app/client/files/',
+      href: '/#/app/client/files',
       overview: {
         title: 'File List',
         desc: 'Files in the currently active torrent, their download progress, and amount of active stream selections.'
@@ -26,7 +26,7 @@
     },
     {
       title: 'Peers',
-      href: '/app/client/peers/',
+      href: '/#/app/client/peers',
       overview: {
         title: 'Peer List',
         desc: 'Peers connected to the currently active torrent, their statistics, region etc.'
@@ -34,7 +34,7 @@
     },
     {
       title: 'Trackers',
-      href: '/app/client/trackers/',
+      href: '/#/app/client/trackers',
       overview: {
         title: 'Tracker Status',
         desc: 'Trackers for the currently active torrent, their status, and statistics about seeders/leechers and download amount.'
@@ -42,7 +42,7 @@
     },
     {
       title: 'Library',
-      href: '/app/client/library/',
+      href: '/#/app/client/library',
       overview: {
         title: 'Torrent Library',
         desc: 'All of your downloaded torrents. If Persist Files is enabled then your previously downloaded torrents will show up here.'
@@ -50,16 +50,16 @@
     },
     {
       title: 'Settings',
-      href: '/app/settings/client/'
+      href: '/#/app/settings/client'
     }
   ]
 
-  $: overview = items.find(({ href }) => href === $page.url.pathname)?.overview ?? {
+  $: overview = items.find(({ href }) => href.slice(2) === $page.route.id)?.overview ?? {
     title: 'Torrent Client',
     desc: 'Monitor your torrents, and configure settings for your torrent client.'
   }
 
-  $: current = $page.url.pathname === '/app/client/'
+  $: current = $page.route.id === '/app/client'
 </script>
 
 <div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col min-w-0'>

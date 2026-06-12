@@ -22,14 +22,14 @@
   export let step = 0
   export let checks: Checks[] = []
 
-  const NEXT = ['network', 'extensions', '../app/home']
-  const PREV = ['', 'storage', 'network']
+  const NEXT = ['/#/setup/network', '/#/setup/extensions', '/#/app/home']
+  const PREV = ['/#/setup', '/#/setup/storage', '/#/setup/network']
 
   $: settled = Promise.allSettled(checks.map(({ promise }) => promise))
 
   function checkNext () {
     if (step === 2) localStorage.setItem('setup-finished', SETUP_VERSION.toString())
-    goto(`../${NEXT[step]}`, { replaceState: true })
+    goto(NEXT[step]!, { replaceState: true })
   }
 </script>
 
@@ -67,7 +67,7 @@
   </div>
 </div>
 <div class='flex flex-row items-center justify-between w-full bg-muted border-t md:border md:rounded-lg border-border py-4 px-8'>
-  <Button variant='secondary' class='w-24' href='../{PREV[step]}' id='setup-prev-button' data-right='#setup-next-button'>Prev</Button>
+  <Button variant='secondary' class='w-24' href={PREV[step]} id='setup-prev-button' data-right='#setup-next-button'>Prev</Button>
   {#await settled}
     <Tooltip.Root>
       <Tooltip.Trigger let:builder>

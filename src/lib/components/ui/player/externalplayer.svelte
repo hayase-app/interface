@@ -28,7 +28,7 @@
   $: isMiniplayer = $page.route.id !== '/app/player'
 
   function openPlayer () {
-    if (isMiniplayer) goto('/app/player/')
+    if (isMiniplayer) goto('/#/app/player')
   }
   const player = $page.route.id !== '/app/player' ? Promise.resolve() : native.spawnPlayer(mediaInfo.file.url)
   const startTime = Date.now()

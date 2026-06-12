@@ -2,6 +2,11 @@ import type { HandleClientError } from '@sveltejs/kit'
 
 import SUPPORTS from '$lib/modules/settings/supports'
 
+// this is for MAL, for they don't support hash routing, so we auth to the root and then redirect to the authorize page with the data in search params
+export const init = () => {
+  if (location.pathname === '/' && location.search.startsWith('?code')) history.replaceState(null, '', '/#/authorize' + location.search)
+}
+
 if (SUPPORTS.isIOS) {
   let customFS: Element | undefined
 

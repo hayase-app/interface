@@ -19,7 +19,7 @@
     if (!(target in NAVIGATE_TARGETS)) return
 
     const targetValue = NAVIGATE_TARGETS[target as keyof typeof NAVIGATE_TARGETS]
-    goto(`/app/${targetValue}/${value ?? ''}`)
+    goto(`/#/app/${targetValue}/${value ?? ''}`)
   })
 
   const imageRx = /\.(jpeg|jpg|gif|png|webp)/i
@@ -30,14 +30,14 @@
     for (const file of await transferToFileList(e)) {
       if (file instanceof Blob) {
         if (file.type.startsWith('image') || imageRx.test(file.name)) {
-          goto('/app/search', { state: { image: file } })
+          goto('/#/app/search', { state: { image: file } })
         }
       } else if (file.type === 'text/plain') {
         if (imageRx.test(file.text)) {
-          goto('/app/search', { state: { image: file.text } })
+          goto('/#/app/search', { state: { image: file.text } })
         } else if (w2gRx.test(file.text)) {
           const match = file.text.match(w2gRx)
-          if (match?.[1]) goto('/app/w2g/' + match[1])
+          if (match?.[1]) goto('/#/app/w2g/' + match[1])
         }
       }
     }

@@ -28,7 +28,7 @@
 </script>
 
 <div class='flex items-center w-full'>
-  <Button size='icon' variant='ghost' href='/app/anime/{media.id}' class='mr-2'>
+  <Button size='icon' variant='ghost' href='/#/app/anime/{media.id}' class='mr-2'>
     <ChevronLeft class='h-4 w-4' />
   </Button>
   <div class='text-[20px] md:text-2xl font-bold line-clamp-1'>{thread.title ?? 'No thread title...'}</div>
