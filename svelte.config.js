@@ -98,7 +98,7 @@ const adapterWithFontPreload = (options = {}) => {
       // copy license file to build directory
       try {
         const src = resolve(import.meta.dirname, 'node_modules/.cache/license-deps.txt')
-        const dst = join(outDir, 'build/LICENSE.txt')
+        const dst = join(outDir, 'LICENSE.txt')
         await copyFile(src, dst)
         console.log('Copied license file to build directory')
       } catch (error) {
