@@ -73,6 +73,7 @@
     const formats = [
       'video/mp4; codecs="avc1.42E01E"',
       'video/mp4; codecs="avc1.4D401E"',
+      'video/mp4; codecs="avc1.6e003"',
       'video/mp4; codecs="hev1.1.6.L93.B0"',
       'video/mp4; codecs="av01.0.05M.08"',
       'audio/mp4; codecs="ac-3"',
