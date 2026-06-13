@@ -105,7 +105,7 @@
   }
 </script>
 
-<div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col gap-4'>
+<div class='p-3 md:p-10 md:pb-0 pb-0 size-full flex flex-col gap-4 overflow-y-auto'>
   <div class='flex justify-center'>
     <div class='space-y-0.5 lg:max-w-[1440px] w-full'>
       <h2 class='text-2xl font-bold'>Debug Page</h2>
