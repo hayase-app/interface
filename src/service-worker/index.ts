@@ -9,7 +9,7 @@ import { build, files, prerendered, version } from '$service-worker'
 const fallbackURL = '/offline.html'
 
 const filterOutWorkers = (url: string) => {
-  if (SUPPORTS.isAndroid || SUPPORTS.isIOS) return true
+  if (SUPPORTS.isMobile) return true
 
   return !(url.includes('codec.worker') || url.includes('audioWorklet'))
 }

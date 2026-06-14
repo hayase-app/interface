@@ -25,9 +25,6 @@ importers:
       '@fontsource/geist-mono':
         specifier: ^5.2.8
         version: 5.2.8
-      '@mediabunny/ac3':
-        specifier: ^1.46.0
-        version: 1.46.0(@thaunknown/mediabunny@1.47.0)
       '@prgm/sveltekit-progress-bar':
         specifier: 2.0.0
         version: 2.0.0(@sveltejs/kit@2.65.0(patch_hash=3be2d57da70f6b67d495f625af2a5dc9214f2e50b3afa7df7cc2fc8ec00c89dc)(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.56.3(@typescript-eslint/types@8.61.0))(vite@8.0.16(@types/node@25.6.0)(esbuild@0.27.2)(jiti@2.7.0)(terser@5.43.1)(yaml@2.6.0)))(svelte@5.56.3(@typescript-eslint/types@8.61.0))(typescript@6.0.3)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.27.2)(jiti@2.7.0)(terser@5.43.1)(yaml@2.6.0)))(svelte@5.56.3(@typescript-eslint/types@8.61.0))
@@ -607,11 +604,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@mediabunny/ac3@1.46.0':
-    resolution: {integrity: sha512-4CReIRRJy4UK2338iy0IHRp64U6zcfd9VZyXJ676u4dEo25CQlFz/s12cbnFl+wNrtCtK5Al/ZpPXBaTjV8+vA==}
-    peerDependencies:
-      mediabunny: ^1.0.0
 
   '@melt-ui/svelte@0.76.2':
     resolution: {integrity: sha512-7SbOa11tXUS95T3fReL+dwDs5FyJtCEqrqG3inRziDws346SYLsxOQ6HmX+4BkIsQh1R8U3XNa+EMmdMt38lMA==}
@@ -3513,10 +3505,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@mediabunny/ac3@1.46.0(@thaunknown/mediabunny@1.47.0)':
-    dependencies:
-      mediabunny: '@thaunknown/mediabunny@1.47.0'
 
   '@melt-ui/svelte@0.76.2(svelte@5.56.3(@typescript-eslint/types@8.61.0))':
     dependencies:

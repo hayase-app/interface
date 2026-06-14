@@ -1,27 +1,12 @@
 <svelte:options accessors={true} />
 
 <script lang='ts' context='module'>
-  import { canDecodeAudio } from 'mediabunny'
-
   import SUPPORTS from '$lib/modules/settings/supports'
 
   let loadPromise: Promise<void> | null = null
 
-  async function loadCodecs () {
-    const [ac3, flac, dts, truehd] = await Promise.all([
-      canDecodeAudio('ac3'),
-      canDecodeAudio('flac'),
-      canDecodeAudio('dts'),
-      canDecodeAudio('truehd')
-    // canDecodeAudio('aac'),
-    ])
-
-    await Promise.allSettled([
-      !ac3 && import('@mediabunny/ac3').then(({ registerAc3Decoder }) => registerAc3Decoder()),
-      (!flac || SUPPORTS.isIOS) && import('./flac').then(({ registerFlacDecoder }) => registerFlacDecoder()),
-      !dts && import('./dts').then(({ registerDtsDecoder }) => registerDtsDecoder()),
-      !truehd && import('./truehd').then(({ registerTrueHDDecoder }) => registerTrueHDDecoder())
-    ])
+  function loadCodecs () {
+    return import('./extra-codecs').then(({ registerCombinedDecoder }) => registerCombinedDecoder())
   }
 </script>
 

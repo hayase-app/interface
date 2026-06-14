@@ -21,20 +21,38 @@ import {
 
 import { sendCommand, refWorker, unrefWorker } from './worker-client'
 
-class TrueHDDecoder extends CustomAudioDecoder {
+class CombinedDecoder extends CustomAudioDecoder {
   private ctx = 0
 
-  static override supports (codec: AudioCodec): boolean {
-    return codec === 'truehd'
+  static override supports (codec: AudioCodec, config: AudioDecoderConfig): boolean {
+    if (codec === 'opus') {
+      return config.numberOfChannels > 2
+    }
+
+    return codec === 'dts' ||
+      codec === 'truehd' ||
+      codec === 'ac3' ||
+      codec === 'eac3' ||
+      codec === 'vorbis'
   }
 
   async init () {
     await refWorker()
 
+    const desc = this.config.description
+    let extradata: ArrayBuffer | undefined
+    if (desc) {
+      const view = ArrayBuffer.isView(desc)
+        ? new Uint8Array(desc.buffer, desc.byteOffset, desc.byteLength)
+        : new Uint8Array(desc)
+      extradata = view.buffer as ArrayBuffer
+    }
+
     const result = await sendCommand({
       type: 'init-decoder',
-      data: {}
-    })
+      data: { codec: this.codec, extradata }
+    }, extradata ? [extradata] : undefined)
+
     this.ctx = result.ctx
   }
 
@@ -67,13 +85,4 @@ class TrueHDDecoder extends CustomAudioDecoder {
   }
 }
 
-/**
- * Registers a Dolby TrueHD decoder, which Mediabunny will then use automatically when applicable.
- * Make sure to call this function before starting any decoding task.
- *
- * @group \@mediabunny/truehd
- * @public
- */
-export const registerTrueHDDecoder = () => {
-  registerDecoder(TrueHDDecoder)
-}
+export const registerCombinedDecoder = () => registerDecoder(CombinedDecoder)

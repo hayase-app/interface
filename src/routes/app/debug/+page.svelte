@@ -109,11 +109,11 @@
 
   const RESOLUTIONS = [
     { width: 426, height: 240, label: '240p' },
-    { width: 640, height: 360, label: '360p' },
-    { width: 854, height: 480, label: '480p' },
-    { width: 1280, height: 720, label: '720p' },
-    { width: 1920, height: 1080, label: '1080p' },
-    { width: 2560, height: 1440, label: '1440p' },
+    { width: 640, height: 360, label: 'QHD' },
+    { width: 854, height: 480, label: 'SD' },
+    { width: 1280, height: 720, label: 'HD' },
+    { width: 1920, height: 1080, label: 'FHD' },
+    { width: 2560, height: 1440, label: '2K' },
     { width: 3840, height: 2160, label: '4K' },
     { width: 7680, height: 4320, label: '8K' }
   ] as const

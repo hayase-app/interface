@@ -9,5 +9,5 @@
       License information for the apps interface and its dependencies.
     </p>
   </div>
-  <pre class='whitespace-pre-wrap text-sm select-text'>{data.licenseText}</pre>
+  <pre class='whitespace-pre-wrap text-sm select-text break-all'>{data.licenseText}</pre>
 </div>

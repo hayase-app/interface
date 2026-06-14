@@ -11,7 +11,7 @@
  * https://github.com/ThaUnknown/mediabunny/tree/main/packages
  */
 
-import createModule from './dts.js'
+import createModule from './extra-codecs.js'
 
 import type { WorkerCommand, WorkerResponse, WorkerResponseData } from './shared'
 
@@ -21,7 +21,7 @@ type ExtendedEmscriptenModule = any
 let module: ExtendedEmscriptenModule
 let modulePromise: Promise<ExtendedEmscriptenModule> | null = null
 
-let initDecoderFn: () => number
+let initDecoderFn: (codecId: number, extradata: number, extradataSize: number) => number
 let configureDecodePacket: (ctx: number, size: number) => number
 let decodePacket: (ctx: number, pts: bigint) => number
 let getDecodedFormat: (ctx: number) => number
@@ -33,6 +33,19 @@ let getDecodedPts: (ctx: number) => bigint
 let flushDecoderFn: (ctx: number) => void
 let closeDecoderFn: (ctx: number) => void
 
+const codecToId = (codec: string) => {
+  switch (codec) {
+    case 'dts': return 0
+    case 'truehd': return 1
+    case 'ac3': return 2
+    case 'eac3': return 3
+    case 'flac': return 4
+    case 'vorbis': return 5
+    case 'opus': return 6
+    default: throw new Error(`Unsupported codec: ${codec}`)
+  }
+}
+
 const ensureModule = async () => {
   if (!module) {
     if (modulePromise) {
@@ -43,7 +56,7 @@ const ensureModule = async () => {
     module = await modulePromise
     modulePromise = null
 
-    initDecoderFn = module.cwrap('init_decoder', 'number', [])
+    initDecoderFn = module.cwrap('init_decoder', 'number', ['number', 'number', 'number'])
     configureDecodePacket = module.cwrap('configure_decode_packet', 'number', ['number', 'number'])
     decodePacket = module.cwrap('decode_packet', 'number', ['number', 'number'])
     getDecodedFormat = module.cwrap('get_decoded_format', 'number', ['number'])
@@ -68,12 +81,25 @@ const AV_FORMAT_MAP: Record<number, { format: AudioSampleFormat, bytesPerSample:
   8: { format: 'f32-planar', bytesPerSample: 4, planar: true }
 }
 
-const initDecoder = async () => {
+const initDecoder = async (codec: string, extradata?: ArrayBuffer) => {
   await ensureModule()
 
-  const ctx = initDecoderFn()
+  let extradataPtr = 0
+  let extradataSize = 0
+  if (extradata) {
+    extradataSize = extradata.byteLength
+    extradataPtr = module._malloc(extradataSize)
+    module.HEAPU8.set(new Uint8Array(extradata), extradataPtr)
+  }
+
+  const ctx = initDecoderFn(codecToId(codec), extradataPtr, extradataSize)
+
+  if (extradataPtr) {
+    module._free(extradataPtr)
+  }
+
   if (ctx === 0) {
-    throw new Error('Failed to initialize DTS decoder.')
+    throw new Error('Failed to initialize decoder.')
   }
 
   return { ctx }
@@ -135,7 +161,7 @@ const onMessage = (data: { id: number, command: WorkerCommand }) => {
 
       switch (command.type) {
         case 'init-decoder': {
-          const { ctx } = await initDecoder()
+          const { ctx } = await initDecoder(command.data.codec, command.data.extradata)
           result = { type: command.type, ctx }
         } break
 

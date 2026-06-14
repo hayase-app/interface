@@ -11,15 +11,15 @@
  * https://github.com/ThaUnknown/mediabunny/tree/main/packages
  */
 
-const DTS_LOADED_SYMBOL = Symbol.for('@mediabunny/dts loaded')
-if ((globalThis as Record<symbol, unknown>)[DTS_LOADED_SYMBOL]) {
+const EXTRA_CODECS_LOADED_SYMBOL = Symbol.for('@mediabunny/extra-codecs loaded')
+if ((globalThis as Record<symbol, unknown>)[EXTRA_CODECS_LOADED_SYMBOL]) {
   console.error(
-    '[WARNING]\n@mediabunny/dts was loaded twice.' +
+    '[WARNING]\n@mediabunny/extra-codecs was loaded twice.' +
     ' This will likely cause the decoder not to work correctly.' +
-    ' Check if multiple dependencies are importing different versions of @mediabunny/dts,' +
+    ' Check if multiple dependencies are importing different versions of @mediabunny/extra-codecs,' +
     ' or if something is being bundled incorrectly.'
   )
 }
-(globalThis as Record<symbol, unknown>)[DTS_LOADED_SYMBOL] = true
+(globalThis as Record<symbol, unknown>)[EXTRA_CODECS_LOADED_SYMBOL] = true
 
-export { registerDtsDecoder } from './decoder'
+export { registerCombinedDecoder } from './decoder'
