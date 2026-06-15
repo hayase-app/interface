@@ -120,6 +120,107 @@
 
   const mediaPromise = Promise.all([testAudio(), testVideo()])
 
+  function getAudioDescription (codec: string, sampleRate: number, channels: number): BufferSource | undefined {
+    switch (codec) {
+      case 'flac': {
+        const buf = new ArrayBuffer(34)
+        const view = new DataView(buf)
+        view.setUint16(0, 4096, false)
+        view.setUint16(2, 4096, false)
+        const upper = (sampleRate << 12) | ((channels - 1) << 9) | (15 << 4)
+        view.setUint32(10, upper, false)
+        view.setUint32(14, 0, false)
+        return buf
+      }
+      case 'mp4a.40.2': {
+        const idx: Record<number, number> = { 96000: 0, 88200: 1, 64000: 2, 48000: 3, 44100: 4, 32000: 5, 24000: 6, 22050: 7, 16000: 8, 12000: 9, 11025: 10, 8000: 11 }
+        const sampleRateIdx = idx[sampleRate] ?? 15
+        const channelCfg = channels >= 8 ? 7 : channels >= 6 ? 6 : channels >= 4 ? 4 : channels >= 2 ? 2 : 1
+        const buf = new ArrayBuffer(2)
+        const view = new DataView(buf)
+        view.setUint8(0, (2 << 3) | (sampleRateIdx >> 1))
+        view.setUint8(1, ((sampleRateIdx & 1) << 7) | (channelCfg << 3))
+        return buf
+      }
+      case 'alac': {
+        const buf = new ArrayBuffer(24)
+        const view = new DataView(buf)
+        view.setUint32(0, 24, false)
+        view.setUint32(4, 0x616C6163, false)
+        view.setUint32(8, 24, false)
+        view.setUint32(12, 0x616C6163, false)
+        view.setUint8(16, 0)
+        view.setUint8(17, 0)
+        view.setUint8(18, channels)
+        view.setUint8(19, 0)
+        view.setUint32(20, sampleRate, false)
+        return buf
+      }
+      case 'opus': {
+        const buf = new ArrayBuffer(19)
+        const view = new DataView(buf)
+        view.setUint32(0, 0x4F707573, false)
+        view.setUint32(4, 0x48656164, false)
+        view.setUint8(8, 1)
+        view.setUint8(9, channels)
+        view.setUint16(10, 0, true)
+        view.setUint32(12, sampleRate, true)
+        view.setUint16(16, 0, true)
+        view.setUint8(18, 0)
+        return buf
+      }
+      case 'vorbis': {
+        const buf = new ArrayBuffer(29)
+        const view = new DataView(buf)
+        view.setUint32(0, 0x766F7262, false)
+        view.setUint16(4, 0x6973, false)
+        view.setUint32(6, 0, true)
+        view.setUint8(10, channels)
+        view.setUint32(11, sampleRate, true)
+        view.setInt32(15, -1, true)
+        view.setInt32(19, -1, true)
+        view.setInt32(23, -1, true)
+        view.setUint8(27, 0x66)
+        view.setUint8(28, 1)
+        return buf
+      }
+      case 'ac-3': {
+        const fscod = sampleRate >= 48000 ? 0 : sampleRate >= 44100 ? 1 : sampleRate >= 32000 ? 2 : 0
+        const acmod = channels >= 2 ? 2 : 1
+        const buf = new ArrayBuffer(3)
+        const view = new DataView(buf)
+        view.setUint8(0, (fscod << 6) | (8 << 1) | 0)
+        view.setUint8(1, (0 << 6) | (acmod << 3) | 0)
+        view.setUint8(2, 0)
+        return buf
+      }
+      case 'dtsc': {
+        const buf = new ArrayBuffer(10)
+        const view = new DataView(buf)
+        view.setUint32(0, 0x7FFE8001, false)
+        const amode = channels >= 2 ? channels >= 6 ? 0x12 : 0x9 : 0x4
+        const sfreq = sampleRate >= 48000 ? 0 : sampleRate >= 44100 ? 1 : sampleRate >= 32000 ? 2 : 0
+        view.setUint8(4, (0 << 7) | (0 << 2) | 0)
+        view.setUint8(5, (0 << 7) | (0 << 1) | (sfreq >> 1))
+        view.setUint8(6, ((sfreq & 1) << 7) | (amode << 1) | 0)
+        view.setUint8(7, (0 << 7) | (0 << 1) | 0)
+        view.setUint8(8, 0)
+        view.setUint8(9, 0)
+        return buf
+      }
+      case 'truehd': {
+        const buf = new ArrayBuffer(5)
+        const view = new DataView(buf)
+        view.setUint16(0, 0xF872, false)
+        view.setUint16(2, 0x6F, false)
+        view.setUint8(4, channels)
+        return buf
+      }
+      default:
+        return undefined
+    }
+  }
+
   async function testAudio () {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const result = {} as Record<AudioCodecKey, Record<SampleRate, number>>
@@ -130,7 +231,10 @@
       await Promise.all(SAMPLE_RATES.map(async sampleRate => {
         for (const numberOfChannels of CHANNELS) {
           try {
-            const { supported } = await AudioDecoder.isConfigSupported({ codec, sampleRate, numberOfChannels })
+            const config: AudioDecoderConfig = { codec, sampleRate, numberOfChannels }
+            const desc = getAudioDescription(codec, sampleRate, numberOfChannels)
+            if (desc) config.description = desc
+            const { supported } = await AudioDecoder.isConfigSupported(config)
             if (supported) {
               rates[sampleRate] = numberOfChannels
               return

@@ -33,7 +33,8 @@ class CombinedDecoder extends CustomAudioDecoder {
       codec === 'truehd' ||
       codec === 'ac3' ||
       codec === 'eac3' ||
-      codec === 'vorbis'
+      codec === 'vorbis' ||
+      codec === 'flac'
   }
 
   async init () {
