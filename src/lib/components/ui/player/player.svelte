@@ -152,12 +152,13 @@
   let paused = true
   let pointerMoving = false
   let fastForwarding = false
+  let immerseOverride = false
   // const cast = false
 
   $: $isPlaying = !paused
 
   $: buffering = readyState < 3
-  $: immersed = (!buffering && !paused && !ended && !pictureInPictureElement && !pointerMoving) || fastForwarding
+  $: immersed = (!buffering && !paused && !ended && !pictureInPictureElement && !pointerMoving) || fastForwarding || immerseOverride
   $: isMiniplayer = $page.route.id !== '/app/player'
 
   $: if (!isMiniplayer && SUPPORTS.isAndroidTV) fullscreen()
@@ -317,6 +318,13 @@
   }
 
   // other
+  function handlePlayerBGClick () {
+    if (isMiniplayer) return goto('/#/app/player')
+
+    if (!SUPPORTS.isMobile) playPause()
+  }
+
+
   $: if (ended && $settings.playerAutoplay && !isMiniplayer && (!$w2globby || Object.keys($w2globby.peers.value).length > 1)) next?.()
 
   function handleVisibility (visibility: DocumentVisibilityState) {
@@ -817,7 +825,7 @@
         bind:playbackRate={$playbackRate}
         bind:volume={exponentialVolume}
         on:fallback={handleMediaBunnyFallback}
-        on:click={() => isMiniplayer ? goto('/#/app/player') : playPause()}
+        on:click={handlePlayerBGClick}
         on:dblclick={fullscreen}
         on:loadeddata={checkAudio}
         on:loadedmetadata={loadAnimeProgress}
@@ -853,7 +861,7 @@
       bind:playbackRate={$playbackRate}
       bind:volume={exponentialVolume}
       bind:this={video}
-      on:click={() => isMiniplayer ? goto('/#/app/player') : playPause()}
+      on:click={handlePlayerBGClick}
       on:dblclick={fullscreen}
       use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: fullscreen }}
       on:loadeddata={checkAudio}
@@ -897,25 +905,38 @@
         <div class='absolute top-10 font-bold text-sm animate-[fade-in_.4s_ease] flex items-center leading-none bg-background/60 px-4 py-2 rounded-2xl'>x2 <FastForward class='ml-2' size='12' fill='currentColor' /></div>
       {/if}
       {#if !SUPPORTS.isAndroidTV}
-        <div class='mobile:flex hidden gap-10 absolute items-center transition-opacity select:opacity-100 z-[0]' class:opacity-0={immersed || seeking}>
-          <Button class='p-3 size-10 pointer-events-auto rounded-[50%] bg-background/20' variant='ghost' disabled={!prev} on:click={() => prev?.()}>
-            <SkipBack fill='currentColor' strokeWidth='1' />
-          </Button>
-          <Button class={cn('p-2.5 size-12 pointer-events-auto rounded-[50%] bg-background/20', buffering && 'opacity-10')} variant='ghost' on:click={playPause}>
-            {#if paused}
-              <Play fill='currentColor' class='p-0.5' />
-            {:else}
-              <Pause fill='currentColor' strokeWidth='1' />
-            {/if}
-          </Button>
-          <Button class='p-3 size-10 pointer-events-auto rounded-[50%] bg-background/20' variant='ghost' disabled={!next} on:click={() => next?.()}>
-            <SkipForward fill='currentColor' strokeWidth='1' />
-          </Button>
+        <div 
+          class='size-full mobile:flex hidden justify-between absolute' 
+          on:click={() => {
+            if (immersed) {
+              immerseOverride = false
+              resetMove(3_000)
+              return 
+            }
+            immerseOverride = true
+          }}
+        >
+          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(-Number($settings.playerSeek))} use:holdToFF={'pointer'} />
+          <div class='w-full h-full pointer-events-auto' on:dblclick|stopPropagation={fullscreen}/>
+          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(Number($settings.playerSeek))} use:holdToFF={'pointer'} />
         </div>
-        <div class='size-full mobile:flex hidden justify-between absolute'>
-          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(-Number($settings.playerSeek))} use:holdToFF={'pointer'} use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: () => seek(-Number($settings.playerSeek)) }} />
-          <div class='h-full w-1/4 pointer-events-auto' on:dblclick|stopPropagation={() => seek(Number($settings.playerSeek))} use:holdToFF={'pointer'} use:customDoubleClick={{ condition: SUPPORTS.isIOS, cb: () => seek(Number($settings.playerSeek)) }} />
-        </div>
+        {#if !immersed}
+          <div class='mobile:flex hidden gap-10 absolute items-center transition-opacity select:opacity-100 z-[0]' class:opacity-0={immersed || seeking}>
+            <Button class='p-3 size-10 pointer-events-auto rounded-[50%] bg-background/20' variant='ghost' disabled={!prev} on:click={() => prev?.()}>
+              <SkipBack fill='currentColor' strokeWidth='1' />
+            </Button>
+            <Button class={cn('p-2.5 size-12 pointer-events-auto rounded-[50%] bg-background/20', buffering && 'opacity-10')} variant='ghost' on:click={playPause}>
+              {#if paused}
+                <Play fill='currentColor' class='p-0.5' />
+              {:else}
+                <Pause fill='currentColor' strokeWidth='1' />
+              {/if}
+            </Button>
+            <Button class='p-3 size-10 pointer-events-auto rounded-[50%] bg-background/20' variant='ghost' disabled={!next} on:click={() => next?.()}>
+              <SkipForward fill='currentColor' strokeWidth='1' />
+            </Button>
+          </div>
+        {/if}
       {/if}
       {#if buffering}
         <div in:fade={{ duration: 200, delay: 500 }} out:fade={{ duration: 200 }}>
@@ -929,94 +950,96 @@
         Skip {currentSkippable.skiptype ?? ''}
       </ProgressButton>
     {/if}
-    <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity delay-150 select:opacity-100' class:opacity-0={immersed}>
-      <div class='flex items-end gap-1'>
-        <div class='flex flex-col gap-2 text-left cursor-pointer'>
-          <EpisodesModal portal={wrapper} {mediaInfo} />
-        </div>
-        <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg ml-auto'>
-          <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, $chapters) || ''}</div>
-          <div class='ml-auto self-end text-sm leading-none font-light text-nowrap' use:click={toggleTimeFormat}>
-            {#if $timeFormat === 'positive'}
-              {toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}
-            {:else}
-              -{toTS(safeduration - (seeking ? seekPercent * safeduration / 100 : currentTime))} / {toTS(safeduration)}
-            {/if}
+    {#if !(SUPPORTS.isMobile && immersed)}
+      <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity delay-150 select:opacity-100' class:opacity-0={immersed}>
+        <div class='flex items-end gap-1'>
+          <div class='flex flex-col gap-2 text-left cursor-pointer'>
+            <EpisodesModal portal={wrapper} {mediaInfo} />
+          </div>
+          <div class='flex flex-col gap-2 grow-0 items-end self-end text-shadow-lg ml-auto'>
+            <div class='text-[rgba(217,217,217,0.6)] text-sm leading-none font-light line-clamp-1 capitalize'>{getChapterTitle(seeking ? seekPercent * safeduration / 100 : currentTime, $chapters) || ''}</div>
+            <div class='ml-auto self-end text-sm leading-none font-light text-nowrap' use:click={toggleTimeFormat}>
+              {#if $timeFormat === 'positive'}
+                {toTS(seeking ? seekPercent * safeduration / 100 : currentTime)} / {toTS(safeduration)}
+              {:else}
+                -{toTS(safeduration - (seeking ? seekPercent * safeduration / 100 : currentTime))} / {toTS(safeduration)}
+              {/if}
+            </div>
           </div>
         </div>
-      </div>
-      <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} chapters={$chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
-      {#if !$settings.minimalPlayerUI && !SUPPORTS.isAndroid && !SUPPORTS.isIOS}
-        <div class='justify-between gap-2 flex'>
-          <div class='flex text-foreground gap-2'>
-            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)} id='player-play-pause-button' data-up='#player-seekbar'>
-              {#if paused}
+        <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} chapters={$chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
+        {#if !$settings.minimalPlayerUI && !SUPPORTS.isAndroid && !SUPPORTS.isIOS}
+          <div class='justify-between gap-2 flex'>
+            <div class='flex text-foreground gap-2'>
+              <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)} id='player-play-pause-button' data-up='#player-seekbar'>
+                {#if paused}
                 <div transition:scaleBlurFade class='absolute'>
                   <Play size='24px' fill='currentColor' class='p-0.5' />
                 </div>
-              {:else}
+                {:else}
                 <div transition:scaleBlurFade class='absolute'>
                   <Pause size='24px' fill='currentColor' strokeWidth='1' />
                 </div>
-              {/if}
-            </Button>
-            {#if prev}
+                {/if}
+              </Button>
+              {#if prev}
               <Button class='p-3 size-12' variant='ghost' on:click={prev} on:keydown={keywrap(prev)} id='player-prev-button' data-up='#player-seekbar' data-right='#player-next-button, #player-volume-button, #player-options-button'>
                 <SkipBack size='24px' fill='currentColor' strokeWidth='1' />
               </Button>
-            {/if}
-            {#if next}
+              {/if}
+              {#if next}
               <Button class='p-3 size-12' variant='ghost' on:click={next} on:keydown={keywrap(next)} id='player-next-button' data-up='#player-seekbar' data-right='#player-volume-button, #player-options-button'>
                 <SkipForward size='24px' fill='currentColor' strokeWidth='1' />
               </Button>
-            {/if}
-            <Volume bind:volume={$volume} bind:muted />
-          </div>
-          <div class='flex gap-2'>
-            {#if $playbackRate !== 1 && $playbackRate}
+              {/if}
+              <Volume bind:volume={$volume} bind:muted />
+            </div>
+            <div class='flex gap-2'>
+              {#if $playbackRate !== 1 && $playbackRate}
               <Button class='p-3 size-12 hidden sm:flex leading-none text-base font-bold' variant='ghost' on:click={() => openPath(['rate'])} on:keydown={keywrap(() => openPath(['rate']))} data-up='#player-seekbar'>
                 x{$playbackRate?.toFixed(1)}
               </Button>
-            {/if}
-            <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
-            {#if subtitles}
+              {/if}
+              <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
+              {#if subtitles}
               <Button class='p-3 size-12' variant='ghost' on:click={() => openPath(['subs'])} on:keydown={keywrap(() => openPath(['subs']))} data-up='#player-seekbar'>
                 <Subtitles size='24px' fill='currentColor' strokeWidth='0' />
               </Button>
-            {/if}
-            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={() => pip.pip()} on:keydown={keywrap(() => pip.pip())} data-up='#player-seekbar'>
-              {#if pictureInPictureElement}
+              {/if}
+              <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={() => pip.pip()} on:keydown={keywrap(() => pip.pip())} data-up='#player-seekbar'>
+                {#if pictureInPictureElement}
                 <div transition:scaleBlurFade class='absolute'>
                   <PictureInPictureExit size='24px' strokeWidth='2' />
                 </div>
-              {:else}
+                {:else}
                 <div transition:scaleBlurFade class='absolute'>
                   <PictureInPictureOff size='24px' strokeWidth='2' />
                 </div>
-              {/if}
-            </Button>
-            {#if $displays.length}
+                {/if}
+              </Button>
+              {#if $displays.length}
               <Button class='p-3 size-12 hidden sm:flex' variant='ghost' on:click={() => openPath(['cast'])} on:keydown={keywrap(() => openPath(['cast']))} data-up='#player-seekbar'>
                 <!-- <Cast size='24px' fill='white' strokeWidth='2' />
-            {:else} -->
+                {:else} -->
                 <Cast size='24px' strokeWidth='2' />
               </Button>
-            {/if}
-            <Button class='p-3 size-12 relative animated-icon shrink-0' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)} data-up='#player-seekbar'>
-              {#if fullscreenElement}
+              {/if}
+              <Button class='p-3 size-12 relative animated-icon shrink-0' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)} data-up='#player-seekbar'>
+                {#if fullscreenElement}
                 <div transition:scaleBlurFade class='absolute'>
                   <Minimize size='24px' class='p-0.5' strokeWidth='2.5' />
                 </div>
-              {:else}
+                {:else}
                 <div transition:scaleBlurFade class='absolute'>
                   <Maximize size='24px' class='p-0.5' strokeWidth='2.5' />
                 </div>
-              {/if}
-            </Button>
+                {/if}
+              </Button>
+            </div>
           </div>
-        </div>
-      {/if}
-    </div>
+        {/if}
+      </div>
+    {/if}
   {:else}
     <div class='absolute w-full left-0 bottom-0 flex justify-center'>
       <Button variant='ghost' class='drop-shadow-[0_0_7px_#000] mb-1 relative' size='icon' on:pointerdown={e => { e.stopPropagation(); playPause() }}>
