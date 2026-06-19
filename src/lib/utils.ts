@@ -21,6 +21,12 @@ export function anitomyscript (input: string[]) {
   return as(fixed)
 }
 
+export function assert (x: unknown): asserts x {
+  if (!x) {
+    throw new Error('Assertion failed.')
+  }
+}
+
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

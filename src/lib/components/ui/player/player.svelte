@@ -27,7 +27,7 @@
   import ProgressButton from '../button/progress-button.svelte'
 
   import Animations, { playAnimation } from './animations.svelte'
-  import { displays } from './castplayer.svelte'
+  import { activeDisplay, displays } from './castplayer.svelte'
   import Chapters, { findChapter, getChapterTitle, type Chapter } from './chapters'
   import DownloadStats from './downloadstats.svelte'
   import EpisodesModal from './episodesmodal.svelte'
@@ -380,6 +380,14 @@
     }
   }
 
+  function cast () {
+    if ($displays[0]?.host === 'PresentationRequest') {
+      $activeDisplay = $displays[0]
+    } else {
+      openPath(['cast'])
+    }
+  }
+
   let stats: {
     fps?: string
     presented?: number
@@ -576,13 +584,13 @@
       type: 'icon',
       desc: 'Toggle Video Cover'
     },
-    // KeyD: {
-    //   fn: () => toggleCast(),
-    //   id: 'cast',
-    //   icon: Cast,
-    //   type: 'icon',
-    //   desc: 'Toggle Cast [broken]'
-    // },
+    KeyD: {
+      fn: () => cast(),
+      id: 'cast',
+      icon: Cast,
+      type: 'icon',
+      desc: 'Cast'
+    },
     KeyC: {
       fn: (e) => cycleSubtitles(e),
       id: 'subtitles',
@@ -996,7 +1004,7 @@
               {/if}
             </Button>
             {#if $displays.length}
-              <Button class='p-3 size-12 hidden sm:flex' variant='ghost' on:click={() => openPath(['cast'])} on:keydown={keywrap(() => openPath(['cast']))} data-up='#player-seekbar'>
+              <Button class='p-3 size-12 hidden sm:flex' variant='ghost' on:click={cast} on:keydown={keywrap(cast)} data-up='#player-seekbar'>
                 <!-- <Cast size='24px' fill='white' strokeWidth='2' />
             {:else} -->
                 <Cast size='24px' strokeWidth='2' />

@@ -1,3 +1,4 @@
+import ChromeCast from './chromecast.ts'
 import SUPPORTS from './settings/supports'
 
 import type { AuthResponse, Native, TorrentInfo } from 'native'
@@ -142,9 +143,9 @@ export default Object.assign<Native, Partial<Native>>({
   downloadProgress: async () => undefined,
   updateProgress: async () => undefined,
   createNZB: async () => undefined,
-  getDisplays: async (cb) => cb([{ friendlyName: 'Display 1', host: 'display1' }]),
-  castPlay: async () => undefined,
-  castClose: async () => undefined,
+  getDisplays: ChromeCast.getDisplays,
+  castPlay: ChromeCast.castPlay,
+  castClose: ChromeCast.castClose,
   enableCORS: async () => undefined,
   torrentInfo: async (): Promise<TorrentInfo> => ({
     name: '',

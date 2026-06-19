@@ -11,7 +11,9 @@ export default tseslint.config(
     ..._globals.serviceworker,
     AudioWorkletProcessor: false,
     sampleRate: false,
-    registerProcessor: false
+    registerProcessor: false,
+    PresentationConnectionEventMap: false,
+    PresentationRequestEventMap: false
   }),
   {
     languageOptions: {
