@@ -178,7 +178,7 @@
     return paused ? Promise.allSettled([video.play(), pip.element.value?.play()]) : [video.pause(), pip.element.value?.pause()]
   }
   function mobilePlayPause () {
-    if (!SUPPORTS.isMobile || !immersed) return playPause()
+    if (!SUPPORTS.isMobile) return playPause()
     return resetMove(2000)
   }
   async function fullscreen () {
