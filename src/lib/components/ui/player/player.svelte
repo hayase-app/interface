@@ -177,8 +177,12 @@
     playAnimation(paused ? 'play' : 'pause')
     return paused ? Promise.allSettled([video.play(), pip.element.value?.play()]) : [video.pause(), pip.element.value?.pause()]
   }
-  function fullscreen () {
-    return fullscreenElement ? document.exitFullscreen() : document.getElementById('episodeListTarget')!.requestFullscreen({ navigationUI: 'hide' })
+  async function fullscreen () {
+    try {
+      return fullscreenElement ? await document.exitFullscreen() : await document.getElementById('episodeListTarget')!.requestFullscreen({ navigationUI: 'hide' })
+    } catch (err) {
+      console.error(err)
+    }
   }
   // $: if (fullscreenElement) screen.orientation.lock?.('landscape').catch(() => {})
   $: fullscreenElement ? screen.orientation.lock?.('landscape') : screen.orientation.unlock?.()
