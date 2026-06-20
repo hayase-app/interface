@@ -178,10 +178,14 @@
     return paused ? Promise.allSettled([video.play(), pip.element.value?.play()]) : [video.pause(), pip.element.value?.pause()]
   }
   async function fullscreen () {
+    const target = document.getElementById('episodeListTarget')!
+    if (SUPPORTS.isAndroid) target.classList.remove('custom-fullscreen')
     try {
-      return fullscreenElement ? await document.exitFullscreen() : await document.getElementById('episodeListTarget')!.requestFullscreen({ navigationUI: 'hide' })
+      return fullscreenElement ? await document.exitFullscreen() : await target.requestFullscreen({ navigationUI: 'hide' })
     } catch (err) {
       console.error(err)
+      // hacky workaround for android permission system
+      if (SUPPORTS.isAndroid && !fullscreenElement) target.classList.add('custom-fullscreen')
     }
   }
   // $: if (fullscreenElement) screen.orientation.lock?.('landscape').catch(() => {})
@@ -190,6 +194,7 @@
   // return the promises for cleaner UI transitions while navigating
   onNavigate(({ to, from }) => {
     if (to?.route.id === from?.route.id && to?.route.id === '/app/player') return
+    if (SUPPORTS.isAndroid) document.getElementById('episodeListTarget')!.classList.remove('custom-fullscreen')
     if (to?.route.id === '/app/player') {
       // force fullscreen on mobile
       if (SUPPORTS.isMobile && !SUPPORTS.isIPad) return fullscreen()
