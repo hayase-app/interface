@@ -184,7 +184,8 @@
   $: fullscreenElement ? screen.orientation.lock?.('landscape') : screen.orientation.unlock?.()
 
   // return the promises for cleaner UI transitions while navigating
-  onNavigate(({ to }) => {
+  onNavigate(({ to, from }) => {
+    if (to?.route.id === from?.route.id && to?.route.id === '/app/player') return
     if (to?.route.id === '/app/player') {
       // force fullscreen on mobile
       if (SUPPORTS.isMobile && !SUPPORTS.isIPad) return fullscreen()
