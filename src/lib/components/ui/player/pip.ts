@@ -4,8 +4,9 @@ import { get } from 'svelte/store'
 import type Subtitles from './subtitles'
 import type VideoDeband from 'video-deband'
 
+import { goto } from '$app/navigation'
 import native from '$lib/modules/native'
-import { settings } from '$lib/modules/settings'
+import { settings, SUPPORTS } from '$lib/modules/settings'
 
 export default class PictureInPicture {
   element = writable<HTMLVideoElement | null>(null)
@@ -52,8 +53,11 @@ export default class PictureInPicture {
   async _on () {
     if (this.element.value) return
     if (!this.video) return
-    if (!this.subtitles?.jassub) {
-      if (!this.deband) return await this.video.requestPictureInPicture()
+    if (!this.subtitles?.jassub || SUPPORTS.isMobile) {
+      if (!this.deband || SUPPORTS.isMobile) {
+        goto('/#/app/player')
+        return await this.video.requestPictureInPicture()
+      }
       return await this._attachListeners(await this.deband.getVideo()).requestPictureInPicture()
     }
 

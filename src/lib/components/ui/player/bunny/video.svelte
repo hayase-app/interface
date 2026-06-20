@@ -19,6 +19,7 @@
   import audioWorkletUrl from './audioWorklet.ts?worker&url'
 
   import type { Track } from '../../../../../app'
+  import type PictureInPicture from '../pip'
   import type { MediaInfo } from '../util'
   import type { TorrentFile } from 'native'
   import type { SvelteMediaTimeRange } from 'svelte/elements'
@@ -117,6 +118,7 @@
   export let canvasSource: CanvasImageSource
   export let current: MediaInfo
   export let otherFiles: TorrentFile[] = []
+  export let pip: PictureInPicture
 
   $: ended = duration > 0 && currentTime >= duration
 
@@ -185,13 +187,23 @@
     dummy.width = 1
     dummy.height = 1
     dummy.getContext('2d')!.fillRect(0, 0, 1, 1)
-    video.srcObject = dummy.captureStream(1)
+    const stream = dummy.captureStream(1)
+    const ctx = new AudioContext()
+    const dst = ctx.createMediaStreamDestination()
+    const osc = ctx.createOscillator()
+    osc.frequency.value = 0
+    osc.connect(dst)
+    osc.start()
+    const track = dst.stream.getAudioTracks()[0]
+    if (track) stream.addTrack(track)
+    video.srcObject = stream
     video.play()
     video.volume = 0.001
-
+    pip._setElements(video)
     return {
       destroy () {
         video.srcObject = null
+        ctx.close()
       }
     }
   }

@@ -808,6 +808,7 @@
         {fitWidth}
         {holdToFF}
         {otherFiles}
+        {pip}
         current={mediaInfo}
         bind:this={video}
         bind:canvasSource
