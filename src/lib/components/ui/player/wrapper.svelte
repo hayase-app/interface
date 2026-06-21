@@ -72,7 +72,7 @@
     $bottom = istop ? '-100vb' : '0px'
     $right = isleft ? '-100vi' : '100%'
     dragging = false
-    if (pointerId && wrapper.hasPointerCapture(pointerId)) wrapper.releasePointerCapture(pointerId)
+    if (pointerId) wrapper.releasePointerCapture(pointerId)
   }
 </script>
 
