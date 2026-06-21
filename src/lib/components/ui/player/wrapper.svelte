@@ -72,14 +72,14 @@
     $bottom = istop ? '-100vb' : '0px'
     $right = isleft ? '-100vi' : '100%'
     dragging = false
-    if (pointerId) wrapper.releasePointerCapture(pointerId)
+    if (pointerId && wrapper.hasPointerCapture(pointerId)) wrapper.releasePointerCapture(pointerId)
   }
 </script>
 
 <div class={cn('size-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-pointer touch-none')}
   bind:this={wrapper}
   on:pointerdown={startDragging}
-  on:pointerup|self={endDragging}
+  on:pointerup={endDragging}
   on:pointermove|self={calculatePosition}
   on:pointerleave|self={endHover}
   on:pointercancel|self={endHover}>
