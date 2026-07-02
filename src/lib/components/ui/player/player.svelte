@@ -179,7 +179,7 @@
   }
   function mobilePlayPause () {
     if (!SUPPORTS.isMobile) return playPause()
-    return resetMove(2000)
+    return resetMove(immersed ? 2000 : 0)
   }
   async function fullscreen () {
     const target = document.getElementById('episodeListTarget')!
