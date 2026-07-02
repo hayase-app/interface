@@ -78,7 +78,7 @@ const adapterWithFontPreload = (options = {}) => {
 
         if (workerUrls.length === 0) return
 
-        swCode = swCode.replace('JASSUB-WORKER-URLS', workerUrls.join('", "'))
+        swCode = swCode.replace("'JASSUB-WORKER-URLS'", `"${workerUrls.join('", "')}"`)
         await writeFile(swPath, swCode, 'utf-8')
         console.log('Updated service worker with JASSUB worker URLs:', workerUrls)
       } catch (error) {
