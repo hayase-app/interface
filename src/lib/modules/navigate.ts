@@ -383,7 +383,7 @@ export function customDoubleClick (node: HTMLElement, { double, single = _ => {}
   let _condition = condition
   let dblTimer: ReturnType<typeof setTimeout> | null = null
 
-  node.addEventListener('pointerdown', e => {
+  node.addEventListener('click', e => {
     if (!_condition || e.button !== 0) return
     if (dblTimer) {
       clearTimeout(dblTimer)
