@@ -18,7 +18,7 @@
   import SkipForward from 'lucide-svelte/icons/skip-forward'
   import Volume1 from 'lucide-svelte/icons/volume-1'
   import VolumeX from 'lucide-svelte/icons/volume-x'
-  import { onDestroy } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { fade } from 'svelte/transition'
   import { persisted } from 'svelte-persisted-store'
   import { toast } from 'svelte-sonner'
@@ -208,7 +208,9 @@
     }
   })
 
-  if (SUPPORTS.isMobile && !SUPPORTS.isIPad && !fullscreenElement) fullscreen()
+  onMount(() => {
+    if (SUPPORTS.isMobile && !SUPPORTS.isIPad && !fullscreenElement && !isMiniplayer) fullscreen()
+  })
 
   // exiting fullscreen on mobile navigates back since its a "back" gesture
   function checkMobileFullscreen () {
