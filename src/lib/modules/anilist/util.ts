@@ -175,3 +175,6 @@ export function getTextColorForRating (rating: number) {
   if (rating >= 65) return 'text-orange-400'
   return 'text-red-500'
 }
+
+// for some reason diacritics started breaking AL search, probs all the bot attacks
+export const removeDiacritics = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')

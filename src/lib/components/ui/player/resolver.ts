@@ -5,7 +5,7 @@ import type { AnitomyResult } from 'anitomyscript'
 import type { ResultOf } from 'gql.tada'
 import type { TorrentFile } from 'native'
 
-import { client, episodes, type Media } from '$lib/modules/anilist'
+import { client, episodes, removeDiacritics, type Media } from '$lib/modules/anilist'
 import { anitomyscript, videoRx } from '$lib/utils'
 
 export type ResolvedFile = TorrentFile & {metadata: { episode: string | number | undefined, parseObject: AnitomyResult, media: Media, failed: boolean }}
@@ -160,14 +160,14 @@ const AnimeResolver = new class AnimeResolver {
   animeNameCache: Record<string, number> = {}
 
   getCacheKeyForTitle (obj: AnitomyResult): string {
-    let key = obj.anime_title[0] ?? ''
+    let key = removeDiacritics(obj.anime_title[0] ?? '')
     if (obj.anime_year.length) key += obj.anime_year[0]
     if (obj.anime_season.length) key += `S${obj.anime_season[0]}`
     return key
   }
 
   alternativeTitles (obj: AnitomyResult): string[] {
-    const title = obj.anime_title[0] ?? ''
+    const title = removeDiacritics(obj.anime_title[0] ?? '')
     const titles = new Set<string>()
 
     let modified = title
@@ -223,8 +223,7 @@ const AnimeResolver = new class AnimeResolver {
     const titleObjects = parseObjects.map(obj => {
       const key = this.getCacheKeyForTitle(obj)
       const titleObjects = this.alternativeTitles(obj).map(title => ({ title, year: obj.anime_year[0], key, isAdult: false }))
-      // @ts-expect-error cba fixing this for now, but this is correct
-      titleObjects.push({ ...titleObjects.at(-1), isAdult: true })
+      titleObjects.push({ ...titleObjects.at(-1)!, isAdult: true })
       return titleObjects
     }).flat()
 

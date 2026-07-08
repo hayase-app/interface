@@ -7,7 +7,7 @@ import { nsfw } from '../settings/settings'
 
 import { AnimePage, Comments, DeleteEntry, DeleteThreadComment, Entry, Following, FollowingMany, type FullMedia, type FullMediaList, IDMedia, IDTitle, RecrusiveRelations, SaveThreadComment, Schedule, Search, Threads, ToggleFavourite, ToggleLike, UpdateUser, UserLists } from './queries'
 import urqlClient from './urql-client'
-import { currentSeason, currentYear, lastSeason, lastYear, nextSeason, nextYear } from './util'
+import { currentSeason, currentYear, lastSeason, lastYear, nextSeason, nextYear, removeDiacritics } from './util'
 
 import type { Media, RelationTreeMedia } from './types'
 import type { Edge, Node } from '@xyflow/svelte'
@@ -100,6 +100,7 @@ class AnilistClient {
   })
 
   search (variables: VariablesOf<typeof Search>, pause?: boolean) {
+    if (variables.search) variables.search = removeDiacritics(variables.search)
     return queryStore({ client: this.client, query: Search, variables: { ...variables, nsfw: get(nsfw) }, pause })
   }
 
