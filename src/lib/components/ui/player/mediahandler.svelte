@@ -30,7 +30,7 @@
       media: file.metadata.media,
       session: {
         title: title(file.metadata.media),
-        description: `Episode ${file.metadata.episode} / ${episodes(file.metadata.media) ?? '?'}`,
+        description: `Episode ${file.metadata.episode} / ${episodes(file.metadata.media) || '?'}`,
         image: cover(file.metadata.media) ?? ''
       }
     }
@@ -47,7 +47,7 @@
   })
 
   function hasNext (file: MediaInfo) {
-    return Number(file.episode) < (episodes(file.media) ?? 1)
+    return Number(file.episode) < (episodes(file.media) || 1)
   }
   function hasPrev (file: MediaInfo) {
     return Number(file.episode) > 1
@@ -58,7 +58,7 @@
       while (fillerEpisodes[current.media.id]?.includes(episode)) {
         episode++
       }
-      episode = Math.min(episode, episodes(current.media) ?? 1)
+      episode = Math.min(episode, episodes(current.media) || 1)
     }
     playEpisode(current.media, episode)
   }

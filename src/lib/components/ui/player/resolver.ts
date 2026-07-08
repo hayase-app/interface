@@ -349,7 +349,7 @@ const AnimeResolver = new class AnimeResolver {
 
     let { media, episode = 1, increment, offset = 0, rootMedia = opts.media, force } = opts
 
-    const rootHighest = episodes(rootMedia) ?? 1
+    const rootHighest = episodes(rootMedia) || 1
 
     const prequel = !increment && this.findEdge(media, 'PREQUEL')?.node
 
@@ -363,7 +363,7 @@ const AnimeResolver = new class AnimeResolver {
     }
     media = await this.getAnimeById(edge.id)
 
-    const highest = episodes(media) ?? 1
+    const highest = episodes(media) || 1
 
     const diff = episode - (highest + offset)
     offset += increment ? rootHighest : highest

@@ -26,7 +26,7 @@
   export let eps: EpisodesResponse | null
   export let media: Media
 
-  $: episodeCount = _episodes(media) || eps?.episodeCount || 0
+  $: episodeCount = _episodes(media, eps)
 
   $: episodeList = media && makeEpisodeList(media, eps)
 

@@ -95,7 +95,7 @@ export function episodeByAirDate (alDate: Date | undefined, episodes: Map<string
 }
 
 export function makeEpisodeList (media: Media, episodesRes?: EpisodesResponse | null) {
-  const count = episodes(media) || episodesRes?.episodeCount || 0
+  const count = episodes(media, episodesRes)
   const alSchedule: Record<number, Date | undefined> = {}
 
   for (const { a: airingAt, e: episode } of dedupeAiring(media)) {

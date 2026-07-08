@@ -110,13 +110,14 @@ export function format (media: Pick<Media, 'format'>): string {
   return 'N/A'
 }
 
-export function episodes (media: Pick<Media, 'aired' | 'notaired' | 'episodes' | 'id'>): number {
+export function episodes (media: Pick<Media, 'aired' | 'notaired' | 'episodes' | 'id'>, eps?: { episodeCount?: number | null } | null): number {
   if (media.episodes) return media.episodes
 
-  const upcoming = media.aired?.n?.[media.aired.n.length - 1]?.e ?? 0
-  const past = media.notaired?.n?.[media.notaired.n.length - 1]?.e ?? 0
+  const upcoming = media.aired?.n?.at(-1)?.e ?? 0
+  const past = media.notaired?.n?.at(-1)?.e ?? 0
+  const mappings = eps?.episodeCount ?? 0
 
-  return Math.max(upcoming, past)
+  return Math.max(upcoming, past, mappings)
 }
 
 export function season (media: Pick<Media, 'season' | 'seasonYear' | 'startDate'>) {

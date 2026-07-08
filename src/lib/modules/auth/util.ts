@@ -32,9 +32,9 @@ export function entry (media: { id: number }) {
   return derived(authAggregator.mediaListEntry(media.id), $e => $e)
 }
 
-export function of (media: Pick<Media, 'aired' | 'notaired' | 'episodes' | 'id'>) {
+export function of (media: Pick<Media, 'aired' | 'notaired' | 'episodes' | 'id'>, eps?: { episodeCount?: number | null } | null) {
   return derived(progress(media), $prog => {
-    const count = episodes(media)
+    const count = episodes(media, eps ?? { episodeCount: $prog })
     if (count === 1 || !count) return
 
     if (!$prog || $prog === count) return `${count} Episodes`

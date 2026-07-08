@@ -32,10 +32,11 @@
   $: anime = data.anime
   $: info = data.info
   $: media = $info.data?.Media ?? $anime.Media!
+  $: eps = data.eps
 
   $: trailerId = media.trailer?.id
   $: trailerMinutes = minutes(trailerId)
-  $: count = episodes(media)
+  $: count = episodes(media, eps)
   $: trailerIsMedia = (count === 1 || !count) && media.duration && $trailerMinutes === media.duration
   let open = false
 
@@ -65,7 +66,7 @@
   $: ({ r, g, b } = colors(media.coverImage?.color ?? undefined))
 
   $: listStore = list(media)
-  $: ofStore = of(media)
+  $: ofStore = of(media, eps)
   $: spoiler = $settings.hideSpoilers && ['CURRENT', 'PLANNING'].includes($listStore!)
   $: underPoweredSpoiler = spoiler && SUPPORTS.isUnderPowered
 
