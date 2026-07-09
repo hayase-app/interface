@@ -22,24 +22,20 @@
   $: messages = $w2globby!.messages
 
   let message = ''
-  let rows = 1
 
   function sendMessage () {
-    $w2globby?.message(message.trim())
-    message = ''
-    rows = 1
+    const trim = message.trim()
+    if (trim) {
+      $w2globby?.message(trim)
+      message = ''
+    }
   }
 
   async function checkInput (e: KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey && message.trim()) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       sendMessage()
       e.preventDefault()
-    } else {
-      rows = message.split('\n').length || 1
     }
-  }
-  function updateRows () {
-    rows = message.split('\n').length || 1
   }
 
   $: processedUsers = Object.values($users).map(({ user }) => user)
@@ -83,11 +79,10 @@
         </TransitionButton>
         <Textarea
           bind:value={message}
-          class='h-auto px-3 w-full resize-none min-h-0 border-0 select:bg-accent select:text-accent-foreground'
-          {rows}
+          class='h-auto px-3 w-full flex-grow-1 resize-none min-h-0 border-0 select:bg-accent select:text-accent-foreground [field-sizing:content]'
           autocomplete='off'
           maxlength={256}
-          placeholder='Message' on:keydown={checkInput} on:input={updateRows} />
+          placeholder='Message' on:keydown={checkInput} />
         <Button on:click={sendMessage} size='icon' class='border-0 shrink-0' variant='outline'>
           <SendHorizontal size={18} />
         </Button>

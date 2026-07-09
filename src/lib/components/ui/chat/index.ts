@@ -11,6 +11,7 @@ export interface ChatMessage {
 }
 
 export { default as ChatProfile } from './ChatProfile.svelte'
+export { default as W2GChatPanel } from './W2GChatPanel.svelte'
 export { default as UserList } from './UserList.svelte'
 export { default as Messages } from './Messages.svelte'
 export { default as MessageToast } from './MessageToast.svelte'

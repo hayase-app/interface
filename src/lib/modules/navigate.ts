@@ -311,9 +311,7 @@ function focusElement (element?: HTMLElement | null) {
   return true
 }
 
-// hacky, but make sure keybinds system loads first so it can prevent this from running
-
-document.addEventListener('keydown', navigate)
+window.addEventListener('keydown', navigate)
 
 export function navigate (e: KeyboardEvent) {
   if (e.key in DirectionKeyMap) {

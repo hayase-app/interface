@@ -53,8 +53,9 @@
   import Play from '$lib/components/icons/Play.svelte'
   import Subtitles from '$lib/components/icons/Subtitles.svelte'
   import Volume2 from '$lib/components/icons/Volume2.svelte'
-  import { Maximize, Minimize } from '$lib/components/icons/animated'
+  import { Maximize, Messages, Minimize } from '$lib/components/icons/animated'
   import { Button, iconSizes } from '$lib/components/ui/button'
+  import { W2GChatPanel } from '$lib/components/ui/chat'
   import { authAggregator } from '$lib/modules/auth'
   import { isPlaying } from '$lib/modules/idle'
   import native from '$lib/modules/native'
@@ -81,6 +82,7 @@
   let currentTime = 0
   let seekPercent = 0
   let duration = 1
+  let chatOpen = false
   const playbackRate = persisted('playbackRate', 1, {
     serializer: {
       stringify: (value) => value.toString(),
@@ -949,6 +951,11 @@
               </Button>
             {/if}
             <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
+            {#if $w2globby}
+              <Button class='p-3 size-12 relative shrink-0 animated-icon' variant='ghost' on:click={() => { chatOpen = !chatOpen }} on:keydown={keywrap(() => { chatOpen = !chatOpen })} data-up='#player-seekbar'>
+                <Messages size={24} />
+              </Button>
+            {/if}
             {#if subtitles}
               <Button class='p-3 size-12' variant='ghost' on:click={() => openPath(['subs'])} on:keydown={keywrap(() => openPath(['subs']))} data-up='#player-seekbar'>
                 <Subtitles size='24px' fill='currentColor' strokeWidth='0' />
@@ -1003,6 +1010,9 @@
     </div>
   {/if}
 </div>
+{#if $w2globby && !isMiniplayer && chatOpen}
+  <W2GChatPanel />
+{/if}
 
 <style>
   .fitWidth :global(.deband-canvas) {

@@ -23,7 +23,7 @@
   })
 
   document.addEventListener('keydown', e => runBind(e, e.code as KeyCode), {
-    capture: true
+    capture: false
   })
 
   async function runBind (e: MouseEvent | KeyboardEvent, code: KeyCode) {
