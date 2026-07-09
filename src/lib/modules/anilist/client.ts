@@ -7,7 +7,7 @@ import { nsfw } from '../settings/settings'
 
 import { AnimePage, Comments, DeleteEntry, DeleteThreadComment, Entry, Following, FollowingMany, type FullMedia, type FullMediaList, IDMedia, IDTitle, RecrusiveRelations, SaveThreadComment, Schedule, Search, Threads, ToggleFavourite, ToggleLike, UpdateUser, UserLists } from './queries'
 import urqlClient from './urql-client'
-import { currentSeason, currentYear, lastSeason, lastYear, nextSeason, nextYear, removeDiacritics } from './util'
+import { seasonsForDate, removeDiacritics } from './util'
 
 import type { Media, RelationTreeMedia } from './types'
 import type { Edge, Node } from '@xyflow/svelte'
@@ -219,8 +219,9 @@ class AnilistClient {
     return result
   }
 
-  schedule (ids?: number[], onList: boolean | null = true) {
-    return queryStore({ client: this.client, query: Schedule, variables: { ids, onList, seasonCurrent: currentSeason, seasonYearCurrent: currentYear, seasonLast: lastSeason, seasonYearLast: lastYear, seasonNext: nextSeason, seasonYearNext: nextYear, formatNot: onList ? null : 'TV_SHORT', nsfw: get(nsfw) } })
+  schedule (ids?: number[], onList: boolean | null = true, date = new Date()) {
+    const { current, year, last, lastYear, next, nextYear } = seasonsForDate(date)
+    return queryStore({ client: this.client, query: Schedule, variables: { ids, onList, seasonCurrent: current, seasonYearCurrent: year, seasonLast: last, seasonYearLast: lastYear, seasonNext: next, seasonYearNext: nextYear, formatNot: onList ? null : 'TV_SHORT', nsfw: get(nsfw) } })
   }
 
   async toggleFav (id: number) {

@@ -112,13 +112,13 @@ export default new class AuthAggregator {
 
   // QUERIES/MUTATIONS
 
-  schedule (onList: boolean | null = true) {
-    if (this.anilist()) return client.schedule(undefined, onList)
-    if (this.kitsu()) return kitsu.schedule(onList)
-    if (this.mal()) return mal.schedule(onList)
-    if (this.simkl()) return simkl.schedule(onList)
+  schedule (onList: boolean | null = true, date: Date) {
+    if (this.anilist()) return client.schedule(undefined, onList, date)
+    if (this.kitsu()) return kitsu.schedule(onList, date)
+    if (this.mal()) return mal.schedule(onList, date)
+    if (this.simkl()) return simkl.schedule(onList, date)
 
-    return local.schedule(onList)
+    return local.schedule(onList, date)
   }
 
   toggleFav (id: number) {

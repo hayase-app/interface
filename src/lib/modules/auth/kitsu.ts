@@ -428,10 +428,10 @@ export default new class KitsuSync {
 
   // QUERIES/MUTATIONS
 
-  schedule (onList: boolean | null = true) {
+  schedule (onList: boolean | null = true, date: Date) {
     const ids = [...this.userlist.value.keys()]
     debug('Kitsu schedule called with onList:', onList, 'and ids:', ids)
-    return client.schedule(onList && ids.length ? ids : undefined)
+    return client.schedule(onList && ids.length ? ids : undefined, undefined, date)
   }
 
   async toggleFav (id: number) {

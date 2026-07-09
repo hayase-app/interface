@@ -24,9 +24,11 @@
 
   const onList = persisted('schedule-on-list', true)
 
-  $: query = authAggregator.schedule($onList || null)
-
   let now = new Date()
+
+  $: queryDate = +new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1)
+  $: query = authAggregator.schedule($onList || null, new Date(queryDate))
+
   $: monthName = now.toLocaleString('en-US', { month: 'long' })
 
   $: firstDay = startOfWeek(startOfMonth(now), { weekStartsOn: 1 })

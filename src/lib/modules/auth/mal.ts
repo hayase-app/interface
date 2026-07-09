@@ -448,10 +448,10 @@ export default new class MALSync {
 
   // QUERIES/MUTATIONS
 
-  schedule (onList: boolean | null = true) {
+  schedule (onList: boolean | null = true, date: Date) {
     const ids = [...this.userlist.value.keys()]
     debug('Fetching MAL schedule with IDs:', ids)
-    return client.schedule(onList && ids.length ? ids : undefined)
+    return client.schedule(onList && ids.length ? ids : undefined, undefined, date)
   }
 
   async toggleFav (id: number) {

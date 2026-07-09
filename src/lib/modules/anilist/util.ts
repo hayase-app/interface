@@ -152,6 +152,17 @@ function getSeasonForMonth (month: number) {
   return ['WINTER', 'SPRING', 'SUMMER', 'FALL'].at(Math.floor((month / 12) * 4) % 4) as 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
 }
 
+export function seasonsForDate (date: Date) {
+  const month = date.getMonth()
+  const year = date.getFullYear()
+  const current = getSeasonForMonth(month)
+  const next = getSeasonForMonth(month + 3)
+  const nextYear = year + (next === 'WINTER' ? 1 : 0)
+  const last = getSeasonForMonth(month - 3)
+  const lastYear = year - (last === 'FALL' ? 1 : 0)
+  return { current, year, next, nextYear, last, lastYear }
+}
+
 const date = new Date()
 const month = date.getMonth()
 export const currentSeason = getSeasonForMonth(month)

@@ -74,9 +74,9 @@ export default new class LocalSync {
     }
   }
 
-  schedule (onList: boolean | null = true): ReturnType<typeof client.schedule> {
+  schedule (onList: boolean | null = true, date: Date) {
     const ids = [...this.entries.value.values().map(({ mediaListEntry }) => mediaListEntry?.id).filter(e => e != null)]
-    return client.schedule(onList && ids.length ? ids : undefined)
+    return client.schedule(onList && ids.length ? ids : undefined, undefined, date)
   }
 
   async toggleFav (id: number) {

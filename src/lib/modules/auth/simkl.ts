@@ -350,10 +350,10 @@ export default new class SimklSync {
 
   // QUERIES/MUTATIONS
 
-  schedule (onList: boolean | null = true) {
+  schedule (onList: boolean | null = true, date: Date) {
     const ids = [...this.userlist.value.keys()]
 
-    return client.schedule(onList && ids.length ? ids : undefined)
+    return client.schedule(onList && ids.length ? ids : undefined, undefined, date)
   }
 
   async _getSimklId (alId: number) {
