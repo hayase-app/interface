@@ -121,7 +121,7 @@ export const server = new class ServerClient {
     this.downloaded.value.add(infoHash)
 
     this._addNZBs(infoHash, media, episode, result.files.map(({ name }) => name))
-    // this._addHTTPWebSeeds(infoHash, media, episode, result.files.map(({ name }) => name))
+    this._addHTTPWebSeeds(infoHash, media, episode, result.files.map(({ name }) => name))
 
     native.checkAvailableSpace().then(space => {
       if (space < 1e9) {
