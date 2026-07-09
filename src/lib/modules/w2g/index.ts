@@ -53,7 +53,7 @@ export class W2GClient extends EventEmitter<{index: [number], player: [PlayerSta
 
   messages = writable<ChatMessage[]>([])
 
-  self: ChatUser = client.client.viewer.value?.viewer ?? { id: generateRandomHexCode(16), avatar: null, name: 'Guest' }
+  self: ChatUser = { guest: false, ...(client.client.viewer.value?.viewer ?? { id: generateRandomHexCode(16), avatar: null, name: 'Guest', guest: true }) }
   peers = writable<PeerList>({ [this.self.id]: { user: this.self } })
 
   reannounceInterval = setInterval(() => {

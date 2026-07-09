@@ -61,7 +61,7 @@ type IRCEvents = {
 }
 
 function ircUserToChatUser ({ id, pfpid, type, nick, prefix, ext }: IRCChatUser): ChatUser {
-  return { id, avatar: { large: getPFP({ id, pfpid, type, prefix, ext }) }, name: nick }
+  return { id, avatar: { large: getPFP({ id, pfpid, type, prefix, ext }) }, name: nick, guest: type === 'guest' }
 }
 
 function ircIdentToChatUser (user: IRCUser): ChatUser {
@@ -69,7 +69,7 @@ function ircIdentToChatUser (user: IRCUser): ChatUser {
   const [type, id] = user.ident.split('_')
   const nick = rest.join('_') || user.nick
 
-  if (type !== 'al' || pfp == null) return { id: id ?? '0', avatar: { large: 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png' }, name: nick }
+  if (type !== 'al' || pfp == null) return { id: id ?? '0', avatar: { large: 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png' }, name: nick, guest: true }
 
   const extLetter = pfp[0] ?? ''
   const prefix = pfp[1] ?? ''

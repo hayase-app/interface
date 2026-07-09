@@ -1,7 +1,7 @@
 import type { Viewer } from '$lib/modules/anilist/queries'
 import type { ResultOf } from 'gql.tada'
 
-export type ChatUser = Omit<NonNullable<ResultOf<typeof Viewer>['Viewer']>, 'id' | 'bannerImage' | 'about' | 'isFollowing' | 'isFollower' | 'donatorBadge' | 'options' | 'createdAt' | 'statistics' | 'mediaListOptions'> & { id: string | number }
+export type ChatUser = Omit<NonNullable<ResultOf<typeof Viewer>['Viewer']>, 'id' | 'bannerImage' | 'about' | 'isFollowing' | 'isFollower' | 'donatorBadge' | 'options' | 'createdAt' | 'statistics' | 'mediaListOptions'> & { id: string | number, guest: boolean }
 
 export interface ChatMessage {
   message: string
@@ -10,6 +10,7 @@ export interface ChatMessage {
   date: Date
 }
 
+export { default as ChatProfile } from './ChatProfile.svelte'
 export { default as UserList } from './UserList.svelte'
 export { default as Messages } from './Messages.svelte'
 export { default as MessageToast } from './MessageToast.svelte'

@@ -1,10 +1,7 @@
 <script lang='ts'>
-  import ExternalLink from 'lucide-svelte/icons/external-link'
+  import ChatProfile from './ChatProfile.svelte'
 
   import type { ChatUser } from '.'
-
-  import native from '$lib/modules/native'
-  import { click } from '$lib/modules/navigate'
 
   export let users: ChatUser[]
 
@@ -15,13 +12,10 @@
   <div>
     {#each processed as [key, user] (key)}
       <div class='flex items-center pb-2'>
-        <img src={user.avatar?.large ?? 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png'} alt='ProfilePicture' class='w-10 h-10 rounded-full p-1 mt-auto' loading='lazy' decoding='async' />
+        <ChatProfile {user} />
         <div class='text-md pl-2'>
           {user.name}
         </div>
-        <span class='cursor-pointer flex items-center ml-auto text-blue-600' use:click={() => native.openURL('https://anilist.co/user/' + user.id)}>
-          <ExternalLink size='18' />
-        </span>
       </div>
     {/each}
   </div>

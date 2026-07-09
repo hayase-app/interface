@@ -224,6 +224,14 @@ export const IDTitle = gql(`
   }
 `)
 
+export const User = gql(`
+  query User($id: Int!) {
+    User(id: $id) {
+      ...UserFrag
+    }
+  }
+`, [UserFrag])
+
 export const Viewer = gql(`
   query Viewer {
     Viewer {

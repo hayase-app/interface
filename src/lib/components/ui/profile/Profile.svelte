@@ -10,13 +10,15 @@
   import { cn, since } from '$lib/utils'
 
   type $$Props = HTMLAttributes<HTMLImageElement> & {
-    user: ResultOf<typeof UserFrag>
+    user: Omit<Partial<ResultOf<typeof UserFrag>>, 'id'> & { id: string | number }
+    open?: boolean
   }
 
   let className: $$Props['class'] = 'inline-block ring-4 ring-background size-8 bg-background group-focus-visible/profile:ring-foreground !border-0'
   export { className as class }
 
-  export let user: ResultOf<typeof UserFrag>
+  export let user: Omit<Partial<ResultOf<typeof UserFrag>>, 'id'> & { id: string | number }
+  export let open: $$Props['open'] = undefined
 
   $: name = user.name
   $: avatar = user.avatar?.large ?? ''
@@ -25,7 +27,7 @@
 </script>
 
 <div class='flex'>
-  <Popover.Root disableFocusTrap>
+  <Popover.Root disableFocusTrap bind:open>
     <Popover.Trigger class='flex group/profile'>
       <Avatar.Root class={cn('group-focus-visible/profile:border border-primary', className)}>
         <Avatar.Image src={avatar} alt={name} />
@@ -50,7 +52,7 @@
               {#if user.isFollower}
                 <span class='text-nowrap flex items-center'>Follows you</span>
               {/if}
-              <span class='text-nowrap flex items-center'>Joined {since(new Date((user.createdAt ?? 0) * 1000))}</span>
+              <span class='text-nowrap flex items-center'>Joined {user.createdAt ? since(new Date((user.createdAt) * 1000)) : 'recently'}</span>
             </div>
           </div>
           {#if bubble && bubble !== 'Donator'}
@@ -67,7 +69,7 @@
         <div class='details text-foreground/80 flex text-[11px] px-4'>
           <span class='text-nowrap flex items-center'>{user.statistics?.anime?.count ?? 0} anime</span>
           <span class='text-nowrap flex items-center'>{user.statistics?.anime?.episodesWatched ?? 0} episodes</span>
-          <span class='text-nowrap flex items-center'>{since(new Date(Date.now() - (user.statistics?.anime?.minutesWatched ?? 0) * 60 * 1000)).replace('ago', 'watched')}</span>
+          <span class='text-nowrap flex items-center'>{user.statistics?.anime?.minutesWatched ? since(new Date(Date.now() - user.statistics.anime.minutesWatched * 60 * 1000)).replace('ago', 'watched') : '0 minutes watched'}</span>
         </div>
       </div>
     </Popover.Content>

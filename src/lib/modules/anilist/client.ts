@@ -5,7 +5,7 @@ import { derived, get, writable, type Writable } from 'svelte/store'
 
 import { nsfw } from '../settings/settings'
 
-import { AnimePage, Comments, DeleteEntry, DeleteThreadComment, Entry, Following, FollowingMany, type FullMedia, type FullMediaList, IDMedia, IDTitle, RecrusiveRelations, SaveThreadComment, Schedule, Search, Threads, ToggleFavourite, ToggleLike, UpdateUser, UserLists } from './queries'
+import { AnimePage, Comments, DeleteEntry, DeleteThreadComment, Entry, Following, FollowingMany, type FullMedia, type FullMediaList, IDMedia, IDTitle, RecrusiveRelations, SaveThreadComment, Schedule, Search, Threads, ToggleFavourite, ToggleLike, UpdateUser, User, UserLists } from './queries'
 import urqlClient from './urql-client'
 import { seasonsForDate, removeDiacritics } from './util'
 
@@ -238,6 +238,11 @@ class AnilistClient {
   async entry (variables: VariablesOf<typeof Entry>) {
     debug('entry: updating entry for media', variables)
     return await this.client.mutation(Entry, variables)
+  }
+
+  user (id: number, pause?: boolean) {
+    debug('user: fetching user with ID', id)
+    return queryStore({ client: this.client, query: User, variables: { id }, pause })
   }
 
   async single (id: number, requestPolicy: RequestPolicy = 'cache-first') {

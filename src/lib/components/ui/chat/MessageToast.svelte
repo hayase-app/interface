@@ -1,4 +1,6 @@
 <script lang='ts'>
+  import ChatProfile from './ChatProfile.svelte'
+
   import type { ChatMessage } from '.'
 
   export let msg: ChatMessage
@@ -7,7 +9,7 @@
 </script>
 
 <div class='w-full flex flex-row-reverse'>
-  <img src={user.avatar?.large ?? 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png'} alt='ProfilePicture' class='w-10 h-10 rounded-full p-1 mt-auto' loading='lazy' decoding='async' />
+  <ChatProfile {user} />
   <div class='flex flex-col px-2 items-end flex-auto'>
     <div class='pb-1 flex flex-row items-center px-1'>
       <div class='font-bold text-sm'>

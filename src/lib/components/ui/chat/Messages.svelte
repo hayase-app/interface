@@ -1,4 +1,6 @@
 <script lang='ts'>
+  import ChatProfile from './ChatProfile.svelte'
+
   import type { ChatMessage } from '.'
   import type { Writable } from 'simple-store-svelte'
 
@@ -22,7 +24,7 @@
 {#each groupMessages($messages).toReversed() as { type, user, date, _messages }, i (i)}
   {@const incoming = type === 'incoming'}
   <div class='flex flex-row mt-3' class:flex-row={incoming} class:flex-row-reverse={!incoming}>
-    <img src={user.avatar?.large ?? 'https://s4.anilist.co/file/anilistcdn/user/avatar/medium/default.png'} alt='ProfilePicture' class='w-10 h-10 rounded-full p-1 mt-auto' loading='lazy' decoding='async' />
+    <ChatProfile {user} />
     <div class='flex flex-col px-2 items-start flex-auto' class:items-start={incoming} class:items-end={!incoming}>
       <div class='pb-1 flex flex-row items-center px-1'>
         <div class='font-bold text-sm'>
