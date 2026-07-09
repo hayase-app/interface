@@ -35,6 +35,7 @@
   import Options from './options.svelte'
   import PictureInPicture from './pip'
   import Seekbar from './seekbar.svelte'
+  import StatsForNerds from './statsfornerds.svelte'
   import Subs from './subtitles'
   import Thumbnailer from './thumbnailer'
   import { screenshot, type MediaInfo } from './util'
@@ -408,54 +409,7 @@
     }
   }
 
-  let stats: {
-    fps?: string
-    presented?: number
-    dropped?: number
-    processing?: string
-    viewport?: string
-    resolution?: string
-    buffer?: string
-    speed?: number
-  } | null = null
-  let requestCallback: number | null = null
-  function toggleStats () {
-    if (requestCallback) {
-      stats = null
-      video.cancelVideoFrameCallback(requestCallback)
-      requestCallback = null
-    } else {
-      requestCallback = video.requestVideoFrameCallback((a, b) => {
-        stats = {}
-        handleStats(a, b, b)
-      })
-    }
-  }
-  async function handleStats (now: number, metadata: VideoFrameCallbackMetadata, lastmeta: VideoFrameCallbackMetadata) {
-    if (stats) {
-      const msbf = (metadata.mediaTime - lastmeta.mediaTime) / (metadata.presentedFrames - lastmeta.presentedFrames)
-      const fps = (1 / msbf).toFixed(3)
-      stats = {
-        fps,
-        presented: metadata.presentedFrames,
-        dropped: video.getVideoPlaybackQuality().droppedVideoFrames,
-        processing: metadata.processingDuration + ' ms',
-        viewport: video.clientWidth + 'x' + video.clientHeight,
-        resolution: videoWidth + 'x' + videoHeight,
-        buffer: getBufferHealth(metadata.mediaTime) + ' s',
-        speed: video.playbackRate || 1
-      }
-      setTimeout(() => video.requestVideoFrameCallback((n, m) => handleStats(n, m, metadata)), 200)
-    }
-  }
-  function getBufferHealth (time: number) {
-    for (const buffer of buffered) {
-      if (time < buffer.end && time >= buffer.start) {
-        return (buffer.end - time) | 0
-      }
-    }
-    return 0
-  }
+  let showStats = false
 
   $: seekIndex = Math.max(0, Math.floor(seekPercent * safeduration / 100 / thumbnailer.interval))
 
@@ -532,7 +486,7 @@
       desc: 'Save Screenshot to Clipboard'
     },
     KeyI: {
-      fn: () => toggleStats(),
+      fn: () => { showStats = !showStats },
       icon: List,
       id: 'list',
       type: 'icon',
@@ -902,19 +856,8 @@
           {/if}
         {/await}
       {/if}
-      {#if stats}
-        <div class='absolute top-10 left-10 border-foreground/15 border bg-background/60 pointer-events-auto px-3 py-2 rounded'>
-          <button class='absolute right-3 top-1' type='button' use:click={toggleStats}>×</button>
-          FPS: {stats.fps}<br />
-          Presented frames: {stats.presented}<br />
-          Dropped frames: {stats.dropped}<br />
-          Frame time: {stats.processing}<br />
-          Viewport: {stats.viewport}<br />
-          Resolution: {stats.resolution}<br />
-          Buffer health: {stats.buffer}<br />
-          Playback speed: x{stats.speed?.toFixed(1)}<br />
-          Subtitle delay: {subtitleDelay} sec
-        </div>
+      {#if showStats}
+        <StatsForNerds {subtitleDelay} {currentTime} {safeduration} {readyState} volume={$volume} {video} {buffered} {videoWidth} {videoHeight} close={() => { showStats = false }} />
       {/if}
       {#if $settings.minimalPlayerUI || SUPPORTS.isMobile}
         <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'

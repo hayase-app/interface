@@ -41,7 +41,7 @@ const QUERY_RULES: Record<string, AccuracyRule> = {
   episodeCount: { setTo: 'low', maxAllowed: 'high' }, // this is for verifying if something is a batch
   absoluteEpisodeNumber: { setTo: 'low', maxAllowed: 'medium' }, // likely means some sketchy stuff is happening
   resolution: { setTo: 'low', maxAllowed: 'high' },
-  exclusions: { setTo: 'medium', maxAllowed: 'high' },
+  exclusions: { setTo: 'low', maxAllowed: 'high' },
   titles: { setTo: 'low', maxAllowed: 'medium' }, // string matching, NO!
   media: { setTo: 'low', maxAllowed: 'medium' } // yeah, this should be a red flag
 }
