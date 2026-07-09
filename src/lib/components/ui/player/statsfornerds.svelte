@@ -55,9 +55,7 @@
 
     presented = metadata.presentedFrames
     frameTime = metadata.processingDuration != null
-      ? metadata.processingDuration < 1
-        ? (metadata.processingDuration * 1000).toFixed(2) + ' ms'
-        : metadata.processingDuration.toFixed(2) + ' ms'
+      ? (metadata.processingDuration * 1000).toFixed(2) + ' ms'
       : '-'
 
     const quality = video.getVideoPlaybackQuality()
