@@ -35,8 +35,8 @@ interface AniSkip {
 }
 
 const SKIPPABLE_CHAPTER_RX_MAP = {
-  Opening: /^op$|opening$|^ncop|^opening /mi,
-  Ending: /^ed$|ending$|^nced|^ending /mi,
+  Opening: /^op(?:$|[ :\d])|opening$|^opening[ :\d]|^ncop/mi,
+  Ending: /^ed(?:$|[ :\d])|ending$|^ending[ :\d]|^nced/mi,
   Intro: /^intro$/mi,
   Outro: /^outro$/mi,
   Credits: /^credits$/mi,
