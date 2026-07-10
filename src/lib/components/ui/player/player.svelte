@@ -140,7 +140,7 @@
   const pipElementStore = pip.element
   $: pictureInPictureElement = $pipElementStore
 
-  const thumbnailer = new Thumbnailer(mediaInfo.file.url)
+  const thumbnailer = new Thumbnailer(useMediaBunnyPlayback ? '' : mediaInfo.file.url)
 
   function handleMediaBunnyFallback ({ detail }: CustomEvent<Error>) {
     useMediaBunnyPlayback = false
