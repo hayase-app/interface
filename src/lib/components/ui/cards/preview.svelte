@@ -15,6 +15,9 @@
 
   export let trace: TraceAnime | undefined = undefined
 
+  let className = ''
+  export { className as class }
+
   let hideFrame: boolean | null = null
   function hide (e: CustomEvent<boolean>) {
     hideFrame = e.detail
@@ -25,7 +28,7 @@
   $: spoiler = $settings.hideSpoilers && ['CURRENT', 'PLANNING'].includes($status!)
 </script>
 
-<div class='!absolute w-[17.5rem] h-80 left-1/2 right-1/2 top-0 bottom-0 m-auto bg-muted z-30 rounded cursor-pointer absolute-container'>
+<div class={cn('!absolute w-[17.5rem] h-80 left-1/2 right-1/2 top-0 bottom-0 m-auto bg-muted z-30 rounded cursor-pointer absolute-container', className)}>
   <div class='h-[45%] banner relative bg-background rounded-t'>
     {#if trace}
       {#if !SUPPORTS.isUnderPowered}

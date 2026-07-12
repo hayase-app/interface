@@ -51,7 +51,7 @@
     {#each $query.data.Page.media as media, i (media?.id ?? '#' + i)}
       <div animate:flip={{ duration: 400, easing: quartInOut }}>
         {#if media}
-          <SmallCard {media} />
+          <SmallCard {media} first={i === 0} />
         {/if}
       </div>
     {:else}

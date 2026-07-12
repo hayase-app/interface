@@ -13,6 +13,7 @@
   import { coverMedium, format, title } from '$lib/modules/anilist/util'
   import { list } from '$lib/modules/auth'
   import { hover } from '$lib/modules/navigate'
+  import { cn } from '$lib/utils'
 
   export let media: Media
 
@@ -30,11 +31,12 @@
   }
 
   $: status = list(media)
+  export let first = false
 </script>
 
 <div class='text-foreground cursor-pointer shrink-0 relative pointer-events-auto active:z-[10] focus-visible:z-[10]' use:hover={[onclick, onhover]}>
   {#if !hidden && hoverable}
-    <PreviewCard {media} />
+    <PreviewCard {media} class={cn(first && 'left-36 md:left-1/2')} />
   {/if}
   <div class='item w-[11.5rem] h-[323px] flex flex-col p-4 [content-visibility:auto] [contain-intrinsic-size:auto_9.5rem_auto_291px]'>
     <div class='h-[13.5rem]'>
