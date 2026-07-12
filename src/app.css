@@ -28,13 +28,13 @@
     font-family: "Geist Mono", ui-monospace, SFMono-Regular, Roboto Mono, Menlo, Monaco, Liberation Mono, DejaVu Sans Mono, Courier New, monospace !important;
   }
 
-  .exclude-transition {
+  /* .exclude-transition {
     view-transition-class: disabled;
   }
 
   ::view-transition-group(.disabled) {
     animation-duration: 0s !important;
-  }
+  } */
 
   @supports not (overflow: clip) {
     .overflow-clip {
@@ -541,25 +541,19 @@ details,
   transform: perspective(100vw) translate3d(0, 0, 0vw) rotateY(0deg) rotateX(0deg);
 }*/
 
-::view-transition-old(my-root),
-::view-transition-new(my-root) {
-  animation-duration: 200ms;
-  animation-timing-function: ease-in-out;
+html::view-transition-old(root) {
+  animation-name: fade-out 0.2s ease-in-out forwards;
 }
 
-::view-transition-old(my-root) {
-  animation-name: fade-out;
+html::view-transition-new(root) {
+  animation-name: fade-in 0.2s ease-in-out forwards;
 }
 
-::view-transition-new(my-root) {
-  animation-name: fade-in;
-}
+@media (prefers-reduced-motion: reduce) {
 
-@media (prefers-reduced-motion) {
-
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
+  html::view-transition-group(*),
+  html::view-transition-old(*),
+  html::view-transition-new(*) {
     animation: none !important;
   }
 }
@@ -660,7 +654,7 @@ details,
   }
 }
 
-@keyframes marquee {
+/* @keyframes marquee {
   from {
     transform: translateX(-30%);
   }
@@ -668,7 +662,7 @@ details,
   to {
     transform: translateX(-130%);
   }
-}
+} */
 
 @keyframes bg-grid-animate {
   from {
@@ -680,9 +674,9 @@ details,
   }
 }
 
-.animate-marquee {
+/* .animate-marquee {
   animation: marquee 80s infinite linear;
-}
+} */
 
 .bg-striped {
   background: repeating-linear-gradient(45deg,
