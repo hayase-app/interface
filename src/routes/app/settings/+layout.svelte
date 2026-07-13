@@ -66,7 +66,7 @@
       <div class='py-4 px-6 rounded bg-fuchsia-400 flex flex-col gap-1 sm:gap-2 text-base bg-center bg-cover mb-4 text-secondary' style:background-image='url("/flowers.png")'>
         <div class='font-bold'>Support the Project</div>
         <div class='text-xs'>Please consider supporting the development of Hayase by donating!</div>
-        <Button on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} size='sm' class='font-bold gap-2 max-w-40 lg:max-w-full w-full leading-none shaow-none'>
+        <Button on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} size='sm' class='contain-strict font-bold gap-2 max-w-40 lg:max-w-full w-full leading-none shaow-none'>
           <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_1rem_#fa68b6] text-[#fa68b6]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
           Donate
         </Button>

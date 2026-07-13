@@ -7,7 +7,7 @@
   interpolate-size: allow-keywords;
   transition-behavior: allow-discrete;
   /* https://www.bram.us/2025/01/29/view-transitions-page-interactivity/ */
-  view-transition-name: none !important;
+  /* view-transition-name: none !important; */
 }
 
 @layer base {
@@ -548,11 +548,11 @@ details,
 }
 
 :root::view-transition-old(root) {
-  animation-name: fade-out 0.2s ease-in-out forwards;
+  animation-name: fade-out 0.2 ease-in-out forwards;
 }
 
 :root::view-transition-new(root) {
-  animation-name: fade-in 0.2s ease-in-out forwards;
+  animation-name: fade-in 0.2 ease-in-out forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

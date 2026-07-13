@@ -136,7 +136,7 @@
     </Dialog.Description>
   </Dialog.Content>
 </Dialog.Root> -->
-<Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' {size} on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='contain-paint px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
+<Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' {size} on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='contain-strict px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
   <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_0.55rem_#fa68b6aa]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
 </Button>
 <SidebarButton href='/#/app/settings' class='animated-icon !transition-none' {size}>
