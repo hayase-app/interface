@@ -172,6 +172,7 @@
     clearTimeout(pointerMoveTimeout)
     pointerMoving = true
     pointerMoveTimeout = setTimeout(() => {
+      pointerMoveTimeout = 0
       pointerMoving = false
     }, time)
   }
@@ -867,13 +868,13 @@
       {/if}
       {#if $settings.minimalPlayerUI || SUPPORTS.isMobile}
         <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'
-          class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity delay-150 desktop:select:opacity-100 {immersed && 'opacity-0'}' />
+          class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity desktop:select:opacity-100 {immersed && 'opacity-0'} {!pointerMoveTimeout && 'delay-150'}' />
       {/if}
       {#if fastForwarding}
         <div class='absolute top-10 font-bold text-sm animate-[fade-in_.4s_ease] flex items-center leading-none bg-background/60 px-4 py-2 rounded-2xl'>x2 <FastForward class='ml-2' size='12' fill='currentColor' /></div>
       {/if}
       {#if !SUPPORTS.isAndroidTV}
-        <div class='mobile:flex hidden gap-10 absolute items-center transition-opacity delay-150 z-[0]' class:opacity-0={immersed || seeking}>
+        <div class='mobile:flex hidden gap-10 absolute items-center transition-opacity z-[0]' class:opacity-0={immersed || seeking} class:delay-150={!pointerMoveTimeout}>
           <Button class='p-3 size-10 pointer-events-auto rounded-[50%] bg-background/20' variant='ghost' disabled={!prev} on:click={() => prev?.()}>
             <SkipBack fill='currentColor' strokeWidth='1' />
           </Button>
@@ -901,11 +902,11 @@
       <Animations />
     </div>
     {#if currentSkippable}
-      <ProgressButton onclick={skip} bind:animating size='default' duration={3000} class={cn('px-7 font-bold absolute bottom-40 right-10 transition-opacity delay-150', immersed && !animating && 'opacity-0')}>
+      <ProgressButton onclick={skip} bind:animating size='default' duration={3000} class={cn('px-7 font-bold absolute bottom-40 right-10 transition-opacity', !pointerMoveTimeout && 'delay-150', immersed && !animating && 'opacity-0')}>
         Skip {currentSkippable.skiptype ?? ''}
       </ProgressButton>
     {/if}
-    <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity delay-150 desktop:select:opacity-100' class:opacity-0={immersed}>
+    <div class='absolute w-full bottom-0 flex flex-col gradient px-6 py-3 transition-opacity desktop:select:opacity-100' class:opacity-0={immersed} class:delay-150={!pointerMoveTimeout}>
       <div class='flex items-end gap-1'>
         <div class='flex flex-col gap-2 text-left cursor-pointer'>
           <EpisodesModal portal={wrapper} {mediaInfo} />
