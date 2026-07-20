@@ -673,9 +673,9 @@
     let wasPaused = paused
     const startFF = () => {
       clearTimeout(timeout)
-      wasPaused = paused
       timeout = setTimeout(() => {
         if (fastForwarding) return
+        wasPaused = paused
         paused = false
         fastForwarding = true
         oldPlaybackRate = $playbackRate

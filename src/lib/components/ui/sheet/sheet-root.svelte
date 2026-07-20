@@ -28,6 +28,7 @@
   $: open && onOpenChange(open)
 
   function onOpenChange (open: boolean) {
+    $$restProps.onOpenChange?.(open)
     if (open) {
       if (!hasState) {
         pushState(location.href, { ...state, dialog })
