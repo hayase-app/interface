@@ -866,7 +866,7 @@
       {#if showStats}
         <StatsForNerds {subtitleDelay} {currentTime} {safeduration} {readyState} volume={$volume} {video} {buffered} {videoWidth} {videoHeight} close={() => { showStats = false }} />
       {/if}
-      {#if $settings.minimalPlayerUI || SUPPORTS.isMobile}
+      {#if $settings.minimalPlayerUI || (SUPPORTS.isMobile && !SUPPORTS.isAndroidTV)}
         <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay
           class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity desktop:select:opacity-100 {immersed && 'opacity-0'} {!pointerMoveTimeout && 'delay-150'}' />
       {/if}
@@ -923,7 +923,7 @@
         </div>
       </div>
       <Seekbar {duration} {currentTime} buffer={buffer / duration * 100} chapters={$chapters} bind:seeking bind:seek={seekPercent} on:seeked={finishSeek} on:seeking={startSeek} {thumbnailer} on:keydown={seekBarKey} on:dblclick={fullscreen} />
-      {#if !$settings.minimalPlayerUI && !SUPPORTS.isAndroid && !SUPPORTS.isIOS}
+      {#if !$settings.minimalPlayerUI && (!SUPPORTS.isAndroid || SUPPORTS.isAndroidTV) && !SUPPORTS.isIOS}
         <div class='justify-between gap-2 flex'>
           <div class='flex text-foreground gap-2'>
             <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)}>
