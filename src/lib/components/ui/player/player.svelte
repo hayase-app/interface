@@ -867,7 +867,7 @@
         <StatsForNerds {subtitleDelay} {currentTime} {safeduration} {readyState} volume={$volume} {video} {buffered} {videoWidth} {videoHeight} close={() => { showStats = false }} />
       {/if}
       {#if $settings.minimalPlayerUI || SUPPORTS.isMobile}
-        <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button-top'
+        <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay
           class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity desktop:select:opacity-100 {immersed && 'opacity-0'} {!pointerMoveTimeout && 'delay-150'}' />
       {/if}
       {#if fastForwarding}
@@ -926,7 +926,7 @@
       {#if !$settings.minimalPlayerUI && !SUPPORTS.isAndroid && !SUPPORTS.isIOS}
         <div class='justify-between gap-2 flex'>
           <div class='flex text-foreground gap-2'>
-            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)} id='player-play-pause-button' data-up='#player-seekbar'>
+            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={playPause} on:keydown={keywrap(playPause)}>
               {#if paused}
                 <div transition:scaleBlurFade class='absolute'>
                   <Play size='24px' fill='currentColor' class='p-0.5' />
@@ -938,12 +938,12 @@
               {/if}
             </Button>
             {#if prev}
-              <Button class='p-3 size-12' variant='ghost' on:click={prev} on:keydown={keywrap(prev)} id='player-prev-button' data-up='#player-seekbar' data-right='#player-next-button, #player-volume-button, #player-options-button'>
+              <Button class='p-3 size-12' variant='ghost' on:click={prev} on:keydown={keywrap(prev)}>
                 <SkipBack size='24px' fill='currentColor' strokeWidth='1' />
               </Button>
             {/if}
             {#if next}
-              <Button class='p-3 size-12' variant='ghost' on:click={next} on:keydown={keywrap(next)} id='player-next-button' data-up='#player-seekbar' data-right='#player-volume-button, #player-options-button'>
+              <Button class='p-3 size-12' variant='ghost' on:click={next} on:keydown={keywrap(next)}>
                 <SkipForward size='24px' fill='currentColor' strokeWidth='1' />
               </Button>
             {/if}
@@ -951,22 +951,22 @@
           </div>
           <div class='flex gap-2'>
             {#if $playbackRate !== 1 && $playbackRate}
-              <Button class='p-3 size-12 hidden sm:flex leading-none text-base font-bold' variant='ghost' on:click={() => openPath(['rate'])} on:keydown={keywrap(() => openPath(['rate']))} data-up='#player-seekbar'>
+              <Button class='p-3 size-12 hidden sm:flex leading-none text-base font-bold' variant='ghost' on:click={() => openPath(['rate'])} on:keydown={keywrap(() => openPath(['rate']))}>
                 x{$playbackRate?.toFixed(1)}
               </Button>
             {/if}
-            <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay id='player-options-button' />
+            <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay />
             {#if $w2globby}
-              <Button class='p-3 size-12 relative shrink-0 animated-icon' variant='ghost' on:click={() => { chatOpen = !chatOpen }} on:keydown={keywrap(() => { chatOpen = !chatOpen })} data-up='#player-seekbar'>
+              <Button class='p-3 size-12 relative shrink-0 animated-icon' variant='ghost' on:click={() => { chatOpen = !chatOpen }} on:keydown={keywrap(() => { chatOpen = !chatOpen })}>
                 <Messages size={24} />
               </Button>
             {/if}
             {#if subtitles}
-              <Button class='p-3 size-12' variant='ghost' on:click={() => openPath(['subs'])} on:keydown={keywrap(() => openPath(['subs']))} data-up='#player-seekbar'>
+              <Button class='p-3 size-12' variant='ghost' on:click={() => openPath(['subs'])} on:keydown={keywrap(() => openPath(['subs']))}>
                 <Subtitles size='24px' fill='currentColor' strokeWidth='0' />
               </Button>
             {/if}
-            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={() => pip.pip()} on:keydown={keywrap(() => pip.pip())} data-up='#player-seekbar'>
+            <Button class='p-3 size-12 relative shrink-0' variant='ghost' on:click={() => pip.pip()} on:keydown={keywrap(() => pip.pip())}>
               {#if pictureInPictureElement}
                 <div transition:scaleBlurFade class='absolute'>
                   <PictureInPictureExit size='24px' strokeWidth='2' />
@@ -978,13 +978,13 @@
               {/if}
             </Button>
             {#if $displays.length}
-              <Button class='p-3 size-12 hidden sm:flex' variant='ghost' on:click={cast} on:keydown={keywrap(cast)} data-up='#player-seekbar'>
+              <Button class='p-3 size-12 hidden sm:flex' variant='ghost' on:click={cast} on:keydown={keywrap(cast)}>
                 <!-- <Cast size='24px' fill='white' strokeWidth='2' />
             {:else} -->
                 <Cast size='24px' strokeWidth='2' />
               </Button>
             {/if}
-            <Button class='p-3 size-12 relative animated-icon shrink-0' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)} data-up='#player-seekbar'>
+            <Button class='p-3 size-12 relative animated-icon shrink-0' variant='ghost' on:click={fullscreen} on:keydown={keywrap(fullscreen)}>
               {#if fullscreenElement}
                 <div transition:scaleBlurFade class='absolute'>
                   <Minimize size='24px' class='p-0.5' strokeWidth='2.5' />

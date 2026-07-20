@@ -81,14 +81,14 @@
     <StatusDot class='top-1 right-1 absolute !me-0' variant='COMPLETED' />
   {/if}
 </SidebarButton>
-<SidebarButton href='/#/app/client' class='animated-icon' id='sidebar-client' data-down='#sidebar-download,#sidebar-donate' {size}>
+<SidebarButton href='/#/app/client' class='animated-icon' {size}>
   <Download size={18} />
 </SidebarButton>
 {#if updateProgress}
   {@const ready = updateProgress === 100}
   <Tooltip.Root>
     <Tooltip.Trigger let:builder tabindex={-1}>
-      <Button builders={[builder]} variant='ghost' id='sidebar-download' data-down='#sidebar-donate' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent', ready && 'text-green-500 select:text-green-700')} on:click={updateAndRestart}>
+      <Button builders={[builder]} variant='ghost' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent', ready && 'text-green-500 select:text-green-700')} on:click={updateAndRestart}>
         <CloudDownload size={18} />
       </Button>
     </Tooltip.Trigger>
@@ -106,7 +106,7 @@
     {#if error.message !== 'No update available' && navigator.onLine}
       <Tooltip.Root>
         <Tooltip.Trigger let:builder tabindex={-1}>
-          <Button builders={[builder]} variant='ghost' id='sidebar-download' data-down='#sidebar-donate' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent text-red-500 select:text-red-700')} on:click={manualUpdate}>
+          <Button builders={[builder]} variant='ghost' class={cn('animated-icon px-2 w-10 md:pl-4 md:w-12 hidden md:flex select:!bg-transparent text-red-500 select:text-red-700')} on:click={manualUpdate}>
             <CloudDownload size={18} />
           </Button>
         </Tooltip.Trigger>
@@ -124,7 +124,7 @@
 {/if}
 <!-- <Dialog.Root portal='#root' >
   <Dialog.Trigger asChild let:builder>
-    <Button variant='ghost' id='sidebar-client' data-down='#sidebar-donate' class='animated-icon px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none hidden md:flex' builders={[builder]}>
+    <Button variant='ghost' class='animated-icon px-2 w-10 relative md:pl-4 md:w-12 md:rounded-l-none hidden md:flex' builders={[builder]}>
       <Newspaper size={18} />
       <span class='inline-flex size-2 top-1 right-1 absolute rounded-full bg-red-500' />
     </Button>
@@ -136,7 +136,7 @@
     </Dialog.Description>
   </Dialog.Content>
 </Dialog.Root> -->
-<Button variant='ghost' id='sidebar-donate' data-up='#sidebar-client' {size} on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='contain-strict px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
+<Button variant='ghost' {size} on:click={() => native.openURL('https://github.com/sponsors/ThaUnknown/')} class='contain-strict px-2 w-full relative mt-auto select:!bg-transparent text-[#fa68b6] select:text-[#fa68b6] md:pl-4 md:w-12 md:rounded-l-none'>
   <Heart size={18} fill='currentColor' class={cn('drop-shadow-[0_0_0.55rem_#fa68b6aa]', active && 'animate-[hearbeat_1s_ease-in-out_infinite_alternate]')} />
 </Button>
 <SidebarButton href='/#/app/settings' class='animated-icon !transition-none' {size}>

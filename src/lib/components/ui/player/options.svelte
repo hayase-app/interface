@@ -79,7 +79,7 @@
 
 <Dialog.Root portal={wrapper} bind:open>
   <Dialog.Trigger asChild let:builder>
-    <Button class={cn('p-3 w-12 h-12', className)} variant='ghost' builders={[builder]} on:keydown={keywrap(() => { open = !open })} data-left='#player-volume-button, #player-next-button, #player-prev-button, #player-play-pause-button' data-up='#player-seekbar' {id}>
+    <Button class={cn('p-3 w-12 h-12', className)} variant='ghost' builders={[builder]} on:keydown={keywrap(() => { open = !open })} {id}>
       <EllipsisVertical size='24px' class='p-[1px]' />
     </Button>
   </Dialog.Trigger>

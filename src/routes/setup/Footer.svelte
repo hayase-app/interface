@@ -67,17 +67,17 @@
   </div>
 </div>
 <div class='flex flex-row items-center justify-between w-full bg-muted border-t md:border md:rounded-lg border-border py-4 px-8'>
-  <Button variant='secondary' class='w-24' href={PREV[step]} id='setup-prev-button' data-right='#setup-next-button'>Prev</Button>
+  <Button variant='secondary' class='w-24' href={PREV[step]}>Prev</Button>
   {#await settled}
     <Tooltip.Root>
       <Tooltip.Trigger let:builder>
-        <Button builders={[builder]} class='font-semibold !pointer-events-auto cursor-wait' disabled id='setup-next-button' data-left='#setup-prev-button'>Waiting for checks...</Button>
+        <Button builders={[builder]} class='font-semibold !pointer-events-auto cursor-wait' disabled>Waiting for checks...</Button>
       </Tooltip.Trigger>
       <Tooltip.Content>
         <p>Wait for all checks to settle</p>
       </Tooltip.Content>
     </Tooltip.Root>
   {:then _}
-    <Button class='font-semibold w-24' on:click={checkNext} id='setup-next-button' data-left='#setup-prev-button'>Next</Button>
+    <Button class='font-semibold w-24' on:click={checkNext}>Next</Button>
   {/await}
 </div>

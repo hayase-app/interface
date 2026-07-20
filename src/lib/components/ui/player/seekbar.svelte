@@ -132,9 +132,6 @@
 
 <div class='w-full flex cursor-pointer relative group/seekbar touch-none !transform-none' class:!cursor-grab={seeking}
   tabindex='0' role='slider' aria-valuenow='0'
-  id='player-seekbar'
-  data-down='#player-play-pause-button'
-  data-up='#episode-list-button'
   on:keydown
   use:customDoubleClick={{ condition: SUPPORTS.isAndroidTV, double: e => dispatch('dblclick', e), delay: 500 }}
   bind:this={seekbar}

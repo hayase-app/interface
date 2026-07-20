@@ -43,7 +43,7 @@
 </script>
 
 <div class='size-full hidden sm:flex flex-row gap-2 group/volume'>
-  <Button class='p-3 w-12 h-12' variant='ghost' on:click={mute} on:keydown={keywrap(mute)} id='player-volume-button' data-right='#player-options-button' data-up='#player-seekbar'>
+  <Button class='p-3 w-12 h-12' variant='ghost' on:click={mute} on:keydown={keywrap(mute)}>
     {#if muted}
       <VolumeOff size='24px' fill='currentColor' />
     {:else if volume === 0}
