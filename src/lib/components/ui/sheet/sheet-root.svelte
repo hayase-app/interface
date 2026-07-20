@@ -24,15 +24,11 @@
     }
   }
 
-  // hack: bitsUI onOpenChange doesnt emit for true, only for false!
-  $: open && onOpenChange(open)
-
   function onOpenChange (open: boolean) {
     $$restProps.onOpenChange?.(open)
     if (open) {
       if (!hasState) {
         pushState(location.href, { ...state, dialog })
-        state.dialog = dialog
       }
     } else {
       if (hasState) history.back()

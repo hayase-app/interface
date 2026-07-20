@@ -203,11 +203,11 @@
 
 <svelte:window on:drop={handleTransfer} on:paste={handleTransfer} />
 
-{#if $searchStore}
-  <Dialog.Root bind:open onOpenChange={close} portal='#episodeListTarget'>
-    <Dialog.Content class='bg-background h-full max-w-5xl w-full max-h-[calc(100%-1rem)] border-b-0 !rounded-b-none mt-2 p-0 items-center flex-col flex lg:rounded-t-xl overflow-clip z-[100] gap-0'>
-      <!-- this hacky thing is required for dialog root focus trap... pitiful -->
-      <div class='size-0' tabindex='0' />
+<Dialog.Root bind:open onOpenChange={close} portal='#episodeListTarget'>
+  <Dialog.Content class='bg-background h-full max-w-5xl w-full max-h-[calc(100%-1rem)] border-b-0 !rounded-b-none mt-2 p-0 items-center flex-col flex lg:rounded-t-xl overflow-clip z-[100] gap-0'>
+    <!-- this hacky thing is required for dialog root focus trap... pitiful -->
+    <div class='size-0' tabindex='0' />
+    {#if $searchStore}
       <div class='absolute top-0 left-0 size-full max-h-36 overflow-hidden flex items-end'>
         <Banner media={$searchStore.media} class='object-cover size-full absolute bottom-[0.5px] left-0 -z-10 opacity-40' />
         <div class='w-full h-[70%] bg-gradient-to-t from-background/80 to-transparent' />
@@ -360,6 +360,6 @@
           {/await}
         </div>
       </div>
-    </Dialog.Content>
-  </Dialog.Root>
-{/if}
+    {/if}
+  </Dialog.Content>
+</Dialog.Root>
