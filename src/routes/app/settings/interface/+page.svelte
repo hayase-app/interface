@@ -215,7 +215,7 @@
 
 {#if !SUPPORTS.isAndroid && !SUPPORTS.isIOS}
   <div class='font-weight-bold text-xl font-bold'>Advanced</div>
-  <SettingCard let:id title='Show Details in Discord Rich Presance' description='Shows currently played anime and episode in Discord rich presence.'>
+  <SettingCard let:id title='Show Details in Discord Rich Presence' description='Shows currently played anime and episode in Discord rich presence.'>
     <Switch {id} bind:checked={$settings.showDetailsInRPC} />
   </SettingCard>
   <SettingCard title='ANGLE Backend' description="What ANGLE backend to use for rendering. DON'T CHANGE WITHOUT REASON! On some Windows machines D3D9 might help with flicker. Changing this setting to something your device doesn't support might prevent Hayase from opening which will require a full reinstall. While Vulkan is an available option it might not be fully supported on Linux.">
