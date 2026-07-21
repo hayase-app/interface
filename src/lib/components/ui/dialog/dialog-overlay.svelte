@@ -1,23 +1,28 @@
 <script lang='ts'>
-  import { Dialog as DialogPrimitive } from 'bits-ui'
+  import { getContext } from 'svelte'
   import { fade } from 'svelte/transition'
+
+  import { DIALOG_KEY, type DialogContext } from './dialog-context.js'
 
   import SUPPORTS from '$lib/modules/settings/supports'
   import { cn } from '$lib/utils.js'
 
-  type $$Props = DialogPrimitive.OverlayProps
+  const api = getContext<DialogContext>(DIALOG_KEY)
 
-  let className: $$Props['class'] = ''
-  export let transition: $$Props['transition'] = fade
-  export let transitionConfig: $$Props['transitionConfig'] = {
-    duration: 150
-  }
+  let className: string | undefined = ''
   export { className as class }
+
+  function handlePointerDown (e: PointerEvent) {
+    if (e.button !== 0) return
+    api.closeDialog()
+  }
 </script>
 
-<DialogPrimitive.Overlay
-  {transition}
-  {transitionConfig}
+<div
+  transition:fade={{
+    duration: 150
+  }}
+  on:pointerdown|self={handlePointerDown}
   class={cn('custom-bg absolute inset-0 z-50', !SUPPORTS.isUnderPowered && 'backdrop-blur-sm', className)}
   {...$$restProps}
 />

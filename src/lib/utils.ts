@@ -78,14 +78,14 @@ interface FlyAndScaleParams {
   x?: number
   start?: number
   duration?: number
+  base?: string
 }
 
 export const flyAndScale = (
   node: Element,
   params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }
 ): TransitionConfig => {
-  const style = getComputedStyle(node)
-  const transform = style.transform === 'none' ? '' : style.transform
+  const transform = params.base ?? (getComputedStyle(node).transform === 'none' ? '' : getComputedStyle(node).transform)
 
   const scaleConversion = (
     valueA: number,

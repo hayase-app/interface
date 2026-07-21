@@ -15,7 +15,7 @@
   import { type ExtensionError, extensions, type StreamedTorrentResult } from '$lib/modules/extensions/extensions'
   import { click, dragScroll } from '$lib/modules/navigate'
   import { settings, videoResolutions } from '$lib/modules/settings'
-  import { breakpoints, cn, colors, fastPrettyBytes, since, transferToFileList } from '$lib/utils'
+  import { breakpoints, cn, colors, fastPrettyBytes, since, sleep, transferToFileList } from '$lib/utils'
 
   const termMapping: Record<string, {text: string, color: string}> = {}
   termMapping['5.1'] = termMapping['5.1CH'] = { text: '5.1', color: '#f67255' }
@@ -108,9 +108,10 @@
 
   let inputText = ''
 
-  function play ({ hash, link }: TorrentResult) {
+  async function play ({ hash, link }: TorrentResult) {
     server.playHash(hash, $searchStore!.media, $searchStore!.episode, link)
     close()
+    await sleep(300)
     goto('/#/app/player')
   }
 
@@ -170,10 +171,11 @@
 
   const torrentRx = /(^magnet:){1}|(^[A-F\d]{8,40}$){1}|(.*\.torrent$){1}/i
 
-  function findTorrentIdentifiers (identifier: string) {
+  async function findTorrentIdentifiers (identifier: string) {
     if (torrentRx.test(identifier) && $searchStore) {
       server.playIdentifier(identifier, $searchStore.media, $searchStore.episode)
       close()
+      await sleep(300)
       goto('/#/app/player')
     }
   }
@@ -191,6 +193,7 @@
           if (file.type === 'application/x-bittorrent' || file.name.endsWith('.torrent')) {
             server.playIdentifier(new Uint8Array(await file.arrayBuffer()), $searchStore.media, $searchStore.episode)
             close()
+            await sleep(300)
             goto('/#/app/player')
           }
         } else if (file.type === 'text/plain') {

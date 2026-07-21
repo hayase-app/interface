@@ -58,7 +58,8 @@
   export { className as class }
 
   export let showKeybinds = false
-  function close () {
+  function close (e?: PointerEvent) {
+    if (e && e.button !== 0) return
     if (showKeybinds) {
       showKeybinds = false
     } else {
@@ -79,7 +80,7 @@
 
 <Dialog.Root portal={wrapper} bind:open>
   <Dialog.Trigger asChild let:builder>
-    <Button class={cn('p-3 w-12 h-12', className)} variant='ghost' builders={[builder]} on:keydown={keywrap(() => { open = !open })} {id}>
+    <Button class={cn('p-3 w-12 h-12', className)} variant='ghost' builders={[builder]} on:keydown={keywrap(() => { open = true })} {id}>
       <EllipsisVertical size='24px' class='p-[1px]' />
     </Button>
   </Dialog.Trigger>
@@ -111,7 +112,7 @@
                     <span slot='trigger' class='capitalize'>{lang}</span>
                     <Tree.Sub>
                       {#each tracks as track (track.id)}
-                        <Tree.Item active={track.enabled} on:click={() => { selectAudio(track.id); open = false }}>
+                        <Tree.Item active={track.enabled} on:click={() => { selectAudio(track.id); close() }}>
                           <span>{track.label}</span>
                         </Tree.Item>
                       {/each}
@@ -130,7 +131,7 @@
                     <span slot='trigger' class='capitalize'>{lang}</span>
                     <Tree.Sub>
                       {#each tracks as track (track.id)}
-                        <Tree.Item active={track.enabled} on:click={() => { selectVideo(track.id); open = false }}>
+                        <Tree.Item active={track.enabled} on:click={() => { selectVideo(track.id); close() }}>
                           <span>{track.label}</span>
                         </Tree.Item>
                       {/each}
@@ -144,7 +145,7 @@
             <Tree.Item id='subs'>
               <span slot='trigger'>Subtitles</span>
               <Tree.Sub>
-                <Tree.Item active={Number($current) === -1} on:click={() => { $current = -1; open = false }}>
+                <Tree.Item active={Number($current) === -1} on:click={() => { $current = -1; close() }}>
                   <span>OFF</span>
                 </Tree.Item>
                 {#each Object.entries(normalizeSubs($tracks)) as [lang, _tracks] (lang)}
@@ -152,14 +153,14 @@
                     <span slot='trigger' class='capitalize'>{lang}</span>
                     <Tree.Sub>
                       {#each _tracks as { number, name }, i (i)}
-                        <Tree.Item active={Number(number) === Number($current)} on:click={() => { $current = number; open = false }}>
+                        <Tree.Item active={Number(number) === Number($current)} on:click={() => { $current = number; close() }}>
                           <span>{name}</span>
                         </Tree.Item>
                       {/each}
                     </Tree.Sub>
                   </Tree.Item>
                 {/each}
-                <Tree.Item on:click={() => { subtitles.pickFile(); open = false }}>
+                <Tree.Item on:click={() => { subtitles.pickFile(); close() }}>
                   <span>Add Subtitle File</span>
                 </Tree.Item>
                 <div class='flex items-center relative scale-parent font-bold'>
@@ -175,7 +176,7 @@
               <span slot='trigger'>Chapters</span>
               <Tree.Sub>
                 {#each chapters as { text, start }, i (i)}
-                  <Tree.Item on:click={() => { seekTo(start); open = false }}>
+                  <Tree.Item on:click={() => { seekTo(start); close() }}>
                     <div class='flex justify-between w-full pr-2'>
                       <span class='capitalize'>{text || '?'}</span>
                       <span class='text-muted-foreground'>{toTS(start || 0)}</span>
@@ -188,25 +189,25 @@
           <Tree.Item id='rate'>
             <span slot='trigger'>Playback Rate</span>
             <Tree.Sub>
-              <Tree.Item active={playbackRate === 0.5} on:click={() => { playbackRate = 0.5; open = false }}>
+              <Tree.Item active={playbackRate === 0.5} on:click={() => { playbackRate = 0.5; close() }}>
                 <span>0.5x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 0.75} on:click={() => { playbackRate = 0.75; open = false }}>
+              <Tree.Item active={playbackRate === 0.75} on:click={() => { playbackRate = 0.75; close() }}>
                 <span>0.75x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 1} on:click={() => { playbackRate = 1; open = false }}>
+              <Tree.Item active={playbackRate === 1} on:click={() => { playbackRate = 1; close() }}>
                 <span>1x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 1.25} on:click={() => { playbackRate = 1.25; open = false }}>
+              <Tree.Item active={playbackRate === 1.25} on:click={() => { playbackRate = 1.25; close() }}>
                 <span>1.25x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 1.5} on:click={() => { playbackRate = 1.5; open = false }}>
+              <Tree.Item active={playbackRate === 1.5} on:click={() => { playbackRate = 1.5; close() }}>
                 <span>1.5x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 1.75} on:click={() => { playbackRate = 1.75; open = false }}>
+              <Tree.Item active={playbackRate === 1.75} on:click={() => { playbackRate = 1.75; close() }}>
                 <span>1.75x</span>
               </Tree.Item>
-              <Tree.Item active={playbackRate === 2} on:click={() => { playbackRate = 2; open = false }}>
+              <Tree.Item active={playbackRate === 2} on:click={() => { playbackRate = 2; close() }}>
                 <span>2x</span>
               </Tree.Item>
             </Tree.Sub>
@@ -233,7 +234,7 @@
               <span slot='trigger'>Cast</span>
               <Tree.Sub>
                 {#each $displays as { friendlyName, host }, i (i)}
-                  <Tree.Item on:click={() => { $activeDisplay = { friendlyName, host }; open = false }}>
+                  <Tree.Item on:click={() => { $activeDisplay = { friendlyName, host }; close() }}>
                     <span class='text-nowrap'>{friendlyName}</span>
                   </Tree.Item>
                 {/each}

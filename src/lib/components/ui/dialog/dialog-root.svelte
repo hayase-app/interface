@@ -1,42 +1,69 @@
 <script lang='ts'>
-  import { Dialog as DialogPrimitive } from 'bits-ui'
+  import { setContext } from 'svelte'
+  import { writable } from 'svelte/store'
+
+  import { DIALOG_KEY, type DialogContext } from './dialog-context.js'
 
   import { pushState } from '$app/navigation'
   import { page } from '$app/stores'
 
-  type $$Props = DialogPrimitive.Props
-
   const dialog = crypto.randomUUID()
 
-  export let open: $$Props['open'] = false
+  export let open = false
+  export let portal: string | HTMLElement = '#root'
+
+  const _open = writable(open)
+
+  let changing = false
+  let lastHasState: boolean | undefined = undefined
 
   $: state = $page.state
-  $: hasState = state.dialog === dialog
+  $: hasState = state?.dialog === dialog
 
-  $: stateChange(hasState)
-
-  // handle navigation via back/forwards history buttons
-  function stateChange (hasState: boolean) {
-    if (hasState) {
-      open = true
-    } else {
-      open = false
+  // Sync from history (popstate / back / forward)
+  // Only fires when hasState changes, NOT when $_open changes
+  $: if (hasState !== lastHasState) {
+    lastHasState = hasState
+    if (hasState !== $_open) {
+      _open.set(hasState)
+      open = hasState
     }
   }
 
-  function onOpenChange (open: boolean) {
-    $$restProps.onOpenChange?.(open)
-    if (open) {
-      if (!hasState) {
-        pushState(location.href, { ...state, dialog })
-      // state.dialog = dialog
+  // Sync from parent prop changes (e.g. SearchModal's close() → bind:open)
+  $: if (open !== $_open) {
+    onOpenChange(open)
+  }
+
+  function onOpenChange (value: boolean) {
+    if (value === $_open || changing) return
+
+    changing = true
+
+    if (value) {
+      pushState(location.href, { ...$page.state, dialog })
+      state.dialog = dialog
+    } else {
+      if (hasState) {
+        history.back()
+        changing = false
       }
-    } else {
-      if (hasState) history.back()
     }
+
+    _open.set(value)
+    open = value
+    $$restProps.onOpenChange?.(value)
+    changing = false
   }
+
+  const api: DialogContext = {
+    portal,
+    open: _open,
+    openDialog: () => onOpenChange(true),
+    closeDialog: () => onOpenChange(false)
+  }
+
+  setContext(DIALOG_KEY, api)
 </script>
 
-<DialogPrimitive.Root bind:open {...$$restProps} {onOpenChange}>
-  <slot />
-</DialogPrimitive.Root>
+<slot />

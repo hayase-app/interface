@@ -1,5 +1,4 @@
-import { Dialog as DialogPrimitive } from 'bits-ui'
-
+import Close from './dialog-close.svelte'
 import Content from './dialog-content.svelte'
 import Description from './dialog-description.svelte'
 import Footer from './dialog-footer.svelte'
@@ -8,9 +7,7 @@ import Overlay from './dialog-overlay.svelte'
 import Portal from './dialog-portal.svelte'
 import Root from './dialog-root.svelte'
 import Title from './dialog-title.svelte'
-
-const Trigger = DialogPrimitive.Trigger
-const Close = DialogPrimitive.Close
+import Trigger from './dialog-trigger.svelte'
 
 export {
   Root,

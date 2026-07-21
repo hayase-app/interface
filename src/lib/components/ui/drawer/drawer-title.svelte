@@ -1,11 +1,11 @@
 <script lang='ts'>
   import { Drawer as DrawerPrimitive } from 'vaul-svelte'
 
-  import type { DialogTitleProps } from 'bits-ui'
+  import type { HTMLAttributes } from 'svelte/elements'
 
   import { cn } from '$lib/utils.js'
 
-  type $$Props = DialogTitleProps
+  type $$Props = HTMLAttributes<HTMLHeadingElement> & { el?: HTMLHeadingElement | undefined }
 
   export let el: $$Props['el'] = undefined
   let className: $$Props['class'] = undefined

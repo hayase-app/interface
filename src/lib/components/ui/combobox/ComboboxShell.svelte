@@ -1,6 +1,4 @@
 <script lang='ts'>
-  import { Dialog as DialogPrimitive } from 'bits-ui'
-
   import * as Dialog from '$lib/components/ui/dialog'
   import * as Popover from '$lib/components/ui/popover'
   import { breakpoints, cn, flyAndScale } from '$lib/utils'
@@ -24,15 +22,17 @@
     <Dialog.Trigger asChild let:builder>
       <slot name='trigger' {builder} />
     </Dialog.Trigger>
-    <DialogPrimitive.Portal>
+    <Dialog.Portal>
       <Dialog.Overlay />
-      <DialogPrimitive.Content
-        transition={flyAndScale}
-        transitionConfig={{ duration: 200 }}
+      <div
+        transition:flyAndScale={{
+          duration: 200,
+          base: 'translate(-50%, 0)'
+        }}
         class='bg-popover text-popover-foreground fixed left-[50%] top-[10%] z-50 flex w-full max-w-[clamp(0px,95dvw,30rem)] translate-x-[-50%] flex-col rounded-lg shadow-lg max-h-[80dvh] overflow-hidden'
       >
         <slot name='content' triggerId='' isMobile={true} />
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
+      </div>
+    </Dialog.Portal>
   </Dialog.Root>
 {/if}

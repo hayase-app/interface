@@ -1,14 +1,14 @@
 <script lang='ts'>
   import Command from './command.svelte'
 
-  import type { Dialog as DialogPrimitive } from 'bits-ui'
   import type { Command as CommandPrimitive } from 'cmdk-sv'
+  import type { HTMLAttributes } from 'svelte/elements'
 
   import * as Dialog from '$lib/components/ui/dialog/index.js'
 
-  type $$Props = DialogPrimitive.Props & CommandPrimitive.CommandProps
+  type $$Props = HTMLAttributes<HTMLElement> & CommandPrimitive.CommandProps
 
-  export let open: $$Props['open'] = false
+  export let open = false
   export let value: $$Props['value'] = ''
 </script>
 
