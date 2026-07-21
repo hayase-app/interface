@@ -3,6 +3,8 @@
 
   import { DIALOG_KEY, type DialogContext } from './dialog-context.js'
 
+  import { cn } from '$lib/utils.js'
+
   const api = getContext<DialogContext>(DIALOG_KEY)
 
   export let to: string | HTMLElement | undefined = undefined
@@ -27,7 +29,7 @@
 </script>
 
 {#if $api.open}
-  <div use:portal class={className} role='dialog'>
+  <div use:portal class={cn('fixed inset-0 z-50', className)} role='dialog'>
     <slot />
   </div>
 {/if}

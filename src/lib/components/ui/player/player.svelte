@@ -165,8 +165,6 @@
   $: immersed = (!buffering && !paused && !ended && !pictureInPictureElement && !pointerMoving) || fastForwarding
   $: isMiniplayer = $page.route.id !== '/app/player'
 
-  $: if (!isMiniplayer && SUPPORTS.isAndroidTV) fullscreen()
-
   let pointerMoveTimeout = 0
   function resetMove (time = 300) {
     clearTimeout(pointerMoveTimeout)
