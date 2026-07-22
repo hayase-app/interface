@@ -60,7 +60,14 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
   targetAnimeFiles.sort((a, b) => Number(a.metadata.episode) - Number(b.metadata.episode))
   targetAnimeFiles.sort((a, b) => Number(b.metadata.parseObject.anime_season[0] ?? 1) - Number(a.metadata.parseObject.anime_season[0] ?? 1))
 
-  const targetEpisode = targetAnimeFiles.find(file => file.metadata.episode === list.episode) ?? targetAnimeFiles.find(file => file.metadata.episode === 1) ?? targetAnimeFiles[0] ?? resolvedFiles[0]
+  remapAbsoluteBatchEpisodes(targetAnimeFiles, episodes(list.media))
+
+  const wanted = Number(list.episode)
+  const targetEpisode =
+    targetAnimeFiles.find(file => Number(file.metadata.episode) === wanted) ??
+    (wanted === 1 ? targetAnimeFiles.find(file => Number(file.metadata.episode) === 1) : undefined) ??
+    targetAnimeFiles[0] ??
+    resolvedFiles[0]
 
   if (!targetEpisode) return
 
@@ -69,6 +76,26 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
     targetAnimeFiles,
     otherFiles,
     resolvedFiles
+  }
+}
+
+function remapAbsoluteBatchEpisodes (files: ResolvedFile[], mediaEpisodes: number | undefined) {
+  if (!mediaEpisodes || mediaEpisodes < 1 || files.length < 2) return
+
+  const nums = files
+    .map(file => Number(file.metadata.episode))
+    .filter(n => Number.isFinite(n) && n >= 1)
+  if (nums.length < 2) return
+
+  const min = Math.min(...nums)
+  if (min <= 1 || min <= mediaEpisodes) return
+  const max = Math.max(...nums)
+  if (max - min + 1 > mediaEpisodes + 1) return
+
+  for (const file of files) {
+    const n = Number(file.metadata.episode)
+    if (!Number.isFinite(n) || n < min) continue
+    file.metadata.episode = n - min + 1
   }
 }
 
