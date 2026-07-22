@@ -60,11 +60,6 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
   targetAnimeFiles.sort((a, b) => Number(a.metadata.episode) - Number(b.metadata.episode))
   targetAnimeFiles.sort((a, b) => Number(b.metadata.parseObject.anime_season[0] ?? 1) - Number(a.metadata.parseObject.anime_season[0] ?? 1))
 
-  // Multi-cour AniList entries (e.g. Science Future Cour 2) use relative episode
-  // numbers 1..N, but season packs often name files with TVDB/season numbering
-  // (Cour 2 ep 1 → file "13"). Remap those onto the media's relative range so
-  // matching and next/prev stay consistent. Without this, find(episode) misses
-  // and the old fallback always picked episode 1 / the first file in the pack.
   remapAbsoluteBatchEpisodes(targetAnimeFiles, episodes(list.media))
 
   const wanted = Number(list.episode)
@@ -84,9 +79,6 @@ export async function resolveFilesPoorly (promise: Promise<{media: Media, id: st
   }
 }
 
-// When every video episode in the pack sits past this media's episode count
-// (min file ep > media.episodes), treat filenames as season/series-absolute and
-// shift them down so Cour/Part-relative episode N maps to file (min + N - 1).
 function remapAbsoluteBatchEpisodes (files: ResolvedFile[], mediaEpisodes: number | undefined) {
   if (!mediaEpisodes || mediaEpisodes < 1 || files.length < 2) return
 
@@ -97,8 +89,6 @@ function remapAbsoluteBatchEpisodes (files: ResolvedFile[], mediaEpisodes: numbe
 
   const min = Math.min(...nums)
   if (min <= 1 || min <= mediaEpisodes) return
-  // Only remap when the pack looks like one contiguous cour/part (not a full
-  // multi-season dump whose range is far larger than this media entry).
   const max = Math.max(...nums)
   if (max - min + 1 > mediaEpisodes + 1) return
 
