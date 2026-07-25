@@ -49,6 +49,20 @@
   let size: 'default' | 'icon-lg' = 'default'
 
   $: size = ($breakpoints.md ? 'default' : 'icon-lg')
+
+  function topFence (e: KeyboardEvent) {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
+  function bottomFence (e: KeyboardEvent) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
 </script>
 
 <svelte:document bind:visibilityState />
@@ -56,11 +70,11 @@
 <BannerImage class='absolute top-0 left-0 w-14 -z-10 hidden md:block' />
 <Logo class={cn('mb-1 h-10 object-contain px-2.5 hidden md:block text-foreground ml-2 cursor-pointer', isMac && 'mt-3')} on:click={() => goto('/#/app/home')} />
 {#if SUPPORTS.isAndroidTV}
-  <SidebarButton href='/#/app/player' class='hidden md:flex py-0'>
+  <SidebarButton href='/#/app/player' class='hidden md:flex py-0' onkeydown={topFence}>
     <Play size={16} />
   </SidebarButton>
 {/if}
-<SidebarButton href='/#/app/home' class='animated-icon' {size}>
+<SidebarButton href='/#/app/home' class='animated-icon' {size} onkeydown={SUPPORTS.isAndroidTV ? () => {} : topFence}>
   <Home size={18} />
 </SidebarButton>
 <SidebarButton href='/#/app/search' class='animated-icon' {size}>
@@ -142,7 +156,7 @@
 <SidebarButton href='/#/app/settings' class='animated-icon !transition-none' {size}>
   <Bolt size={18} />
 </SidebarButton>
-<SidebarButton href='/#/app/profile' class='hidden md:flex animated-icon' {size}>
+<SidebarButton href='/#/app/profile' class='hidden md:flex animated-icon' {size} onkeydown={bottomFence}>
   <!-- <SidebarButton href='/#/app/profile' class='hidden md:flex py-0 animated-icon'> -->
   {#if $viewer}
     <Avatar.Root class='size-6 rounded-md'>
