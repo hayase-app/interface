@@ -75,6 +75,15 @@
 
   server._addNZBs(mediaInfo.file.hash, mediaInfo.media, mediaInfo.episode, mediaInfo.file.name)
   server._addHTTPWebSeeds(mediaInfo.file.hash, mediaInfo.media, mediaInfo.episode, { name: mediaInfo.file.name, index: mediaInfo.file.id })
+
+  // state
+  let seeking = false
+  let ended = false
+  let paused = true
+  let pointerMoving = false
+  let fastForwarding = false
+  // const cast = false
+
   // bindings
   // values
   let videoHeight = 0
@@ -83,12 +92,13 @@
   let seekPercent = 0
   let duration = 1
   let chatOpen = false
-  const playbackRate = persisted('playbackRate', 1, {
+  const playbackRateStore = persisted('playbackRate', 1, {
     serializer: {
       stringify: (value) => value.toString(),
       parse: (value) => Math.min(16, Math.max(0.1, parseFloat(value)))
     }
   })
+  $: playbackRate = fastForwarding ? 2 : $playbackRateStore
   let buffered: SvelteMediaTimeRange[] = []
   let subtitleDelay = 0
   $: buffer = Math.max(...buffered.map(({ end }) => end))
@@ -150,14 +160,6 @@
   }
 
   $: if (subtitles?.jassub) subtitles.jassub.timeOffset = Number(subtitleDelay)
-
-  // state
-  let seeking = false
-  let ended = false
-  let paused = true
-  let pointerMoving = false
-  let fastForwarding = false
-  // const cast = false
 
   $: $isPlaying = !paused
 
@@ -419,7 +421,7 @@
   $: if (readyState > 1 && !seekIndex && canvasSource) thumbnailer._paintThumbnail(canvasSource, playbackIndex, videoWidth, videoHeight)
 
   $: native.setMediaSession(mediaInfo.session, mediaInfo.media.id, safeduration)
-  $: native.setPositionState({ duration: safeduration, position: Math.min(Math.max(0, currentTime), safeduration), playbackRate: $playbackRate }, readyState === 0 ? 'none' : paused ? 'paused' : 'playing')
+  $: native.setPositionState({ duration: safeduration, position: Math.min(Math.max(0, currentTime), safeduration), playbackRate }, readyState === 0 ? 'none' : paused ? 'paused' : 'playing')
   $: native.setPlayBackState(readyState === 0 ? 'none' : paused ? 'paused' : 'playing')
   native.setActionHandler('play', playPause)
   native.setActionHandler('pause', playPause)
@@ -626,21 +628,21 @@
       desc: 'Volume Down'
     },
     BracketLeft: {
-      fn: () => { $playbackRate = Math.min(16, Math.max(0.1, $playbackRate - 0.1)) },
+      fn: () => { $playbackRateStore = Math.min(16, Math.max(0.1, $playbackRateStore - 0.1)) },
       id: 'history',
       icon: RotateCcw,
       type: 'icon',
       desc: 'Decrease Playback Rate'
     },
     BracketRight: {
-      fn: () => { $playbackRate = Math.min(16, Math.max(0.1, $playbackRate + 0.1)) },
+      fn: () => { $playbackRateStore = Math.min(16, Math.max(0.1, $playbackRateStore + 0.1)) },
       id: 'update',
       icon: RotateCw,
       type: 'icon',
       desc: 'Increase Playback Rate'
     },
     Backslash: {
-      fn: () => { $playbackRate = 1 },
+      fn: () => { $playbackRateStore = 1 },
       icon: RefreshCcw,
       id: 'schedule',
       type: 'icon',
@@ -664,10 +666,9 @@
 
   $condition = () => !isMiniplayer
 
-  function holdToFF (document: HTMLElement, type: 'key' | 'pointer') {
+  function holdToFF (element: HTMLElement, type: 'key' | 'pointer') {
     const ctrl = new AbortController()
     let timeout = 0
-    let oldPlaybackRate = $playbackRate
     let wasPaused = paused
     const startFF = () => {
       clearTimeout(timeout)
@@ -676,42 +677,39 @@
         if (fastForwarding) return
         paused = false
         fastForwarding = true
-        oldPlaybackRate = $playbackRate
-        $playbackRate = 2
       }, 1000)
     }
     const endFF = () => {
       clearTimeout(timeout)
       if (!fastForwarding) return
       fastForwarding = false
-      $playbackRate = oldPlaybackRate
       paused = wasPaused
     }
-    document.addEventListener(type + 'down' as 'keydown' | 'pointerdown', event => {
+    element.addEventListener(type + 'down' as 'keydown' | 'pointerdown', event => {
       if (isMiniplayer) return
       if ('code' in event && (event.code !== 'Space')) return
       if ('button' in event && event.button !== 0) return
       if ('repeat' in event && event.repeat) return
       if ('pointerId' in event) {
-        document.setPointerCapture(event.pointerId)
+        element.setPointerCapture(event.pointerId)
       }
       startFF()
-    }, { ...ctrl, capture: type === 'key' })
-    document.addEventListener(type + 'up' as 'keyup' | 'pointerup', event => {
+    }, { signal: ctrl.signal, capture: type === 'key' })
+    element.addEventListener(type + 'up' as 'keyup' | 'pointerup', event => {
       if (isMiniplayer) return
       if ('code' in event && event.code === 'Space') return endFF()
-      if ('pointerId' in event) document.releasePointerCapture(event.pointerId)
+      if ('pointerId' in event) element.releasePointerCapture(event.pointerId)
       if ('pointerType' in event && event.pointerType !== 'mouse') endFF()
     }, ctrl)
-    document.addEventListener('click', e => {
+    element.addEventListener('click', e => {
       if (isMiniplayer) return
       if (fastForwarding) e.stopImmediatePropagation()
       endFF()
     }, ctrl)
 
     if (type === 'pointer') {
-      document.addEventListener('pointercancel', event => {
-        if ('pointerId' in event) document.releasePointerCapture(event.pointerId)
+      element.addEventListener('pointercancel', event => {
+        if ('pointerId' in event) element.releasePointerCapture(event.pointerId)
         endFF()
       }, ctrl)
     }
@@ -808,7 +806,7 @@
         bind:clientWidth
         bind:clientHeight
         bind:subtitles
-        bind:playbackRate={$playbackRate}
+        bind:playbackRate
         bind:volume={exponentialVolume}
         on:fallback={handleMediaBunnyFallback}
         on:click={mobilePlayPause}
@@ -844,7 +842,7 @@
       bind:muted
       bind:readyState
       bind:buffered
-      bind:playbackRate={$playbackRate}
+      bind:playbackRate
       bind:volume={exponentialVolume}
       bind:this={video}
       use:customDoubleClick={{ single: mobilePlayPause, double: fullscreen, condition: !isMiniplayer }}
@@ -871,7 +869,7 @@
         <StatsForNerds {subtitleDelay} {currentTime} {safeduration} {readyState} volume={$volume} {video} {buffered} {videoWidth} {videoHeight} close={() => { showStats = false }} />
       {/if}
       {#if $settings.minimalPlayerUI || (SUPPORTS.isMobile && !SUPPORTS.isAndroidTV)}
-        <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay
+        <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRateStore} bind:subtitleDelay
           class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity desktop:select:opacity-100 {immersed && 'opacity-0'} {!pointerMoveTimeout && 'delay-150'}' />
       {/if}
       {#if fastForwarding}
@@ -954,12 +952,12 @@
             <Volume bind:volume={$volume} bind:muted />
           </div>
           <div class='flex gap-2'>
-            {#if $playbackRate !== 1 && $playbackRate}
+            {#if playbackRate !== 1 && playbackRate}
               <Button class='p-3 size-12 hidden sm:flex leading-none text-base font-bold' variant='ghost' on:click={() => openPath(['rate'])} on:keydown={keywrap(() => openPath(['rate']))}>
-                x{$playbackRate?.toFixed(1)}
+                x{playbackRate?.toFixed(1)}
               </Button>
             {/if}
-            <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay />
+            <Options {fullscreen} {wrapper} screenshot={ss} {seekTo} bind:open bind:openPath {video} {selectAudio} {selectVideo} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRateStore} bind:subtitleDelay />
             {#if $w2globby}
               <Button class='p-3 size-12 relative shrink-0 animated-icon' variant='ghost' on:click={() => { chatOpen = !chatOpen }} on:keydown={keywrap(() => { chatOpen = !chatOpen })}>
                 <Messages size={24} />
