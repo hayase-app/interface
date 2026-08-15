@@ -716,7 +716,12 @@
       }, ctrl)
     }
 
-    return { destroy: () => ctrl.abort() }
+    return {
+      destroy: () => {
+        ctrl.abort()
+        endFF()
+      }
+    }
   }
 
   function updateState (state: { paused: boolean, time: number }) {
