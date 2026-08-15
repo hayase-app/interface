@@ -1,3 +1,9 @@
+<script context="module" lang="ts">
+    import { writable } from 'svelte/store'
+    export const fastForwarding = writable(false)
+    export const FFTimeout = writable(0)
+</script>
+
 <script lang='ts'>
   import Captions from 'lucide-svelte/icons/captions'
   import Cast from 'lucide-svelte/icons/cast'
@@ -156,13 +162,13 @@
   let ended = false
   let paused = true
   let pointerMoving = false
-  let fastForwarding = false
+  //let fastForwarding = false
   // const cast = false
 
   $: $isPlaying = !paused
 
   $: buffering = readyState < 3 && !paused
-  $: immersed = (!buffering && !paused && !ended && !pictureInPictureElement && !pointerMoving) || fastForwarding
+  $: immersed = (!buffering && !paused && !ended && !pictureInPictureElement && !pointerMoving) || $fastForwarding
   $: isMiniplayer = $page.route.id !== '/app/player'
 
   let pointerMoveTimeout = 0
@@ -666,24 +672,26 @@
 
   function holdToFF (document: HTMLElement, type: 'key' | 'pointer') {
     const ctrl = new AbortController()
-    let timeout = 0
+    //let timeout = 0
     let oldPlaybackRate = $playbackRate
     let wasPaused = paused
     const startFF = () => {
-      clearTimeout(timeout)
+      console.log("Started");
+      clearTimeout($FFTimeout)
       wasPaused = paused
-      timeout = setTimeout(() => {
-        if (fastForwarding) return
+      $FFTimeout = setTimeout(() => {
+        if ($fastForwarding) return
         paused = false
-        fastForwarding = true
+        $fastForwarding = true
         oldPlaybackRate = $playbackRate
         $playbackRate = 2
       }, 1000)
     }
     const endFF = () => {
-      clearTimeout(timeout)
-      if (!fastForwarding) return
-      fastForwarding = false
+      console.log("Cleared");
+      clearTimeout($FFTimeout)
+      if (!$fastForwarding) return
+      $fastForwarding = false
       $playbackRate = oldPlaybackRate
       paused = wasPaused
     }
@@ -705,7 +713,7 @@
     }, ctrl)
     document.addEventListener('click', e => {
       if (isMiniplayer) return
-      if (fastForwarding) e.stopImmediatePropagation()
+      if ($fastForwarding) e.stopImmediatePropagation()
       endFF()
     }, ctrl)
 
@@ -869,7 +877,7 @@
         <Options {wrapper} bind:open bind:openPath {video} {seekTo} screenshot={ss} {selectAudio} {selectVideo} {fullscreen} chapters={$chapters} {subtitles} {videoFiles} {selectFile} {pip} bind:playbackRate={$playbackRate} bind:subtitleDelay
           class='inline-flex p-3 size-12 absolute z-[1] top-4 right-4 bg-background/20 pointer-events-auto transition-opacity desktop:select:opacity-100 {immersed && 'opacity-0'} {!pointerMoveTimeout && 'delay-150'}' />
       {/if}
-      {#if fastForwarding}
+      {#if $fastForwarding}
         <div class='absolute top-10 font-bold text-sm animate-[fade-in_.4s_ease] flex items-center leading-none bg-background/60 px-4 py-2 rounded-2xl'>x2 <FastForward class='ml-2' size='12' fill='currentColor' /></div>
       {/if}
       {#if !SUPPORTS.isAndroidTV}
