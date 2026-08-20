@@ -64,7 +64,7 @@
       {#each getPage(currentPage, episodeList) as { episode, image, title, summary, airingAt, airdate, filler, length, rating, runtime } (episode)}
         {@const watched = _progress >= episode && !completed}
         {@const target = _progress + 1 === episode}
-        {@const spoiler = !watched && !completed && !rewatching && !target && $settings.hideSpoilers}
+        {@const spoiler = !watched && !completed && !rewatching && $settings.hideSpoilers}
         {@const underPoweredSpoiler = spoiler && SUPPORTS.isUnderPowered}
         <div class={!target ? 'px-3 w-full' : 'contents'}>
           <div use:click={() => play(episode)}
