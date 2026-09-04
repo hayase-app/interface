@@ -171,31 +171,33 @@ const AnimeResolver = new class AnimeResolver {
     const titles = new Set<string>()
 
     let modified = title
-    // preemptively change S2 into Season 2 or 2nd Season, otherwise this will have accuracy issues
-    const seasonMatch = title.match(/ S(\d+)/)
-    if (obj.anime_season[0] && Number(obj.anime_season[0]) > 1) {
-      modified = title + ` ${Number(obj.anime_season[0])}${postfix[Number(obj.anime_season[0])] ?? 'th'} Season`
-      titles.add(modified)
-      titles.add(title + ` Season ${Number(obj.anime_season[0])}`)
-    } else if (seasonMatch) {
-      if (Number(seasonMatch[1]) === 1) { // if this is S1, remove the " S1" or " S01"
-        modified = title.replace(/ S(\d+)/, '')
-        titles.add(modified)
-      } else {
-        modified = title.replace(/ S(\d+)/, ` ${Number(seasonMatch[1])}${postfix[Number(seasonMatch[1])] ?? 'th'} Season`)
-        titles.add(modified)
-        titles.add(title.replace(/ S(\d+)/, ` Season ${Number(seasonMatch[1])}`))
-      }
-    } else {
-      titles.add(title)
-    }
 
     // remove trailing ` 2020`
     // this 100% causes false positives, but titles are matched by lavenshtein distance, so shows like Demon Lord 2099 will match with that
-    const yearMatch = modified.match(/\D(\d{4})$/)
+    const yearMatch = title.match(/\D(\d{4})$/)
     if (yearMatch && (!obj.anime_year.length || yearMatch[1] === obj.anime_year[0])) {
-      modified = modified.replace(/\D(\d{4})$/, '')
+      modified = title.replace(/\D(\d{4})$/, '')
       titles.add(modified)
+    }
+
+    // preemptively change S2 into Season 2 or 2nd Season, otherwise this will have accuracy issues
+    const seasonMatch = modified.match(/ S(\d+)/)
+    if (obj.anime_season[0] && Number(obj.anime_season[0]) > 1) {
+      modified = modified + ` ${Number(obj.anime_season[0])}${postfix[Number(obj.anime_season[0])] ?? 'th'} Season`
+      titles.add(modified)
+      titles.add(modified + ` Season ${Number(obj.anime_season[0])}`)
+    } else if (seasonMatch) {
+      if (Number(seasonMatch[1]) === 1) { // if this is S1, remove the " S1" or " S01"
+        modified = modified.replace(/ S(\d+)/, '')
+        titles.add(modified)
+      } else {
+        modified = modified.replace(/ S(\d+)/, ` ${Number(seasonMatch[1])}${postfix[Number(seasonMatch[1])] ?? 'th'} Season`)
+        titles.add(modified)
+        titles.add(modified.replace(/ S(\d+)/, ` Season ${Number(seasonMatch[1])}`))
+      }
+    } else {
+      // only add original title [to not duplicate with year] if we're sure there's no season stuff that might potentially pollute the search
+      titles.add(title)
     }
 
     // remove - :
