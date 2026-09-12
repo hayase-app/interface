@@ -12,7 +12,7 @@
   import type { LibraryEntry } from 'native'
 
   import { goto } from '$app/navigation'
-  import { FolderSync, Trash } from '$lib/components/icons/animated'
+  import { Download, FolderSync, Trash } from '$lib/components/icons/animated'
   import * as Dialog from '$lib/components/ui/dialog'
   import { Input } from '$lib/components/ui/input'
   import * as Table from '$lib/components/ui/table'
@@ -131,6 +131,18 @@
     })
   }
 
+  function downloadTorrents () {
+    toast.promise(
+      Promise.all(getSelected().map(({ hash, mediaID, episode }) => server.backgroundDownload(hash, mediaID, episode))), {
+        loading: 'Adding to background downloads...',
+        success: 'Added to background downloads',
+        error: e => {
+          console.error(e)
+          return 'Failed to add to background downloads\n' + ('stack' in (e as object) ? (e as Error).stack : 'Unknown error')
+        }
+      })
+  }
+
   function deleteTorrents () {
     toast.promise(
       native.deleteTorrents(getSelected().map(e => e.hash))
@@ -156,6 +168,9 @@
       bind:value={$filterValue} />
     <MagnifyingGlass class='h-4 w-4 shrink-0 opacity-50 absolute left-3 text-muted-foreground z-10 pointer-events-none' />
   </div>
+  <Button variant='secondary' size='icon' class='border-0 animated-icon' on:click={downloadTorrents} disabled={!$someRowsSelected}>
+    <Download class={cn('size-4')} />
+  </Button>
   <Button variant='secondary' size='icon' class='border-0 animated-icon' on:click={rescanTorrents} disabled={!$someRowsSelected}>
     <FolderSync class={cn('size-4')} />
   </Button>

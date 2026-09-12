@@ -59,10 +59,12 @@
 </script>
 
 <script lang='ts'>
+  import DownloadIcon from 'lucide-svelte/icons/download'
   import Folder from 'lucide-svelte/icons/folder'
   import { flip } from 'svelte/animate'
   import { quartInOut } from 'svelte/easing'
 
+  import { Button } from './ui/button'
   import ProgressButton from './ui/button/progress-button.svelte'
   import { Banner } from './ui/img'
 
@@ -113,6 +115,11 @@
     close()
     await sleep(300)
     goto('/#/app/player')
+  }
+
+  async function download ({ hash, link }: TorrentResult) {
+    if (!open || !$searchStore) return
+    await server.backgroundDownload(hash, $searchStore.media.id, $searchStore.episode, link)
   }
 
   async function playBest () {
@@ -270,12 +277,19 @@
                 <div class='flex pl-2 flex-col justify-between w-full h-20 relative min-w-0 text-[.7rem]'>
                   <div class='flex w-full items-center'>
                     <div class='text-xl font-bold text-nowrap group-select/card:text-custom transition-colors pl-6 md:pl-0'>{getGroup(result.parseObject)}</div>
-                    <div class='ml-auto flex gap-2 self-start'>
+                    <div class='ml-auto flex gap-2 self-start items-center'>
                       {#each result.extension as id (id)}
                         {#if $savedConfigs[id]}
                           <img src={$savedConfigs[id].icon} alt={id} class='size-4' title='Provided by {id}' decoding='async' loading='lazy' />
                         {/if}
                       {/each}
+                      <Button
+                        variant='ghost'
+                        size='icon-sm'
+                        title='Download in background'
+                        on:click={(e) => { e.stopPropagation(); download(result) }}>
+                        <DownloadIcon class='size-4' />
+                      </Button>
                     </div>
                   </div>
                   <div class='text-muted-foreground text-ellipsis text-nowrap overflow-hidden'>{simplifyFilename(result.parseObject)}</div>

@@ -42,6 +42,8 @@ export const server = new class ServerClient {
 
   peers = this._timedSafeStore([], native.peerInfo)
 
+  activeTorrents = this._timedSafeStore([], native.activeTorrents, undefined, true)
+
   files = this._timedSafeStore([], native.fileInfo)
 
   trackers = derived(this._timedSafeStore({}, native.trackers, 120_000), ($trackers) => Object.entries($trackers).map(([announce, trackers]) => ({ announce, ...trackers })))
@@ -113,8 +115,16 @@ export const server = new class ServerClient {
     return await this.playHash(infoHash, media, episode, identifier)
   }
 
+  async backgroundDownload (infoHash: string, mediaID: number, episode: number, torrent: string | ArrayBufferView = infoHash) {
+    if (!infoHash) return
+    debug('downloading torrent in background', infoHash, mediaID, episode)
+    const files = await native.addTorrent(torrent, mediaID, episode, true)
+    this.downloaded.value.add(infoHash)
+    return files
+  }
+
   async _loadTorrent (infoHash: string, torrent: string | ArrayBufferView, media: Media, episode: number) {
-    const result = { id: infoHash, media, episode, files: await native.playTorrent(torrent, media.id, episode) }
+    const result = { id: infoHash, media, episode, files: await native.addTorrent(torrent, media.id, episode, false) }
     debug('torrent play result', result)
 
     if (get(this.last)?.id === infoHash) this.last.set({ id: infoHash, media, episode })

@@ -18,7 +18,7 @@ export const settings = persisted('settings', defaults, { beforeRead: value => (
 
 export const debug = persisted('debug-key', '')
 
-const alID = SUPPORTS.isIOS ? '39545' : dev ? '26159' : '3461'
+const alID = SUPPORTS.isIOS ? '39545' : dev ? '26159' : '50801'
 const malID = 'd93b624a92e431a9b6dfe7a66c0c5bbb'
 export const anilistClientID = persisted('anilist-client-id', alID, {
   beforeWrite: v => v || alID,

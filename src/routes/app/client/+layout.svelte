@@ -49,6 +49,14 @@
       }
     },
     {
+      title: 'Downloads',
+      href: '/#/app/client/downloads',
+      overview: {
+        title: 'Background Downloads',
+        desc: 'Torrents downloading in the background, their progress, and transfer statistics.'
+      }
+    },
+    {
       title: 'Settings',
       href: '/#/app/settings/client'
     }

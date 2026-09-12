@@ -7,13 +7,13 @@ import { get } from 'svelte/store'
 
 import type { ResolvedFile } from './resolver'
 import type { MediaInfo } from './util'
-import type { ASSEvent, ASSStyle } from 'jassub/dist/worker/util'
+import type { ASSStyle } from 'jassub/dist/worker/util'
 import type { SubtitleTrack, TorrentFile } from 'native'
 
 import { extensions } from '$lib/modules/extensions'
 import native from '$lib/modules/native'
 import { type defaults, settings } from '$lib/modules/settings'
-import { fontRx, HashMap, subRx, subtitleExtensions, toTS } from '$lib/utils'
+import { fontRx, subRx, subtitleExtensions, toTS } from '$lib/utils'
 
 const defaultHeader = `[Script Info]
 Title: English (US)
@@ -87,9 +87,8 @@ function detectCJKLanguage (str: string) {
   return null
 }
 
-let lastSelectedTrack: { language?: string, name?: string, number: string } | undefined
+let lastSelectedTrack: SubtitleTrack | undefined
 
-const stylesRx = /^Style:[^,]*/gm
 export default class Subtitles {
   video?: HTMLVideoElement
   canvas?: HTMLCanvasElement
@@ -99,7 +98,7 @@ export default class Subtitles {
   current = writable<number | string>(-1)
   set = get(settings)
 
-  _tracks = writable<Record<number | string, { events: HashMap<{ text: string, time: number, duration: number, style?: string }, ASSEvent>, meta: SubtitleTrack, styles: Record<string | number, number> }>>({})
+  _tracks = writable<Record<number | string, { events: Map<string, { text: string, time: number, duration: number }>, meta: SubtitleTrack }>>({})
 
   constructor (video: HTMLVideoElement | undefined, otherFiles: TorrentFile[], mediaInfo: MediaInfo, canvas?: HTMLCanvasElement) {
     this.video = video
@@ -143,15 +142,9 @@ export default class Subtitles {
     const tracks = native.tracks(this.selected.hash, this.selected.id).then(async tracklist => {
       for (const track of tracklist) {
         const newtrack = this.track(track.number)
-        newtrack.styles.Default = 0
         if (track.header?.startsWith('[Script Info]')) track.type = 'ass'
         track.header ??= defaultHeader
         newtrack.meta = track
-        const styleMatches = track.header.match(stylesRx)
-        if (!styleMatches) continue
-        for (let i = 0; i < styleMatches.length; ++i) {
-          newtrack.styles[styleMatches[i]!.replace('Style:', '').trim()] = i + 1
-        }
       }
       await this.initSubtitleRenderer()
 
@@ -207,16 +200,17 @@ export default class Subtitles {
       await this.selectCaptions(tracks[0]![0])
     }).catch(console.error)
 
-    native.subtitles(this.selected.hash, this.selected.id, async (subtitle: { text: string, time: number, duration: number, style?: string }, trackNumber) => {
+    native.subtitles(this.selected.hash, this.selected.id, async (subtitle, trackNumber) => {
       await tracks
-      const { events, meta, styles } = this.track(trackNumber)
-      if (events.has(subtitle)) return
-      const event = this.constructSub(subtitle, meta.type !== 'ass', events.size, styles[subtitle.style ?? 'Default'] ?? 0)
-      events.add(subtitle, event)
+      const { events, meta } = this.track(trackNumber)
+      const key = subtitle.text + subtitle.duration.toString() + subtitle.time.toString()
+      if (events.has(key)) return
+      const event = this.constructSub(subtitle, meta.type !== 'ass', events.size)
+      events.set(key, event)
       if (Number(this.current.value) === trackNumber) {
         await this.jassub?.ready
         if (this.jassub?._destroyed) return
-        this.jassub?.renderer.createEvent(event)
+        this.jassub?.renderer.processChunk(event.text, event.time, event.duration)
       }
     }).catch(console.error)
 
@@ -272,14 +266,7 @@ export default class Subtitles {
     if (!convert) return
     const { header, type } = convert
     const newtrack = this.track(trackNumber)
-    newtrack.styles.Default = 0
-    newtrack.meta = { type, header, number: '' + trackNumber, name, language: (detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber, _compressed: false, default: false, forced: false }
-    const styleMatches = header.match(stylesRx)
-    if (styleMatches) {
-      for (let i = 0; i < styleMatches.length; ++i) {
-        newtrack.styles[styleMatches[i]!.replace('Style:', '').trim()] = i + 1
-      }
-    }
+    newtrack.meta = { type, header, number: trackNumber, name, language: (detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber, _compressed: false, default: false, forced: false }
     if (this.current.value === -1) {
       await this.initSubtitleRenderer()
       await this.selectCaptions(trackNumber)
@@ -351,7 +338,7 @@ export default class Subtitles {
     const tracks = this._tracks.value
 
     tracks[trackNumber] ??= {
-      events: new HashMap(),
+      events: new Map(),
       // @ts-expect-error initializing with empty object
       meta: {},
       styles: {}
@@ -360,38 +347,29 @@ export default class Subtitles {
     return tracks[trackNumber]!
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructSub (subtitle: any, isNotAss: boolean, subtitleIndex: number, Style: number): ASSEvent {
-    let Text = subtitle.text ?? ''
-    if (isNotAss) { // converts VTT or other to SSA
-      const matches: string[] | null = Text.match(/<[^>]+>/g) // create array of all tags
-      if (matches) {
-        matches.forEach(match => {
-          if (match.includes('</')) { // check if its a closing tag
-            Text = Text.replace(match, match.replace('</', '{\\').replace('>', '0}'))
-          } else {
-            Text = Text.replace(match, match.replace('<', '{\\').replace('>', '1}'))
-          }
-        })
-      }
-      // replace all html special tags with normal ones
-      Text = Text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, '\\h').replace(/\r?\n/g, '\\N')
-    } else {
-      Text = Text.replace(/\r?\n/g, '')
+  constructSub (subtitle: { text: string, time: number, duration: number}, isNotAss: boolean, subtitleIndex: number) {
+    if (!isNotAss) {
+      subtitle.text = subtitle.text.replace(/\r?\n/g, '')
+      return subtitle
     }
-    return {
-      Start: subtitle.time,
-      Duration: subtitle.duration,
-      Style,
-      Name: subtitle.name ?? '',
-      MarginL: Number(subtitle.marginL) || 0,
-      MarginR: Number(subtitle.marginR) || 0,
-      MarginV: Number(subtitle.marginV) || 0,
-      Effect: subtitle.effect ?? '',
-      Text,
-      ReadOrder: subtitle.readOrder ?? subtitleIndex,
-      Layer: Number(subtitle.layer) || 0
+    let text = subtitle.text ?? ''
+    // converts VTT or other to SSA
+    const matches: string[] | null = text.match(/<[^>]+>/g) // create array of all tags
+    if (matches) {
+      matches.forEach(match => {
+        if (match.includes('</')) { // check if its a closing tag
+          text = text.replace(match, match.replace('</', '{\\').replace('>', '0}'))
+        } else {
+          text = text.replace(match, match.replace('<', '{\\').replace('>', '1}'))
+        }
+      })
     }
+    // replace all html special tags with normal ones
+    text = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, '\\h').replace(/\r?\n/g, '\\N')
+
+    // "64,0,Default,,0,0,0,,Hello!"
+
+    return { ...subtitle, text: `${subtitleIndex},0,Default,,0,0,0,,${text}` }
   }
 
   async selectCaptions (trackNumber: number | string) {
@@ -411,7 +389,7 @@ export default class Subtitles {
     lastSelectedTrack = track.meta
 
     await this.jassub.renderer.setTrack(track.meta.header?.slice(0, -1) || defaultHeader)
-    for (const subtitle of track.events) await this.jassub.renderer.createEvent(subtitle)
+    for (const { text, duration, time } of track.events.values()) await this.jassub.renderer.processChunk(text, time, duration)
     const lang = track.meta.language
     if (LANGUAGE_OVERRIDES[lang]) {
       const name = LANGUAGE_OVERRIDES[lang]

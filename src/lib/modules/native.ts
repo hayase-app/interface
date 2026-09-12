@@ -118,7 +118,8 @@ export default Object.assign<Native, Partial<Native>>({
   checkIncomingConnections: () => new Promise(resolve => setTimeout(() => resolve(false), 1000)),
   updatePeerCounts: async () => [],
   isApp: false,
-  playTorrent: async () => dummyFiles,
+  addTorrent: async () => dummyFiles,
+  activeTorrents: async () => [],
   rescanTorrents: async () => undefined,
   deleteTorrents: async () => undefined,
   library: async () => [],
@@ -130,7 +131,7 @@ export default Object.assign<Native, Partial<Native>>({
     { start: 1.0 * 60 * 1000, end: 1.2 * 60 * 1000, text: 'Chapter 1' },
     { start: 1.4 * 60 * 1000, end: 88 * 1000, text: 'Chapter 2 ' }
   ],
-  version: async () => 'v6.4.4',
+  version: async () => 'v6.5.0',
   updateSettings: async () => undefined,
   setDOH: async () => undefined,
   cachedTorrents: async () => [],
