@@ -59,12 +59,10 @@
 </script>
 
 <script lang='ts'>
-  import DownloadIcon from 'lucide-svelte/icons/download'
   import Folder from 'lucide-svelte/icons/folder'
   import { flip } from 'svelte/animate'
   import { quartInOut } from 'svelte/easing'
 
-  import { Button } from './ui/button'
   import ProgressButton from './ui/button/progress-button.svelte'
   import { Banner } from './ui/img'
 
@@ -283,13 +281,13 @@
                           <img src={$savedConfigs[id].icon} alt={id} class='size-4' title='Provided by {id}' decoding='async' loading='lazy' />
                         {/if}
                       {/each}
-                      <Button
-                        variant='ghost'
-                        size='icon-sm'
+                      <button
                         title='Download in background'
-                        on:click={(e) => { e.stopPropagation(); download(result) }}>
-                        <DownloadIcon class='size-4' />
-                      </Button>
+                        on:click={(e) => { e.stopPropagation(); download(result) }}
+                        class='ml-1 px-1.5 py-0.5 text-[0.55rem] font-black uppercase leading-none shadow-[3px_3px_0_0_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none'
+                        style="background:#39ff14;color:#000;border:3px dashed #ff00ff;border-radius:0;font-family:'Comic Sans MS','Comic Sans',cursive;transform:rotate(-4deg);">
+                        Download in Background
+                      </button>
                     </div>
                   </div>
                   <div class='text-muted-foreground text-ellipsis text-nowrap overflow-hidden'>{simplifyFilename(result.parseObject)}</div>
