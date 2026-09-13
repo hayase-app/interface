@@ -120,7 +120,13 @@ export const server = new class ServerClient {
     debug('downloading torrent in background', infoHash, mediaID, episode)
     const files = await native.addTorrent(torrent, mediaID, episode, true)
     this.downloaded.value.add(infoHash)
+    await this.updateLibrary()
     return files
+  }
+
+  async removeBackgroundDownloads (hashes: string[]) {
+    await native.removeBackgroundTorrents(hashes)
+    await this.updateLibrary()
   }
 
   async _loadTorrent (infoHash: string, torrent: string | ArrayBufferView, media: Media, episode: number) {

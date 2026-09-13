@@ -122,6 +122,7 @@ export default Object.assign<Native, Partial<Native>>({
   activeTorrents: async () => [],
   rescanTorrents: async () => undefined,
   deleteTorrents: async () => undefined,
+  removeBackgroundTorrents: async () => undefined,
   library: async () => [],
   attachments: async () => [],
   tracks: async () => [],
