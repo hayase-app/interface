@@ -60,6 +60,7 @@ const torrentSettings = derivedDeep(settings, ($settings) => ({
   torrentStreamedDownload: $settings.torrentStreamedDownload,
   torrentSpeed: $settings.torrentSpeed,
   maxConns: $settings.maxConns,
+  connectionBudget: $settings.connectionBudget,
   torrentPort: $settings.torrentPort,
   dhtPort: $settings.dhtPort,
   torrentPeX: $settings.torrentPeX,

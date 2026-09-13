@@ -82,8 +82,11 @@
       <div class='shrink-0 absolute right-3 z-10 pointer-events-none text-sm leading-5'>Mb/s</div>
     </div>
   </SettingCard>
-  <SettingCard class='bg-transparent' let:id title='Max Number of Connections' description='Number of peers per torrent. Higher values will increase download speeds but might quickly fill up available ports if your ISP limits the maximum allowed number of open connections.'>
+  <SettingCard class='bg-transparent' let:id title='Maximum Connections per Torrent' description='The maximum number of connections allowed for a single torrent. igher values will increase download speeds but might quickly fill up available ports if your ISP limits the maximum allowed number of open connections.'>
     <Input type='number' inputmode='numeric' pattern='[0-9]*' min='1' max='512' bind:value={$settings.maxConns} {id} class='w-32 shrink-0' />
+  </SettingCard>
+  <SettingCard class='bg-transparent' let:id title='Global Maximum Connections' description='The maximum number of connections allowed for the whole torrent client at any given time, shared across all torrents. This can be lower than the per-torrent limit when many torrents run at the same time. Increase this if you have hundreds of torrents.'>
+    <Input type='number' inputmode='numeric' pattern='[0-9]*' min='1' bind:value={$settings.connectionBudget} {id} class='w-32 shrink-0' />
   </SettingCard>
   <SettingCard class='bg-transparent' let:id title='Forwarded Torrent Port' description='Forwarded port used for incoming torrent connections. 0 automatically finds an open unused port. Change this to a specific port if you forwarded manually, or if you use a VPN.'>
     <Input type='number' inputmode='numeric' pattern='[0-9]*' min='0' max='65536' bind:value={$settings.torrentPort} {id} class='w-32 shrink-0' />
