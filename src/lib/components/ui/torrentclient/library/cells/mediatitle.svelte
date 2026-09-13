@@ -3,7 +3,7 @@
 
   export let value: number
 
-  const query = client.singleTitle(value)
+  $: query = client.singleTitle(value)
 </script>
 
 {#if $query.fetching}
