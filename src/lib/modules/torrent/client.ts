@@ -18,6 +18,15 @@ import { fastPrettyBytes } from '$lib/utils'
 
 const debug = Debug('ui:torrent-client')
 
+function showError (message: string, error: unknown, id?: string) {
+  console.error(error)
+  toast.error(message, {
+    description: error instanceof Error ? error.message : 'Unknown error',
+    duration: 15_000,
+    id
+  })
+}
+
 const defaultTorrentInfo: TorrentInfo = {
   name: '',
   progress: 0,
@@ -63,7 +72,7 @@ export const server = new class ServerClient {
             if (id) set(await fn(id))
           }
         } catch (error) {
-          console.warn(error)
+          showError('Failed to update torrent client data', error, 'torrent-client-update')
         }
         listener = setTimeout(update, duration)
       }
@@ -84,7 +93,7 @@ export const server = new class ServerClient {
       native.downloadProgress(stats.progress)
     })
 
-    this.cachedTorrents()
+    this.cachedTorrents().catch(error => showError('Failed to load cached torrents', error))
   }
 
   async updateLibrary () {
@@ -104,6 +113,7 @@ export const server = new class ServerClient {
     this.last.set({ id: infoHash, media, episode })
     client.setInitialState(media, episode)
     this.active.value = this._loadTorrent(infoHash, torrent, media, episode)
+    this.active.value.catch(error => showError('Failed to load torrent', error))
     w2globby.value?.mediaChange({ episode, mediaId: media.id, torrent: infoHash })
     return this.active.value
   }
@@ -120,13 +130,11 @@ export const server = new class ServerClient {
     debug('downloading torrent in background', infoHash, mediaID, episode)
     const files = await native.addTorrent(torrent, mediaID, episode, true)
     this.downloaded.value.add(infoHash)
-    await this.updateLibrary()
     return files
   }
 
   async removeBackgroundDownloads (hashes: string[]) {
     await native.removeBackgroundTorrents(hashes)
-    await this.updateLibrary()
   }
 
   async _loadTorrent (infoHash: string, torrent: string | ArrayBufferView, media: Media, episode: number) {
@@ -137,13 +145,17 @@ export const server = new class ServerClient {
     this.downloaded.value.add(infoHash)
 
     this._addNZBs(infoHash, media, episode, result.files.map(({ name }) => name))
+      .catch(error => showError('Failed to query NZB extensions', error))
     this._addHTTPWebSeeds(infoHash, media, episode, result.files.map(({ name, id }) => ({ name, index: id })))
+      .catch(error => showError('Failed to query HTTP webseed extensions', error))
 
-    native.checkAvailableSpace().then(space => {
-      if (space < 1e9) {
-        toast.error('Low disk space', { description: `${fastPrettyBytes(space)} available, 1GB is the recommended minimum. Consider freeing up some space otherwise issues may occur.`, duration: 15_000 })
-      }
-    })
+    native.checkAvailableSpace()
+      .then(space => {
+        if (space < 1e9) {
+          toast.error('Low disk space', { description: `${fastPrettyBytes(space)} available, 1GB is the recommended minimum. Consider freeing up some space otherwise issues may occur.`, duration: 15_000 })
+        }
+      })
+      .catch(error => showError('Failed to check available disk space', error))
 
     return result
   }
@@ -160,7 +172,7 @@ export const server = new class ServerClient {
       try {
         await native.createNZB(hash, nzb)
       } catch (e) {
-        toast.error('Failed to add NZB', { description: (e as Error).message, duration: 15_000 })
+        showError('Failed to add NZB', e)
       }
     }
   }
@@ -174,7 +186,7 @@ export const server = new class ServerClient {
       try {
         await native.createHTTPWebSeed(hash, webseed.url, webseed.authorization, webseed.index, webseed.rateLimit)
       } catch (e) {
-        toast.error('Failed to add HTTP webseed', { description: (e as Error).message, duration: 15_000 })
+        showError('Failed to add HTTP webseed', e)
       }
     }
   }

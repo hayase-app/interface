@@ -4,6 +4,7 @@
   import Download from 'svelte-radix/Download.svelte'
   import File from 'svelte-radix/File.svelte'
   import MagnifyingGlass from 'svelte-radix/MagnifyingGlass.svelte'
+  import { toast } from 'svelte-sonner'
 
   import { SingleCombo } from './ui/combobox'
   import { Input } from './ui/input'
@@ -117,7 +118,15 @@
 
   async function download ({ hash, link }: TorrentResult) {
     if (!open || !$searchStore) return
-    await server.backgroundDownload(hash, $searchStore.media.id, $searchStore.episode, link)
+    try {
+      await server.backgroundDownload(hash, $searchStore.media.id, $searchStore.episode, link)
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to start background download', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+        duration: 15_000
+      })
+    }
   }
 
   async function playBest () {
