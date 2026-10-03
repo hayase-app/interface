@@ -56,7 +56,7 @@
 
   function aggregate (data: ResultOf<typeof Schedule>, dayList: Array<{ date: Date, number: number }>, $entries: Map<number, ResultOf<typeof FullMediaList>>) {
     // join media from all queries into single list, de-duplicate it, and make sure it's not dropped
-    const mediaList = [...data.curr1?.media ?? [], ...data.curr2?.media ?? [], ...data.curr3?.media ?? [], ...data.residue?.media ?? [], ...data.next1?.media ?? [], ...data.next2?.media ?? []]
+    const mediaList = [...data.curr1?.media ?? [], ...data.curr2?.media ?? [], ...data.curr3?.media ?? [], ...data.residue?.media ?? [], ...data.residueFinished?.media ?? [], ...data.next1?.media ?? [], ...data.next2?.media ?? []]
       .filter((v, i, a) => v != null && a.findIndex(s => s?.id === v.id) === i && $entries.get(v.id)?.status !== 'DROPPED') as Array<ResultOf<typeof ScheduleMedia>>
 
     const dayMap: Record<string, DayAirTimes | undefined> = Object.fromEntries(dayList.map(day => [+day.date, { day, episodes: [] }]))

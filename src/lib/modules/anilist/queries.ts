@@ -330,6 +330,11 @@ export const Schedule = gql(`
         ...ScheduleMedia
       }
     },
+    residueFinished: Page(page: 1) {
+      media(type: ANIME, season: $seasonLast, seasonYear: $seasonYearLast, status: FINISHED, episodes_greater: 11, format_not: $formatNot, onList: $onList, id_in: $ids, genre_not_in: $nsfw) {
+        ...ScheduleMedia
+      }
+    },
     next1: Page(page: 1) {
       media(type: ANIME, season: $seasonNext, seasonYear: $seasonYearNext, sort: [START_DATE], format_not: $formatNot, onList: $onList, id_in: $ids, genre_not_in: $nsfw) {
         ...ScheduleMedia
