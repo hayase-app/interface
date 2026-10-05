@@ -99,8 +99,8 @@ importers:
         specifier: ^18.0.6
         version: 18.0.6
       mediabunny:
-        specifier: npm:@thaunknown/mediabunny@^1.50.9
-        version: '@thaunknown/mediabunny@1.50.9'
+        specifier: npm:@thaunknown/mediabunny@^1.61.1
+        version: '@thaunknown/mediabunny@1.61.1'
       overtype:
         specifier: ^2.4.0
         version: 2.4.0
@@ -928,8 +928,8 @@ packages:
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
 
-  '@thaunknown/mediabunny@1.50.9':
-    resolution: {integrity: sha512-nOM474OciBBJAMzV7ewVm6E/ELaSL60fD2WK/arjoqOkpbE5OE8hd/JYF1ymAJp1KKS98nfMzJoiGk7AtMvAMg==}
+  '@thaunknown/mediabunny@1.61.1':
+    resolution: {integrity: sha512-P/DqaA0TyEmaujhQd1HdaIH5WEFDwH/v2AC3gFjTaHIsJeL24Sh214jMl2E781EprbmtE+tXR9uK59O/rYTZYw==}
 
   '@thaunknown/simple-peer@9.12.1':
     resolution: {integrity: sha512-IS5BXvXx7cvBAzaxqotJf4s4rJCPk5JABLK6Gbnn7oAmWVcH4hYABabBBrvvJtv/xyUqR4v/H3LalnGRJJfEog==}
@@ -3811,7 +3811,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@thaunknown/mediabunny@1.50.9':
+  '@thaunknown/mediabunny@1.61.1':
     dependencies:
       '@types/dom-mediacapture-transform': 0.1.11
       '@types/dom-webcodecs': 0.1.13

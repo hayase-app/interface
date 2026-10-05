@@ -16,7 +16,7 @@
   import { authAggregator } from '$lib/modules/auth'
   import native from '$lib/modules/native'
   import { settings } from '$lib/modules/settings'
-  import { breakpoints, cn, toTS } from '$lib/utils'
+  import { breakpoints, clamp, cn, toTS } from '$lib/utils'
 
   export let mediaInfo: MediaInfo
   export let videoFiles: ResolvedFile[]
@@ -54,10 +54,6 @@
   $: checkComplete($elapsed)
 
   const duration = (mediaInfo.media.duration ?? 24) * 60
-
-  function clamp (value: number): number {
-    return Math.min(Math.max(value, 0), 100)
-  }
 </script>
 
 <div class='flex-col w-full flex-shrink-0 relative overflow-clip flex justify-center items-center bg-background {isMiniplayer ? 'aspect-video cursor-pointer' : 'h-full' } px-8' on:click={openPlayer} bind:this={wrapper}>
@@ -68,13 +64,13 @@
       <div class='ml-auto self-end text-sm leading-none font-light text-nowrap mt-3'>{toTS(Math.min($elapsed, duration))} / {toTS(duration)}</div>
       <div class='relative w-full h-1 flex items-center justify-center overflow-clip rounded-[2px]'>
         <div class='bg-[rgba(217,217,217,0.4)] absolute left-0 w-full h-0.5' />
-        <div class='bg-primary absolute w-full left-0 h-0.5 transform-gpu' style:--tw-translate-x='{clamp($elapsed / duration * 100) - 100}%' />
+        <div class='bg-primary absolute w-full left-0 h-0.5 transform-gpu' style:--tw-translate-x='{clamp($elapsed / duration * 100, 0, 100) - 100}%' />
       </div>
     {:then _}
       <div class='ml-auto self-end text-sm leading-none font-light text-nowrap mt-3'>{toTS(Math.min((Date.now() - startTime) / 1000, duration))} / {toTS(duration)}</div>
       <div class='relative w-full h-1 flex items-center justify-center overflow-clip rounded-[2px]'>
         <div class='bg-[rgba(217,217,217,0.4)] absolute left-0 w-full h-0.5' />
-        <div class='bg-primary absolute w-full left-0 h-0.5 transform-gpu' style:--tw-translate-x='{clamp((Date.now() - startTime) / 10 / duration) - 100}%' />
+        <div class='bg-primary absolute w-full left-0 h-0.5 transform-gpu' style:--tw-translate-x='{clamp((Date.now() - startTime) / 10 / duration, 0, 100) - 100}%' />
       </div>
     {:catch error}
       <div class='text-red-500 text-sm font-light leading-none whitespace-pre-wrap'>{error.stack}</div>

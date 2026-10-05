@@ -23,6 +23,10 @@ export function anitomyscript (input: string[]) {
   return as(fixed)
 }
 
+export function clamp (value: number, min = 0, max = Number.MAX_SAFE_INTEGER) {
+  return Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)) || 0
+}
+
 export function assert (x: unknown): asserts x {
   if (!x) {
     throw new Error('Assertion failed.')

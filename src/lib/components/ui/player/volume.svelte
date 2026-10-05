@@ -7,10 +7,7 @@
   import Volume2 from '$lib/components/icons/Volume2.svelte'
   import { Button } from '$lib/components/ui/button'
   import { keywrap } from '$lib/modules/navigate'
-
-  function clamp (value: number) {
-    return Math.min(Math.max(value, 0), 1)
-  }
+  import { clamp } from '$lib/utils'
 
   export let volume: number
   export let muted: boolean
@@ -20,7 +17,7 @@
 
   function calculatePositionProgress ({ pageX, currentTarget }: PointerEvent) {
     const target = currentTarget as HTMLDivElement
-    const float = clamp((pageX - target.getBoundingClientRect().left) / target.clientWidth)
+    const float = clamp((pageX - target.getBoundingClientRect().left) / target.clientWidth, 0, 1)
     if (seeking) {
       volume = float
     }

@@ -202,3 +202,39 @@ export function on (
 
   return { [Symbol.asyncIterator] () { return iterator } }
 }
+
+export type EventDetail<M extends { [K in keyof M]: Event }, K extends keyof M> =
+  M[K] extends CustomEvent<infer D> ? D : never
+
+export type CustomEventKey<M extends { [K in keyof M]: Event }> = {
+  [K in keyof M]: M[K] extends CustomEvent<unknown> ? K : never
+}[keyof M]
+
+export type SimpleEventKey<M extends { [K in keyof M]: Event }> = {
+  [K in keyof M]: M[K] extends CustomEvent<unknown> ? never : K
+}[keyof M]
+
+// An EventTarget whose add/remove/emit methods are keyed to an event map.
+type AnyListener = EventListenerOrEventListenerObject | null | ((event: never) => void)
+
+export default class TypedEventTarget<M extends { [K in keyof M]: Event }> extends EventTarget {
+  addEventListener<K extends keyof M> (type: K, listener: (event: M[K]) => void, options?: boolean | AddEventListenerOptions): void
+  addEventListener (type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions): void
+  addEventListener (type: string, listener: AnyListener, options?: boolean | AddEventListenerOptions): void {
+    super.addEventListener(type, listener as EventListenerOrEventListenerObject | null, options)
+  }
+
+  removeEventListener<K extends keyof M> (type: K, listener: (event: M[K]) => void, options?: boolean | EventListenerOptions): void
+  removeEventListener (type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | EventListenerOptions): void
+  removeEventListener (type: string, listener: AnyListener, options?: boolean | EventListenerOptions): void {
+    super.removeEventListener(type, listener as EventListenerOrEventListenerObject | null, options)
+  }
+
+  _emit<K extends CustomEventKey<M>> (type: K, detail: EventDetail<M, K>) {
+    this.dispatchEvent(new CustomEvent(type as string, { detail }))
+  }
+
+  _emitSimple<K extends SimpleEventKey<M>> (type: K) {
+    this.dispatchEvent(new Event(type as string))
+  }
+}

@@ -1,6 +1,6 @@
 {
 	"name": "ui",
-	"version": "6.5.7",
+	"version": "6.5.8",
 	"license": "BUSL-1.1",
 	"private": true,
 	"packageManager": "pnpm@10.28.0",
@@ -82,7 +82,7 @@
 		"js-levenshtein": "^1.1.6",
 		"lucide-svelte": "^1.0.1",
 		"marked": "^18.0.6",
-		"mediabunny": "npm:@thaunknown/mediabunny@^1.50.9",
+		"mediabunny": "npm:@thaunknown/mediabunny@^1.61.1",
 		"overtype": "^2.4.0",
 		"p2pt": "github:ThaUnknown/p2pt#modernise",
 		"parse-torrent": "^11.0.23",
