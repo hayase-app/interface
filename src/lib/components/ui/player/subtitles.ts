@@ -251,9 +251,6 @@ export default class Subtitles {
   }
 
   async addSingleSubtitleFile (file: File) {
-    // lets hope there's no more than 1000 subtitle tracks in a file
-    const trackNumber = 1000 + Object.keys(this._tracks.value).length
-
     const dot = file.name.lastIndexOf('.')
     const extension = file.name.substring(dot + 1).toLowerCase()
     if (!subtitleExtensions.includes(extension)) return
@@ -266,6 +263,9 @@ export default class Subtitles {
     const convert = Subtitles.convertSubText(await file.text(), extension)
     if (!convert) return
     const { header, type } = convert
+    // picked after the await, or files that arrive together all get the same number and overwrite each other
+    // lets hope there's no more than 1000 subtitle tracks in a file
+    const trackNumber = 1000 + Object.keys(this._tracks.value).length
     const newtrack = this.track(trackNumber)
     newtrack.meta = { type, header, number: trackNumber, name, language: (detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber, _compressed: false, default: false, forced: false }
     if (this.current.value === -1) {
