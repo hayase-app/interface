@@ -33,7 +33,7 @@ export default {
   showDetailsInRPC: true,
   showNavigation: false,
   torrentPath: '',
-  angle: 'default' as 'default' | 'd3d11'| 'd3d9' | 'warp' | 'gl' | 'gles' | 'swiftshader' | 'vulkan' | 'metal',
+  angle: 'default' as 'default' | 'd3d11' | 'd3d9' | 'warp' | 'gl' | 'gles' | 'swiftshader' | 'vulkan' | 'metal',
   uiScale: 1,
   titleType: 'ANILIST' as 'ANILIST' | 'ROMAJI' | 'ENGLISH' | 'NATIVE',
   enableExternal: false,
@@ -45,7 +45,7 @@ export default {
   androidStorageType: 'cache',
   showHentai: false,
   hideSpoilers: false,
-  theme: 'default' as 'default' | 'light' | 'catppuccin' | 'dracula' | 'amber' | 'lavender' | 'system' | 'custom',
+  theme: 'default' as 'default' | 'light' | 'catppuccin' | 'dracula' | 'gruvbox' | 'lavender' | 'system' | 'custom',
   customThemeColors: {
     '--custom-background': '#000000',
     '--custom-foreground': '#fafafa',

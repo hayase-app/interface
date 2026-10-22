@@ -220,26 +220,26 @@
   --ring: hsl(258 61% 60%);
 }
 
-.theme-amber {
-  --background: hsl(38 20% 2%);
-  --foreground: hsl(0 0% 96%);
-  --muted: hsl(38 20% 6%);
-  --muted-foreground: hsl(0 0% 55%);
-  --popover: hsl(38 20% 6%);
-  --popover-foreground: hsl(0 0% 96%);
-  --card: hsl(38 20% 4%);
-  --card-foreground: hsl(0 0% 96%);
-  --border: hsl(38 20% 12%);
-  --input: hsl(38 15% 18%);
-  --primary: hsl(38 92% 50%);
-  --primary-foreground: hsl(0 0% 10%);
-  --secondary: hsl(38 30% 18%);
-  --secondary-foreground: hsl(0 0% 96%);
-  --accent: hsl(38 30% 10%);
-  --accent-foreground: hsl(38 92% 85%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --ring: hsl(38 92% 50%);
+.theme-gruvbox {
+  --background: hsl(200 6% 12%);
+  --foreground: hsl(43 50% 81%);
+  --muted: hsl(0 0% 16%);
+  --muted-foreground: hsl(30 11% 51%);
+  --popover: hsl(0 0% 16%);
+  --popover-foreground: hsl(43 50% 81%);
+  --card: hsl(0 0% 16%);
+  --card-foreground: hsl(43 50% 81%);
+  --border: hsl(20 5% 22%);
+  --input: hsl(20 7% 29%);
+  --primary: hsl(27 99% 55%);
+  --primary-foreground: hsl(200 6% 12%);
+  --secondary: hsl(20 7% 29%);
+  --secondary-foreground: hsl(43 50% 81%);
+  --accent: hsl(20 5% 22%);
+  --accent-foreground: hsl(48 82% 88%);
+  --destructive: hsl(6 96% 59%);
+  --destructive-foreground: hsl(200 6% 12%);
+  --ring: hsl(27 99% 55%);
 }
 
 .theme-lavender {

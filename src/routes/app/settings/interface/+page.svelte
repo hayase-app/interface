@@ -85,7 +85,7 @@
     { value: 'light', label: 'Whiteout' },
     { value: 'catppuccin', label: 'Catppuccin' },
     { value: 'dracula', label: 'Dracula' },
-    { value: 'amber', label: 'Amber' },
+    { value: 'gruvbox', label: 'Gruvbox' },
     { value: 'lavender', label: 'Lavender' },
     { value: 'system', label: 'System' },
     { value: 'custom', label: 'Custom' }
