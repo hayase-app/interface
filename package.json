@@ -12,6 +12,7 @@
 		"check": "svelte-check --threshold error --tsconfig ./tsconfig.web.json",
 		"check:watch": "svelte-check --threshold error --tsconfig ./tsconfig.web.json --watch",
 		"test": "pnpm run sync && pnpm run lint && pnpm run gql:check && pnpm run check",
+		"test:gamepad": "node --experimental-vm-modules --test tests/gamepad.test.mjs",
 		"lint": "eslint --quiet -c eslint.config.js",
 		"lint:fix": "eslint --quiet -c eslint.config.js --fix",
 		"gql:turbo": "node ./node_modules/gql.tada/bin/cli.js turbo -c ./tsconfig.web.json",

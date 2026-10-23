@@ -20,6 +20,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
+        projectService: { allowDefaultProject: ['tests/*.mjs'] },
         svelteConfig
       }
     },
@@ -34,6 +35,12 @@ export default tseslint.config(
         }
       ],
       'svelte/no-navigation-without-resolve': ['off']
+    }
+  },
+  {
+    files: ['tests/*.mjs'],
+    languageOptions: {
+      globals: _globals.node
     }
   }
 )

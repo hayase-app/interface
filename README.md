@@ -11,6 +11,7 @@ pnpm i // to install
 pnpm run dev // to develop
 pnpm run build // to build
 pnpm run sync && pnpm run lint && pnpm run gql:check && pnpm run check // to test
+pnpm run test:gamepad // input regression tests, requires Node 22.13+; no dependencies needed
 ```
 
 > [!IMPORTANT]

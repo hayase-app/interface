@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      - name: Test gamepad input
+        run: pnpm run test:gamepad
+
       - name: Check GQL
         run: pnpm run gql:check
 

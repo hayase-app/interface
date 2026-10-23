@@ -15,6 +15,20 @@ const BUTTON_MAP: Record<number, ButtonMap> = {
   15: { key: 'ArrowRight', code: 'ArrowRight' }
 }
 
+// This Android TV remote exposes a non-standard gamepad alongside native keys.
+// Only its D-pad has been verified; leave native OK and Back handling alone.
+const ONN_DPAD_MAP: Record<number, ButtonMap> = {
+  12: BUTTON_MAP[12]!,
+  13: BUTTON_MAP[13]!,
+  14: BUTTON_MAP[14]!,
+  15: BUTTON_MAP[15]!
+}
+
+function isOnnRemote (gamepad: Gamepad | null | undefined) {
+  return !!gamepad?.connected && gamepad.mapping === '' &&
+    /^Onn-Remote Keyboard \(Vendor: 0957 Product: 0031\)$/i.test(gamepad.id)
+}
+
 // Left stick axes -> arrow directions, with hysteresis to avoid flicker
 const STICK_PRESS = 0.5
 const STICK_RELEASE = 0.3
@@ -44,7 +58,7 @@ interface PressState {
 const pressed = new Map<`${number}:${number}`, PressState>() // `${gamepadIndex}:${buttonIndex}`
 
 let rafId = 0
-let pad: Gamepad | null |undefined
+let pad: Gamepad | null | undefined
 
 function dispatch (type: 'keydown' | 'keyup', { key, code }: ButtonMap, repeat = false) {
   inputType.value = 'dpad'
@@ -85,18 +99,37 @@ function handleButton (id: `${number}:${number}`, isDown: boolean, now: number, 
 }
 
 function updateActivePad () {
-  pad = navigator.getGamepads().find(p => p?.mapping === 'standard')
-  if (pad && activityState.value === 'active') start()
+  const pads = navigator.getGamepads()
+  const nextPad = pads.find(p => p?.connected && p.mapping === 'standard') ?? pads.find(isOnnRemote)
+  if (nextPad?.index !== pad?.index || nextPad?.id !== pad?.id || nextPad?.mapping !== pad?.mapping) stop()
+  pad = nextPad
+  if (pad && activityState.value === 'active' && document.visibilityState === 'visible') start()
   else stop()
 }
 
 function start () {
   if (!pad || rafId) return
-  rafId = requestAnimationFrame(start)
+  rafId = requestAnimationFrame(poll)
+}
+
+function poll () {
+  // The scheduled frame has fired. Keep the duplicate-start guard out of this callback.
+  rafId = 0
+  // Gamepad objects can be snapshots: read the current button state every frame.
+  const currentPad = pad && navigator.getGamepads()[pad.index]
+  if (!currentPad?.connected ||
+      (currentPad.mapping !== 'standard' && !isOnnRemote(currentPad)) ||
+      activityState.value !== 'active' || document.visibilityState !== 'visible') {
+    stop()
+    return
+  }
+  if (currentPad.id !== pad?.id || currentPad.mapping !== pad?.mapping) stop()
+  pad = currentPad
+  const buttonMap = isOnnRemote(pad) ? ONN_DPAD_MAP : BUTTON_MAP
   const now = performance.now()
 
   for (let i = 0; i < pad.buttons.length; i++) {
-    const map = BUTTON_MAP[i]
+    const map = buttonMap[i]
     if (!map) continue
     handleButton(`${pad.index}:${i}`, pad.buttons[i]!.pressed, now, map)
   }
@@ -108,10 +141,12 @@ function start () {
   // Standard analog sticks return near 0 when at rest, flight-sim peripherals
   // often peg axes at -1/1 (throttle quadrant, pedals, etc.) causing constant
   // directional navigation.
-  if (Math.abs(x) < 0.9 || Math.abs(y) < 0.9) {
+  if (!isOnnRemote(pad) && (Math.abs(x) < 0.9 || Math.abs(y) < 0.9)) {
     handleStickAxis(pad.index, STICK_LEFT, STICK_RIGHT, x, now)
     handleStickAxis(pad.index, STICK_UP, STICK_DOWN, y, now)
   }
+  if (activityState.value === 'active' && document.visibilityState === 'visible') start()
+  else stop()
 }
 
 function handleStickAxis (gamepadIndex: number, negIdx: number, posIdx: number, value: number, now: number) {
@@ -127,8 +162,7 @@ function handleStickAxis (gamepadIndex: number, negIdx: number, posIdx: number, 
 }
 
 function stop () {
-  if (!rafId) return
-  cancelAnimationFrame(rafId)
+  if (rafId) cancelAnimationFrame(rafId)
   rafId = 0
   // release any buttons still marked as pressed to avoid stuck-key state
   for (const id of pressed.keys()) {
@@ -143,6 +177,7 @@ function stop () {
 if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {
   addEventListener('gamepadconnected', updateActivePad)
   addEventListener('gamepaddisconnected', updateActivePad)
+  document.addEventListener('visibilitychange', updateActivePad)
   // this kicks off polling
   activityState.subscribe(updateActivePad)
 }
