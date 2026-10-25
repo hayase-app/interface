@@ -49,6 +49,8 @@ export default class AudioOutput extends TypedEventTarget<AudioOutputEventMap> {
   playing = false
   // The engine closes this gate while a seek has not presented its video frame.
   canResume?: () => boolean
+  // The fallback clock advances only while a frame can be presented.
+  canAdvance?: () => boolean
   inputRate = 48000
   bufferedFrames = 0
   mediaEnd = 0
@@ -93,7 +95,7 @@ export default class AudioOutput extends TypedEventTarget<AudioOutputEventMap> {
   }
 
   _noAudioTime () {
-    if (!this.playing) return this._anchorMedia
+    if (!this.playing || !(this.canAdvance?.() ?? true)) return this._anchorMedia
     return clamp(this._anchorMedia + ((performance.now() - this._anchorPerf) / 1000) * this.rate, 0, this._duration || Infinity)
   }
 

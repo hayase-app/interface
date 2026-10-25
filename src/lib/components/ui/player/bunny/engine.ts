@@ -84,6 +84,7 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
   _state: PlayerState = 'idle'
   _epoch = 0
   _loadSeq = 0
+  _loading = false
   _seeking = 0
   _destroyed = false
   _preferredAudioLanguage = 'jpn'
@@ -101,6 +102,7 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
     this.canvas = canvas
     this.video = new VideoPipeline(canvas, () => this.audio.time)
     this.audio.canResume = () => this._seeking === 0
+    this.audio.canAdvance = () => !this._loading && this.video.hasFrame
     this._bindPipelines()
   }
 
@@ -129,6 +131,9 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
       this._emit('error', { error: event.detail.error })
     })
     this.video.addEventListener('tick', (event) => {
+      // No frame means the pipeline cannot present yet. Do not report
+      // progress, so the clock shows the buffering state.
+      if (!this.video.hasFrame) return
       this._emit('timeupdate', { time: event.detail.time })
       this._checkEnded(event.detail.time)
       this._updateReadyState()
@@ -205,6 +210,7 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
     const seq = ++this._loadSeq
     const superseded = () => this._destroyed || seq !== this._loadSeq
 
+    this._loading = true
     this._epoch++
     this._reset()
     this._setState('loading')
@@ -252,12 +258,17 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
       await this.seekTo(this._firstTimestamp)
       if (superseded()) return
 
-      this._setState('ready')
+      this._setState(this.paused ? 'ready' : 'playing')
+      if (!this.paused) await this.audio.play()
+      if (superseded()) return
+      this._loading = false
       this._emit('loadedmetadata', { duration: this.duration, videoWidth: this.videoWidth, videoHeight: this.videoHeight })
       this._emitSimple('loadeddata')
     } catch (error) {
       if (superseded()) return
       throw error
+    } finally {
+      if (seq === this._loadSeq) this._loading = false
     }
   }
 
@@ -281,7 +292,7 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
     if (this.playing) return
     if (this._state === 'ended') {
       await this.seekTo(0)
-      if (this._destroyed) return
+      if (this._destroyed || this.paused) return
     }
 
     this.paused = false
@@ -291,15 +302,16 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
     // begins ahead of the decoder.
     if (!this.video.hasFrame) {
       await this.video.seek(this.currentTime)
-      if (this._destroyed) return
+      if (this._destroyed || this.paused) return
     }
 
     this.video.start()
     this._setState('playing')
-    // A seek in flight resumes output after it presents its video frame.
-    if (this._seeking) await this.audio.prime()
+    // A seek in flight or a load in progress resumes output when the frame
+    // is ready. Do not run the clock without a picture.
+    if (this._loading || this._seeking) await this.audio.prime()
     else await this.audio.play()
-    if (this._destroyed) return
+    if (this._destroyed || this.paused) return
     this._wakeLock.request()
   }
 
