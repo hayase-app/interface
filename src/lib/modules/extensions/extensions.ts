@@ -9,7 +9,7 @@ import { settings, type videoResolutions } from '../settings'
 
 import { storage } from './storage'
 
-import type { TorrentResult, WebSeedResult, WebSeedFile } from './types'
+import type { TorrentResult, WebSeedResult, WebSeedFile, SubtitleResult } from './types'
 import type { EpisodesResponse, Titles, Episode } from '../anizip/types'
 import type { AnitomyResult } from 'anitomyscript'
 
@@ -375,10 +375,10 @@ export const extensions = new class Extensions {
 
     const options = await this._getQueryOptions(media, episode)
 
-    const { settled, errors } = await toSettled<ExtensionError, Array<{ url: string, language: string }> | undefined>(extensions.entries().map(async ([id, worker]) => {
+    const { settled, errors } = await toSettled<ExtensionError, SubtitleResult[] | undefined>(extensions.entries().map(async ([id, worker]) => {
       if (!extopts[id]?.enabled || configs[id]?.type !== 'subtitle') return
       try {
-        return await raceTimeout(worker.single(options, extopts[id].options) as Promise<Array<{ url: string, language: string }>>, 10_000)
+        return await raceTimeout(worker.single(options, extopts[id].options) as Promise<SubtitleResult[]>, 10_000)
       } catch (error) {
         throw new ExtensionError(error as Error, id)
       }

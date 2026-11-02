@@ -72,6 +72,10 @@ const LANGUAGE_OVERRIDES: Record<string, string> = {
   zh: 'Noto Sans HK'
 }
 
+function subExtension (str: string) {
+  return subRx.exec(str)?.[1]?.toLowerCase()
+}
+
 function detectCJKLanguage (str: string) {
   const japaneseRegex = /[\u3040-\u309f\u30a0-\u30ff]/
   const koreanRegex = /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]/
@@ -117,15 +121,23 @@ export default class Subtitles {
 
     const subFiles = otherFiles.filter(({ name }) => subRx.test(name))
 
-    const fetchAndLoad = async (file: { url: string, name: string }) => {
+    const fetchAndLoad = async (file: { url: string, name: string }, meta?: { language: string, name: string }) => {
       const res = await fetch(file.url)
       const blob = await res.blob()
-      await this.addSingleSubtitleFile(new File([blob], file.name))
+      await this.addSingleSubtitleFile(new File([blob], file.name), meta)
     }
 
     extensions.subtitlesQuery(mediaInfo.media, mediaInfo.episode).then(async results => {
-      for (const { url, language } of results) {
-        await fetchAndLoad({ url, name: language })
+      for (const { url, language, name, format } of results) {
+        // extensions without `name` and `format` put the file extension in `language`, which is also the track name
+        if (name == null && format == null) {
+          await fetchAndLoad({ url, name: language })
+          continue
+        }
+        const lang = language.replace(subRx, '')
+        const extension = format ?? subExtension(language) ?? subExtension(url.split(/[?#]/)[0] ?? '')
+        if (!extension) continue
+        await fetchAndLoad({ url, name: 'subtitle.' + extension }, { language: lang, name: name ?? lang })
       }
     })
 
@@ -250,7 +262,7 @@ export default class Subtitles {
     input.click()
   }
 
-  async addSingleSubtitleFile (file: File) {
+  async addSingleSubtitleFile (file: File, meta?: { language: string, name: string }) {
     const dot = file.name.lastIndexOf('.')
     const extension = file.name.substring(dot + 1).toLowerCase()
     if (!subtitleExtensions.includes(extension)) return
@@ -267,7 +279,7 @@ export default class Subtitles {
     // lets hope there's no more than 1000 subtitle tracks in a file
     const trackNumber = 1000 + Object.keys(this._tracks.value).length
     const newtrack = this.track(trackNumber)
-    newtrack.meta = { type, header, number: trackNumber, name, language: (detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber, _compressed: false, default: false, forced: false }
+    newtrack.meta = { type, header, number: trackNumber, name: meta?.name ?? name, language: meta?.language ?? ((detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber), _compressed: false, default: false, forced: false }
     if (this.current.value === -1) {
       await this.initSubtitleRenderer()
       await this.selectCaptions(trackNumber)

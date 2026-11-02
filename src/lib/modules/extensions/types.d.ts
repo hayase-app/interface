@@ -112,7 +112,14 @@ export class WebSeedSource {
   batch: (query: WebSeedQueryWithFetch<{files: WebSeedFile[]}>, options?: Record<string, number | string | boolean>) => Promise<WebSeedResult[] | undefined>
 }
 
+export interface SubtitleResult {
+  url: string // direct URL to the subtitle file
+  language: string // track language, e.g. 'pol', used for grouping in the menu and for auto-select. without `name` or `format` it's also the file name, as before
+  name?: string // track name shown in the menu, e.g. 'Full Subtitles [Group]', defaults to `language`
+  format?: 'ass' | 'ssa' | 'srt' | 'vtt' | 'sub' | 'txt' // subtitle format, defaults to the extension of `language`, then of the URL path
+}
+
 export class SubtitleSource {
   test: () => Promise<boolean>
-  single: (query: Omit<AnimeQueryWithFetch, 'resolution' | 'exclusions'>, options?: Record<string, number | string | boolean>) => Promise<Array<{url: string, language: string}>>
+  single: (query: Omit<AnimeQueryWithFetch, 'resolution' | 'exclusions'>, options?: Record<string, number | string | boolean>) => Promise<SubtitleResult[]>
 }
