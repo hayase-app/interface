@@ -173,7 +173,7 @@ export function hover (node: HTMLElement, [cb = noop, hoverUpdate = noop]: [type
   }
 }
 
-interface ElementPosition { element: HTMLElement, x: number, y: number, inViewport: boolean, rect: DOMRect }
+interface ElementPosition { element: HTMLElement, x: number, y: number, inViewport: boolean, fullyVisible: boolean, rect: DOMRect }
 
 type Direction = 'up' | 'right' | 'down' | 'left'
 
@@ -202,7 +202,8 @@ function getKeyboardFocusableElements (element: Element = document.body) {
 function getElementPosition (element: HTMLElement): ElementPosition {
   const rect = element.getBoundingClientRect()
   const inViewport = isInViewport(rect)
-  return { element, x: rect.x + rect.width * 0.5, y: rect.y + rect.height * 0.5, inViewport, rect }
+  const fullyVisible = inViewport ? isFullyVisible(element, rect) : false
+  return { element, x: rect.x + rect.width * 0.5, y: rect.y + rect.height * 0.5, inViewport, fullyVisible, rect }
 }
 
 /**
@@ -217,7 +218,7 @@ function getFocusableElementPositions (): ElementPosition[] {
   } catch {}
   for (const element of getKeyboardFocusableElements(document.querySelector('[role="dialog"]') ?? document.querySelector('[role="application"]') ?? listbox ?? document.body)) {
     const position = getElementPosition(element)
-    elements.push(position)
+    if (position.fullyVisible) elements.push(position)
   }
   return elements
 }
@@ -227,6 +228,30 @@ function getFocusableElementPositions (): ElementPosition[] {
  */
 function isInViewport ({ top, left, bottom, right, width, height }: { top: number, left: number, bottom: number, right: number, width: number, height: number }) {
   return top + height >= 0 && left + width >= 0 && bottom - height <= window.innerHeight && right - width <= window.innerWidth
+}
+
+/**
+ * Check if an element is clipped by any overflow parent containers.
+ */
+function isFullyVisible (el: HTMLElement, rect: DOMRect): boolean {
+  let parent = el.parentElement
+  while (parent && parent !== document.body) {
+    const style = window.getComputedStyle(parent)
+    if (style.overflow !== 'visible') {
+      const parentRect = parent.getBoundingClientRect()
+      if (
+        rect.top < parentRect.top ||
+        rect.left < parentRect.left ||
+        rect.bottom > parentRect.bottom ||
+        rect.right > parentRect.right
+      ) {
+        return false
+      }
+    }
+    parent = parent.parentElement
+  }
+
+  return true
 }
 
 // function isVisible ({ top, left, bottom, right }, element) {
