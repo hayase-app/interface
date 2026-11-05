@@ -7,7 +7,7 @@ class Connection {
   position = 0
   leftover: Uint8Array = new Uint8Array(0)
   queue: Promise<unknown> = Promise.resolve()
-  // The position after all queued reads. A read that starts here continues this response.
+  // The position after all queued reads. A read that starts here continues this response
   end = -1
   lastUse = 0
 
@@ -25,15 +25,22 @@ class Connection {
       headers: { Range: `bytes=${start}-`, 'Cache-Control': 'no-store' },
       signal: ctrl.signal
     })
-    const size = /\/(\d+)$/.exec(res.headers.get('Content-Range') ?? '')?.[1]
-    if (res.status !== 206 || !res.body || !size) {
+    if (res.status !== 206 || !res.body) {
       ctrl.abort()
       throw new Error(`The server did not send a range response for ${this.url}: ${res.status} ${res.statusText}`)
+    }
+    // A cross-origin response hides Content-Range if the server does not expose it
+    const range = /\/(\d+)$/.exec(res.headers.get('Content-Range') ?? '')?.[1]
+    const length = res.headers.get('Content-Length')
+    const size = range ? Number(range) : length ? start + Number(length) : NaN
+    if (!Number.isInteger(size)) {
+      ctrl.abort()
+      throw new Error(`The range response for ${this.url} has no Content-Range or Content-Length header.`)
     }
     this.reader = res.body.getReader()
     this.position = start
     this.leftover = new Uint8Array(0)
-    return Number(size)
+    return size
   }
 
   requestSize () {
