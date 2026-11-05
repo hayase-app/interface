@@ -119,7 +119,7 @@ export default async function connect (key: string, domain: string) {
     activeTorrents: torrent.activeTorrents,
     createNZB: torrent.createNZBWebSeed,
     createHTTPWebSeed: torrent.createHTTPWebSeed,
-    isApp: true
+    isApp: 'browser'
   }
 
   // Cast discovery runs on the host network, so only a local connection gets it.

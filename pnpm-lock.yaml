@@ -99,8 +99,8 @@ importers:
         specifier: ^18.0.6
         version: 18.0.6
       mediabunny:
-        specifier: npm:@thaunknown/mediabunny@^1.61.1
-        version: '@thaunknown/mediabunny@1.61.1'
+        specifier: ^1.65.2
+        version: 1.65.2
       overtype:
         specifier: ^2.4.0
         version: 2.4.0
@@ -927,9 +927,6 @@ packages:
 
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
-
-  '@thaunknown/mediabunny@1.61.1':
-    resolution: {integrity: sha512-P/DqaA0TyEmaujhQd1HdaIH5WEFDwH/v2AC3gFjTaHIsJeL24Sh214jMl2E781EprbmtE+tXR9uK59O/rYTZYw==}
 
   '@thaunknown/simple-peer@9.12.1':
     resolution: {integrity: sha512-IS5BXvXx7cvBAzaxqotJf4s4rJCPk5JABLK6Gbnn7oAmWVcH4hYABabBBrvvJtv/xyUqR4v/H3LalnGRJJfEog==}
@@ -2321,6 +2318,9 @@ packages:
 
   mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+
+  mediabunny@1.65.2:
+    resolution: {integrity: sha512-goZpibvo/5hkc/56WVNm93Ini+o7K4y8aXA20c/BN1B+m3L5aHQa8MTvO+S1APg/YI8kMILtrX6QCqUtxLW7bA==}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -3805,11 +3805,6 @@ snapshots:
   '@swc/helpers@0.5.23':
     dependencies:
       tslib: 2.8.1
-
-  '@thaunknown/mediabunny@1.61.1':
-    dependencies:
-      '@types/dom-mediacapture-transform': 0.1.11
-      '@types/dom-webcodecs': 0.1.13
 
   '@thaunknown/simple-peer@9.12.1':
     dependencies:
@@ -5378,6 +5373,11 @@ snapshots:
   math-intrinsics@1.1.0: {}
 
   mdn-data@2.0.30: {}
+
+  mediabunny@1.65.2:
+    dependencies:
+      '@types/dom-mediacapture-transform': 0.1.11
+      '@types/dom-webcodecs': 0.1.13
 
   merge2@1.4.1: {}
 

@@ -220,7 +220,14 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
       await registerCodecs()
       if (superseded()) return
 
-      const input = this._input = new Input({ source: new UrlSource(src), formats: ALL_FORMATS })
+      const input = this._input = new Input({
+        source: new UrlSource(src, {
+          requestInit: {
+            cache: 'no-store'
+          }
+        }),
+        formats: ALL_FORMATS
+      })
       const [videoTracks, audioTracks] = await Promise.all([input.getVideoTracks(), input.getAudioTracks()])
       if (superseded()) return
 
