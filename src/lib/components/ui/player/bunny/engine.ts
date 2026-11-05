@@ -9,13 +9,13 @@
 import {
   ALL_FORMATS,
   Input,
-  UrlSource,
   VideoSampleSink,
   type InputAudioTrack,
   type InputVideoTrack
 } from 'mediabunny'
 
 import AudioOutput from './audioOutput'
+import ContinuousSource from './continuousSource'
 import VideoPipeline from './videoPipeline'
 import ScreenWakeLock from './wakeLock'
 
@@ -221,11 +221,7 @@ export default class MediaEngine extends TypedEventTarget<EngineEventMap> {
       if (superseded()) return
 
       const input = this._input = new Input({
-        source: new UrlSource(src, {
-          requestInit: {
-            cache: 'no-store'
-          }
-        }),
+        source: new ContinuousSource(src),
         formats: ALL_FORMATS
       })
       const [videoTracks, audioTracks] = await Promise.all([input.getVideoTracks(), input.getAudioTracks()])
