@@ -1,5 +1,6 @@
 import { activityState } from './idle'
 import { inputType } from './navigate'
+import SUPPORTS from './settings/supports'
 
 // Standard Gamepad mapping per W3C spec
 // https://www.w3.org/TR/gamepad/#remapping
@@ -44,7 +45,6 @@ interface PressState {
 const pressed = new Map<`${number}:${number}`, PressState>() // `${gamepadIndex}:${buttonIndex}`
 
 let rafId = 0
-let pad: Gamepad | null |undefined
 
 function dispatch (type: 'keydown' | 'keyup', { key, code }: ButtonMap, repeat = false) {
   inputType.value = 'dpad'
@@ -84,34 +84,65 @@ function handleButton (id: `${number}:${number}`, isDown: boolean, now: number, 
   }
 }
 
+function getPads () {
+  return navigator.getGamepads().filter((p): p is Gamepad => !!p && (SUPPORTS.isMobile || p.mapping === 'standard'))
+}
+
+const knownPads = new Map<number, string>()
+
 function updateActivePad () {
-  pad = navigator.getGamepads().find(p => p?.mapping === 'standard')
-  if (pad && activityState.value === 'active') start()
+  if (getPads().length && activityState.value === 'active') start()
   else stop()
 }
 
-function start () {
-  if (!pad || rafId) return
-  rafId = requestAnimationFrame(start)
+function release (gamepadIndex?: number) {
+  for (const id of pressed.keys()) {
+    const [padIndex, buttonIndex] = id.split(':').map(Number) as [number, number]
+    if (gamepadIndex !== undefined && padIndex !== gamepadIndex) continue
+    pressed.delete(id)
+    const map = BUTTON_MAP[buttonIndex] ?? STICK_MAP[buttonIndex]
+    if (map) dispatch('keyup', map, false)
+  }
+}
+
+function poll () {
+  rafId = requestAnimationFrame(poll)
   const now = performance.now()
 
-  for (let i = 0; i < pad.buttons.length; i++) {
-    const map = BUTTON_MAP[i]
-    if (!map) continue
-    handleButton(`${pad.index}:${i}`, pad.buttons[i]!.pressed, now, map)
+  const pads = getPads()
+
+  for (const [index, id] of knownPads) {
+    if (pads.some(pad => pad.index === index && pad.id === id)) continue
+    knownPads.delete(index)
+    release(index)
   }
 
-  // Left stick: axes[0] = X (left/right), axes[1] = Y (up/down)
-  const [x = 0, y = 0] = pad.axes
+  for (const pad of pads) {
+    knownPads.set(pad.index, pad.id)
 
-  // Skip axes if they look like non-centered device inputs (e.g. throttle, rudder).
-  // Standard analog sticks return near 0 when at rest, flight-sim peripherals
-  // often peg axes at -1/1 (throttle quadrant, pedals, etc.) causing constant
-  // directional navigation.
-  if (Math.abs(x) < 0.9 || Math.abs(y) < 0.9) {
-    handleStickAxis(pad.index, STICK_LEFT, STICK_RIGHT, x, now)
-    handleStickAxis(pad.index, STICK_UP, STICK_DOWN, y, now)
+    for (let i = 0; i < pad.buttons.length; i++) {
+      const map = BUTTON_MAP[i]
+      if (!map) continue
+      handleButton(`${pad.index}:${i}`, pad.buttons[i]!.pressed, now, map)
+    }
+
+    // Left stick: axes[0] = X (left/right), axes[1] = Y (up/down)
+    const [x = 0, y = 0] = pad.axes
+
+    // Skip axes if they look like non-centered device inputs (e.g. throttle, rudder).
+    // Standard analog sticks return near 0 when at rest, flight-sim peripherals
+    // often peg axes at -1/1 (throttle quadrant, pedals, etc.) causing constant
+    // directional navigation.
+    if (Math.abs(x) < 0.9 || Math.abs(y) < 0.9) {
+      handleStickAxis(pad.index, STICK_LEFT, STICK_RIGHT, x, now)
+      handleStickAxis(pad.index, STICK_UP, STICK_DOWN, y, now)
+    }
   }
+}
+
+function start () {
+  if (rafId) return
+  poll()
 }
 
 function handleStickAxis (gamepadIndex: number, negIdx: number, posIdx: number, value: number, now: number) {
@@ -130,14 +161,8 @@ function stop () {
   if (!rafId) return
   cancelAnimationFrame(rafId)
   rafId = 0
-  // release any buttons still marked as pressed to avoid stuck-key state
-  for (const id of pressed.keys()) {
-    const [, buttonIndexStr] = id.split(':')
-    const buttonIndex = Number(buttonIndexStr)
-    const map = BUTTON_MAP[buttonIndex] ?? STICK_MAP[buttonIndex]
-    if (map) dispatch('keyup', map, false)
-  }
-  pressed.clear()
+  release()
+  knownPads.clear()
 }
 
 if (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function') {

@@ -137,7 +137,7 @@ export default Object.assign<Native, Partial<Native>>({
   checkAvailableSpace: () => new Promise(resolve => setTimeout(() => resolve(Math.floor(Math.random() * (1e10 - 1e8 + 1) + 1e8)), 1000)),
   checkIncomingConnections: () => new Promise(resolve => setTimeout(() => resolve(false), 1000)),
   updatePeerCounts: async () => [],
-  isApp: false,
+  isApp: undefined,
   addTorrent: async () => dummyFiles,
   activeTorrents: async () => dummyTorrents,
   rescanTorrents: async () => undefined,
