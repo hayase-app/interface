@@ -105,7 +105,7 @@
   }
 
   let pageNumber = 1
-  let inputText = ''
+  let inputText = search.name
 
   function clear () {
     search = {
