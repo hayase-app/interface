@@ -28,7 +28,7 @@ declare global {
     interface PageState {
       search?: VariablesOf<typeof Search>
       image?: File | string
-      dialog?: string
+      dialogs?: string[]
     }
     // interface Platform {}
   }

@@ -11,6 +11,7 @@
 
   import type { ExtensionConfig } from '$lib/modules/extensions/types'
 
+  import { afterNavigate } from '$app/navigation'
   import { Code } from '$lib/components/icons/animated'
   import { Button } from '$lib/components/ui/button'
   import * as Dialog from '$lib/components/ui/dialog'
@@ -19,17 +20,14 @@
   let configs: ExtensionConfig[] = []
   let error: string | null = null
   let importing = false
-  let isOpen = true
+  let isOpen = false
 
-  $: if (!isOpen) $extensionInstalURL = ''
+  async function fetchManifest (extensionInstalURL: string) {
+    configs = []
+    error = null
+    isOpen = true
 
-  async function fetchManifest () {
-    if (!$extensionInstalURL) {
-      error = 'No extension URL provided.'
-      return
-    }
-
-    const all = await safejson<ExtensionConfig[]>($extensionInstalURL)
+    const all = await safejson<ExtensionConfig[]>(extensionInstalURL)
     if (!all) {
       error = 'Could not fetch extension manifest from the provided URL.'
       return
@@ -43,11 +41,19 @@
     configs = all
   }
 
+  function onOpenChange (open: boolean) {
+    if (!open) $extensionInstalURL = ''
+  }
+
   function close () {
     isOpen = false
   }
 
-  fetchManifest()
+  $: if ($extensionInstalURL) fetchManifest($extensionInstalURL)
+
+  afterNavigate(() => {
+    if ($extensionInstalURL) fetchManifest($extensionInstalURL)
+  })
 
   async function install () {
     if (!$extensionInstalURL) return
@@ -68,7 +74,7 @@
   $: existingConfigs = configs.filter(c => existingIds.has(c.id))
 </script>
 
-<Dialog.Root portal='#root' bind:open={isOpen}>
+<Dialog.Root portal='#root' bind:open={isOpen} {onOpenChange}>
   <Dialog.Content class='flex flex-col max-h-[95%] max-w-3xl bg-background p-4 md:p-6'>
     <Dialog.Header>
       <Dialog.Title>Install Extensions</Dialog.Title>

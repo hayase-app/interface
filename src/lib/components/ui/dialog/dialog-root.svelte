@@ -18,7 +18,7 @@
   let lastHasState: boolean | undefined = undefined
 
   $: state = $page.state
-  $: hasState = state?.dialog === dialog
+  $: hasState = state?.dialogs?.includes(dialog) ?? false
 
   // Sync from history (popstate / back / forward)
   // Only fires when hasState changes, NOT when $_open changes
@@ -40,8 +40,9 @@
     changing = true
 
     if (value) {
-      pushState(location.href, { ...$page.state, dialog })
-      state.dialog = dialog
+      const dialogs = [...(state?.dialogs ?? []), dialog]
+      pushState(location.href, { ...$page.state, dialogs })
+      state.dialogs = dialogs
     } else {
       if (hasState) {
         history.back()
