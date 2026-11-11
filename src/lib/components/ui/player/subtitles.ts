@@ -117,15 +117,15 @@ export default class Subtitles {
 
     const subFiles = otherFiles.filter(({ name }) => subRx.test(name))
 
-    const fetchAndLoad = async (file: { url: string, name: string }) => {
+    const fetchAndLoad = async (file: { url: string, name?: string, language?: string }) => {
       const res = await fetch(file.url)
       const blob = await res.blob()
-      await this.addSingleSubtitleFile(new File([blob], file.name))
+      await this.addSingleSubtitleFile(new File([blob], file.name ?? new URL(file.url).pathname.split('/').pop() ?? file.url), file.language)
     }
 
     extensions.subtitlesQuery(mediaInfo.media, mediaInfo.episode).then(async results => {
       for (const { url, language } of results) {
-        await fetchAndLoad({ url, name: language })
+        await fetchAndLoad({ url, language })
       }
     })
 
@@ -250,15 +250,16 @@ export default class Subtitles {
     input.click()
   }
 
-  async addSingleSubtitleFile (file: File) {
+  async addSingleSubtitleFile (file: File, language?: string) {
     const dot = file.name.lastIndexOf('.')
     const extension = file.name.substring(dot + 1).toLowerCase()
     if (!subtitleExtensions.includes(extension)) return
     const filename = file.name.slice(0, dot)
     // sub name could contain video name with or without extension, possibly followed by lang, or not.
-    const name = filename.includes(this.selected.name)
+    const name = (filename.includes(this.selected.name)
       ? filename.replace(this.selected.name, '')
       : filename.replace(this.selected.name.slice(0, this.selected.name.lastIndexOf('.')), '')
+    ).replace(/[,._-]/g, ' ').trim()
 
     const convert = Subtitles.convertSubText(await file.text(), extension)
     if (!convert) return
@@ -267,7 +268,7 @@ export default class Subtitles {
     // lets hope there's no more than 1000 subtitle tracks in a file
     const trackNumber = 1000 + Object.keys(this._tracks.value).length
     const newtrack = this.track(trackNumber)
-    newtrack.meta = { type, header, number: trackNumber, name, language: (detectCJKLanguage(header) ?? name.replace(/[,._-]/g, ' ').trim()) || 'Track ' + trackNumber, _compressed: false, default: false, forced: false }
+    newtrack.meta = { type, header, number: trackNumber, name, language: detectCJKLanguage(header) ?? language ?? (name || 'eng'), _compressed: false, default: false, forced: false }
     if (this.current.value === -1) {
       await this.initSubtitleRenderer()
       await this.selectCaptions(trackNumber)
