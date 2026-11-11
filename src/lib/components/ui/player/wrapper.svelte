@@ -69,10 +69,10 @@
 
     if (pointerId) wrapper.setPointerCapture(pointerId)
   }
-  function endDragging ({ pointerId, clientX, clientY, pointerType }: PointerEvent) {
+  function endDragging ({ pointerId, clientX, clientY }: PointerEvent) {
     if (!isMiniplayer || pointerId !== activePointer) return
     activePointer = null
-    if (!dragging && pointerType !== 'mouse') openPlayer()
+    if (!dragging) openPlayer()
     const istop = window.innerHeight / 2 - clientY >= 0
     const isleft = window.innerWidth / 2 - clientX >= 0
     $bottom = istop ? '-100vb' : '0px'
