@@ -51,23 +51,28 @@
 
   function endHover () {
     if (!isMiniplayer) return
+    activePointer = null
     dragging = false
     firstX = 0
     firstY = 0
   }
 
+  let activePointer: number | null = null
   let initialX = 0
   let initialY = 0
 
   function startDragging ({ offsetX, offsetY, pointerId }: PointerEvent) {
     if (!isMiniplayer) return
+    activePointer = pointerId
     initialX = offsetX
     initialY = offsetY
 
     if (pointerId) wrapper.setPointerCapture(pointerId)
   }
-  function endDragging ({ pointerId, clientX, clientY }: PointerEvent) {
-    if (!isMiniplayer) return
+  function endDragging ({ pointerId, clientX, clientY, pointerType }: PointerEvent) {
+    if (!isMiniplayer || pointerId !== activePointer) return
+    activePointer = null
+    if (!dragging && pointerType !== 'mouse') openPlayer()
     const istop = window.innerHeight / 2 - clientY >= 0
     const isleft = window.innerWidth / 2 - clientX >= 0
     $bottom = istop ? '-100vb' : '0px'
@@ -79,12 +84,11 @@
 
 <div class={cn('size-full', isMiniplayer && 'z-[49] absolute top-0 left-0 pointer-events-none cursor-pointer touch-none')}
   bind:this={wrapper}
-  on:pointerup|self={openPlayer}
   on:pointerdown={startDragging}
   on:pointerup={endDragging}
   on:pointermove|self={calculatePosition}
   on:pointerleave|self={endHover}
-  on:pointercancel|self={endHover}>
+  on:pointercancel={endHover}>
   <div class={cn(
     'w-full flex',
     isMiniplayer ? 'pointer-events-auto max-w-[22rem] px-4 absolute bottom-0 right-0 [&>*]:rounded-lg [&>*]:overflow-clip miniplayer transition-transform duration-[500ms] ease-[cubic-bezier(0.3,1.5,0.8,1)]' : 'size-full',
