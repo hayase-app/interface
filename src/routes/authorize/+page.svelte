@@ -1,12 +1,23 @@
 <script lang='ts'>
   import { Separator } from '$lib/components/ui/separator'
+  import SUPPORTS from '$lib/modules/settings/supports'
+
+  const search = new URL(location.hash.slice('#/authorize'.length), location.origin).search
 
   const channel = new BroadcastChannel('hayase-auth')
 
-  channel.postMessage(new URL(location.hash.slice('#/authorize'.length), location.origin).search)
+  channel.postMessage(search)
 
   channel.close()
-  window.close()
+
+  // The Android app can open this page in the system browser, which does not share the channel with the app.
+  // TODO: in the future all the isIOS checks in */auth/*.ts should be replaced with isMobile and this should be deleted.
+  const isSystemBrowser = SUPPORTS.isAndroid && !navigator.userAgent.includes('; wv)') && !window.opener
+  if (isSystemBrowser) {
+    location.href = 'hayase://authorize/' + search
+  } else {
+    window.close()
+  }
 </script>
 
 <div class='size-full flex flex-col grow items-center justify-center gap-9'>

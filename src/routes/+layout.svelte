@@ -51,6 +51,12 @@
   $: document.documentElement.className = 'dark bg-black theme-' + $settings.theme
 
   native.navigate(({ target, value }) => {
+    if (target === 'authorize' && value) {
+      const channel = new BroadcastChannel('hayase-auth')
+      channel.postMessage(value.replace(/^#/, '?'))
+      channel.close()
+      return
+    }
     if (target !== 'extensions' || !value) return
     extensionInstalURL.set(sanitizeExtensionUrl(new URL(value, 'http://localhost').searchParams.get('url') ?? value))
   })

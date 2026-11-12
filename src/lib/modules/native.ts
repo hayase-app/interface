@@ -95,7 +95,7 @@ export default Object.assign<Native, Partial<Native>>({
     return makeAuth(
       open(url, 'authframe', SUPPORTS.isAndroid ? 'popup' : 'popup,width=382,height=582'),
       search => {
-        if (search.startsWith('?al&access_token=')) {
+        if (search.includes('access_token=')) {
           return Object.fromEntries(new URLSearchParams(search).entries()) as unknown as AuthResponse
         }
       }
