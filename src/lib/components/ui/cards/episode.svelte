@@ -35,7 +35,7 @@
   {#if !hidden}
     <PreviewCard {media} {trace} />
   {/if}
-  <div class='item w-[16rem] flex flex-col'>
+  <div class='animate-[load-in_0.3s_ease_0s_1] w-[16rem] flex flex-col'>
     <div class='h-[9rem]'>
       <Load src={trace?.image ?? coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
     </div>
@@ -69,9 +69,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .item {
-    animation: 0.3s ease 0s 1 load-in;
-  }
-</style>

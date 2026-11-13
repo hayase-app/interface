@@ -90,7 +90,7 @@
     autoplay /> -->
 
 <div class='size-full overflow-clip absolute top-0 rounded-t'>
-  <div class='absolute z-10 top-0 right-0 p-3' class:hide use:click={toggleMute}>
+  <div class='absolute z-10 top-0 right-0 p-3 transition-opacity duration-300' class:opacity-0={hide} use:click={toggleMute}>
     {#if muted}
       <VolumeX size='1rem' fill='currentColor' class='pointer-events-none' />
     {:else}
@@ -99,8 +99,8 @@
   </div>
   <iframe
     credentialless
-    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none'
-    class:hide
+    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none transition-opacity duration-300'
+    class:opacity-0={hide}
     title='trailer'
     allow='autoplay'
     bind:this={frame}
@@ -111,19 +111,10 @@
 <div class='size-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
   <iframe
     credentialless
-    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2'
-    class:hide
+    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 transition-opacity duration-300'
+    class:opacity-0={hide}
     title='trailer'
     allow='autoplay'
     src='https://www.youtube-nocookie.com/embed/{id}?{params}'
   />
 </div>
-
-<style>
-  .absolute {
-    transition: opacity 0.3s;
-  }
-  .absolute.hide {
-    opacity: 0;
-  }
-</style>

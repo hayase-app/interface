@@ -19,7 +19,7 @@
   stroke-width={strokeWidth}
   stroke-linecap='round'
   stroke-linejoin='round'
-  class={cn(className, 'overflow-visible align-middle target-animated-icon')}
+  class={cn(className, 'overflow-visible align-middle target-animated-icon rotate-[50deg] origin-center transition-transform duration-[400ms] ease-back-out')}
   {...$$restProps}
 >
   <path d='M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8' fill='none' />
@@ -27,11 +27,3 @@
   <path d='M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16' fill='none' />
   <path d='M8 16H3v5' fill='none' />
 </svg>
-
-<style>
-  .target-animated-icon {
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: center;
-    transform: rotate(50deg);
-  }
-</style>

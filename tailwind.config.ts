@@ -129,6 +129,10 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
+      transitionTimingFunction: {
+        'back-out': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'back-in-out': 'cubic-bezier(0.68, -0.6, 0.32, 1.6)'
+      },
       fontFamily: {
         sans: [...fontFamily.sans]
       },

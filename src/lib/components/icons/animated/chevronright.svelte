@@ -22,12 +22,5 @@
   class={cn(className, 'overflow-visible')}
   {...$$restProps}
 >
-  <path d='m9 18 6-6-6-6' class='target-animated-icon' />
+  <path d='m9 18 6-6-6-6' class='target-animated-icon translate-x-[3px] transition-transform duration-200 ease-in' />
 </svg>
-
-<style>
-  .target-animated-icon {
-    transition: transform 0.2s ease-in;
-    transform: translateX(3px);
-  }
-</style>

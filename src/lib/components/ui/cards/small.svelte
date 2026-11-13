@@ -38,7 +38,7 @@
   {#if !hidden && hoverable}
     <PreviewCard {media} class={cn(first && 'left-36 md:left-1/2')} />
   {/if}
-  <div class='item w-[11.5rem] h-[323px] flex flex-col p-4 [content-visibility:auto] [contain-intrinsic-size:auto_9.5rem_auto_291px]'>
+  <div class='animate-[load-in_0.3s_ease_0s_1] w-[11.5rem] h-[323px] flex flex-col p-4 [content-visibility:auto] [contain-intrinsic-size:auto_9.5rem_auto_291px]'>
     <div class='h-[13.5rem]'>
       <Load src={coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
     </div>
@@ -60,9 +60,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .item {
-    animation: 0.3s ease 0s 1 load-in;
-  }
-</style>

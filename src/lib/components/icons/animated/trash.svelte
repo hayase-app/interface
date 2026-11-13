@@ -19,23 +19,12 @@
   stroke-width={strokeWidth}
   stroke-linecap='round'
   stroke-linejoin='round'
-  class={cn(className, 'overflow-visible [transform-origin:center]')}
+  class={cn(className, 'overflow-visible [transform-origin:center] [&_.target-animated-icon]:transition-transform [&_.target-animated-icon]:duration-200 [&_.target-animated-icon]:ease-in')}
   {...$$restProps}
 >
-  <g class='target-animated-icon'>
+  <g class='target-animated-icon -translate-y-px'>
     <path d='M3 6h18' />
     <path d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2' />
   </g>
-  <path d='M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8' class='target-animated-icon' />
+  <path d='M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8' class='target-animated-icon translate-y-px' />
 </svg>
-
-<style>
-  g.target-animated-icon {
-    transform: translateY(-1px);
-    transition: transform 0.2s ease-in;
-  }
-  path.target-animated-icon {
-    transform: translateY(1px);
-    transition: transform 0.2s ease-in;
-  }
-</style>

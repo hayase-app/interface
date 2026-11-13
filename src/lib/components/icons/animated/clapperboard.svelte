@@ -22,8 +22,8 @@
   class={cn(className, 'overflow-visible')}
   {...$$restProps}
 >
-  <g class='target-animated-icon clapperboard-outer'>
-    <g class='target-animated-icon clapperboard-inner'>
+  <g class='target-animated-icon [transform-origin:4px_20px]'>
+    <g class='target-animated-icon [transform-origin:3px_11px]'>
       <path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z' />
       <path d='m6.2 5.3 3.1 3.9' />
       <path d='m12.4 3.4 3.1 4' />
@@ -33,14 +33,6 @@
 </svg>
 
 <style>
-  .clapperboard-outer {
-    transform-origin: 4px 20px;
-  }
-
-  .clapperboard-inner {
-    transform-origin: 3px 11px;
-  }
-
   .target-animated-icon {
     animation: clapperboardOuter 0.8s ease-in-out;
   }

@@ -12,7 +12,7 @@
   $$restProps
 </script>
 
-<a class={cn('node w-[150px] text-xs text-center border bg-[#111] rounded-sm cursor-pointer block font-semibold transition-colors overflow-clip', data.current ? 'border-custom text-custom' : 'border-[#111] text-foreground')} href='/#/app/anime/{data.id}'>
+<a class={cn('node w-[150px] text-xs text-center border bg-[#111] rounded-sm cursor-pointer block font-semibold transition-colors overflow-clip [--xy-handle-background-color:none] [--xy-handle-border-color:none]', data.current ? 'border-custom text-custom' : 'border-[#111] text-foreground')} href='/#/app/anime/{data.id}'>
   <div class='relative'>
     <Handle type='target' position={targetPosition} />
     {#if data.media}
@@ -37,10 +37,3 @@
     <Handle type='source' position={sourcePosition} />
   </div>
 </a>
-
-<style>
-  .node {
-    --xy-handle-background-color: none;
-    --xy-handle-border-color: none;
-  }
-</style>

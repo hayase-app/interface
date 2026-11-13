@@ -67,7 +67,7 @@
           <button class='flex items-center justify-center h-8 w-[46px] select:bg-secondary-foreground/30' use:click={native.maximise} use:tabindex>
             <svg class='size-3' role='img' viewBox='0 0 12 12'><rect fill='none' height='9' stroke='currentColor' width='9' x='1.5' y='1.5' />
           </button>
-          <button class='flex items-center justify-center h-8 w-[46px] close-button select:bg-secondary-foreground/30' use:click={native.close} use:tabindex>
+          <button class='flex items-center justify-center h-8 w-[46px] hover:!bg-[#e81123] active:!bg-[#f1707a] select:bg-secondary-foreground/30' use:click={native.close} use:tabindex>
             <svg class='size-3' role='img' viewBox='0 0 12 12'><polygon fill='currentColor' fill-rule='evenodd' points='11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1' />
           </button>
         </div>
@@ -76,22 +76,5 @@
   </Wrapper>
 {/if}
 {#if $debug}
-  <div class='ribbon z-[1000] text-center fixed font-bold pointer-events-none'>Debug Mode!</div>
+  <div class='z-[1000] text-center fixed font-bold pointer-events-none top-0 left-0 bg-[#f63220] shadow-[0_0_0_999px_#f63220] [clip-path:inset(0_-100%)] origin-top-right -translate-x-[29.3%] -rotate-45'>Debug Mode!</div>
 {/if}
-
-<style>
-  .ribbon {
-    background: #f63220;
-    box-shadow: 0 0 0 999px #f63220;
-    clip-path: inset(0 -100%);
-    inset: 0 auto auto 0;
-    transform-origin: 100% 0;
-    transform: translate(-29.3%) rotate(-45deg);
-  }
-  .close-button:hover {
-    background: #e81123 !important;
-  }
-  .close-button:active {
-    background: #f1707a !important;
-  }
-</style>

@@ -19,19 +19,12 @@
   stroke-width={strokeWidth}
   stroke-linecap='round'
   stroke-linejoin='round'
-  class={cn(className, 'overflow-visible')}
+  class={cn(className, 'overflow-visible [&_.target-animated-icon]:transition-transform [&_.target-animated-icon]:duration-300 [&_.target-animated-icon]:ease-back-in-out')}
   {...$$restProps}
 >
   <path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4' />
   <g>
-    <polyline points='7 10 12 15 17 10' class='target-animated-icon' />
-    <line x1='12' x2='12' y1='15' y2='3' class='target-animated-icon' />
+    <polyline points='7 10 12 15 17 10' class='target-animated-icon translate-y-[2px]' />
+    <line x1='12' x2='12' y1='15' y2='3' class='target-animated-icon translate-y-[2px]' />
   </g>
 </svg>
-
-<style>
-  .target-animated-icon {
-    transform: translateY(2px);
-    transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-  }
-</style>

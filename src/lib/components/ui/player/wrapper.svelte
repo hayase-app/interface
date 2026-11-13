@@ -112,6 +112,18 @@
 </div>
 
 <style>
+  @property --top {
+    syntax: '<length-percentage>';
+    inherits: false;
+    initial-value: 0px;
+  }
+
+  @property --left {
+    syntax: '<length-percentage>';
+    inherits: false;
+    initial-value: 0px;
+  }
+
   .paused {
     --padding-right: calc(100% - 3rem);
     --padding-left: calc(-100vi + 3rem);
