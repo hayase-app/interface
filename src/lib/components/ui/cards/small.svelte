@@ -34,11 +34,13 @@
   export let first = false
 </script>
 
-<div class='text-foreground cursor-pointer shrink-0 relative pointer-events-auto active:z-[10] focus-visible:z-[10]' use:hover={[onclick, onhover]}>
+<div class='text-foreground cursor-pointer shrink-0 relative pointer-events-auto active:z-[10] focus-visible:z-[10] [contain-intrinsic-size:auto_11.5rem_auto_323px]'
+  style:content-visibility={hidden ? 'auto' : 'visible'}
+  use:hover={[onclick, onhover]}>
   {#if !hidden && hoverable}
     <PreviewCard {media} class={cn(first && 'left-36 md:left-1/2')} />
   {/if}
-  <div class='animate-[load-in_0.3s_ease_0s_1] w-[11.5rem] h-[323px] flex flex-col p-4 [content-visibility:auto] [contain-intrinsic-size:auto_9.5rem_auto_291px]'>
+  <div class='animate-[load-in_0.3s_ease_0s_1] w-[11.5rem] h-[323px] flex flex-col p-4'>
     <div class='h-[13.5rem]'>
       <Load src={coverMedium(media)} alt='cover' class='object-cover size-full rounded' color={media.coverImage?.color} />
     </div>

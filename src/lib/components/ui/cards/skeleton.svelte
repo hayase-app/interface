@@ -2,7 +2,7 @@
   export let animate = true
 </script>
 
-<div class='p-4 shrink-0'>
+<div class='p-4 shrink-0 h-[323px]'>
   <div class='animate-[load-in_0.3s_ease_0s_1] aspect-[152/290] w-[9.5rem] flex flex-col'>
     <div class='h-[13.5rem] bg-background rounded w-full'>
       <div class='bg-primary/5 size-full rounded' class:animate-pulse={animate} />
