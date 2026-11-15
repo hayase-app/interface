@@ -46,7 +46,7 @@
       {/if}
     {/if}
   </div>
-  <div class='w-full px-4 bg-muted'>
+  <div class='w-full px-4 bg-muted relative z-10'>
     <div class='text-lg font-bold truncate inline-block w-full text-foreground pt-2' title={title(media)}>
       {title(media)}
     </div>

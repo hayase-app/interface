@@ -89,7 +89,7 @@
     on:loadeddata={() => { hide = false }}
     autoplay /> -->
 
-<div class='size-full overflow-clip absolute top-0 rounded-t'>
+<div class='size-full absolute top-0'>
   <div class='absolute z-10 top-0 right-0 p-3 transition-opacity duration-300' class:opacity-0={hide} use:click={toggleMute}>
     {#if muted}
       <VolumeX size='1rem' fill='currentColor' class='pointer-events-none' />
@@ -97,24 +97,28 @@
       <Volume2 size='1rem' fill='currentColor' class='pointer-events-none' />
     {/if}
   </div>
-  <iframe
-    credentialless
-    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none transition-opacity duration-300'
-    class:opacity-0={hide}
-    title='trailer'
-    allow='autoplay'
-    bind:this={frame}
-    on:load={initFrame}
-    src='https://www.youtube-nocookie.com/embed/{id}?{params}&enablejsapi=1'
-  />
+  <div class='absolute -inset-28 z-0 pointer-events-none will-change-[opacity]'>
+    <div class='absolute inset-28 overflow-hidden rounded-t'>
+      <iframe
+        credentialless
+        class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none transition-opacity duration-300'
+        class:opacity-0={hide}
+        title='trailer'
+        allow='autoplay'
+        bind:this={frame}
+        on:load={initFrame}
+        src='https://www.youtube-nocookie.com/embed/{id}?{params}&enablejsapi=1'
+      />
+    </div>
+    <div class='glow-ring absolute inset-0 backdrop-blur-[35px] backdrop-saturate-200' />
+  </div>
 </div>
-<div class='size-full overflow-clip absolute top-0 rounded-t blur-2xl saturate-200 -z-10 pointer-events-none'>
-  <iframe
-    credentialless
-    class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 transition-opacity duration-300'
-    class:opacity-0={hide}
-    title='trailer'
-    allow='autoplay'
-    src='https://www.youtube-nocookie.com/embed/{id}?{params}'
-  />
-</div>
+
+<style>
+  .glow-ring {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 504 368' preserveAspectRatio='none'%3E%3Cpath fill-rule='evenodd' fill='white' d='M0,0H504V368H0ZM116,112H388A4,4,0,0,1,392,116V256H112V116A4,4,0,0,1,116,112Z'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-position: 0 0;
+    mask-repeat: no-repeat;
+  }
+</style>
