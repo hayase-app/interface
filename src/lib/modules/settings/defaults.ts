@@ -9,7 +9,7 @@ export default {
   playerPause: true,
   playerAutocomplete: true,
   playerDeband: false,
-  playerCustom: SUPPORTS.isMobile && !(SUPPORTS.isAndroidTV && SUPPORTS.isUnderPowered),
+  playerCustom: SUPPORTS.isMobile && !SUPPORTS.isUnderPowered,
   subtitleStyle: 'none' as 'none' | 'gandhisans' | 'notosans' | 'roboto',
   searchQuality: '1080' as keyof typeof videoResolutions,
   searchAutoSelect: true,

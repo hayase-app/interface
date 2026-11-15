@@ -20,7 +20,7 @@ const VIDEO_DROP_SECONDS = 0.08
 const MAX_CONSECUTIVE_DROPS = 5
 // Keep a small queue of decoded frames, so presentation can catch up after a
 // late decode or a seek.
-const PREFETCH_FRAMES = 3
+const PREFETCH_FRAMES = 6
 // A decoder can reject a decode while it tears down after a seek. A new
 // iterator usually succeeds, so retry before the error reaches the engine.
 const DECODE_RETRY_LIMIT = 5

@@ -58,7 +58,7 @@
 </SettingCard>
 
 <div class='font-weight-bold text-xl font-bold'>Playback Settings</div>
-{#if (SUPPORTS.isAndroidTV && SUPPORTS.isUnderPowered) || dev}
+{#if SUPPORTS.isMobile || dev}
   <SettingCard let:id title='Use Custom Video Player' description='Enables the custom video player. This allows you to switch audio and video tracks and has better codec support, at the cost of higher CPU usage.'>
     <Switch {id} bind:checked={$settings.playerCustom} />
   </SettingCard>
