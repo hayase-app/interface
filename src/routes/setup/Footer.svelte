@@ -11,14 +11,14 @@
 </script>
 
 <script lang='ts'>
-  import Check from 'lucide-svelte/icons/check'
-  import X from 'lucide-svelte/icons/x'
+  import Check from '@lucide/svelte/icons/check'
+  import X from '@lucide/svelte/icons/x'
 
+  import { SETUP_VERSION } from '#lib'
+  import { Badge } from '#lib/components/ui/badge'
+  import { Button } from '#lib/components/ui/button'
+  import * as Tooltip from '#lib/components/ui/tooltip'
   import { goto } from '$app/navigation'
-  import { SETUP_VERSION } from '$lib'
-  import { Badge } from '$lib/components/ui/badge'
-  import { Button } from '$lib/components/ui/button'
-  import * as Tooltip from '$lib/components/ui/tooltip'
   export let step = 0
   export let checks: Checks[] = []
 
@@ -29,7 +29,7 @@
 
   function checkNext () {
     if (step === 2) localStorage.setItem('setup-finished', SETUP_VERSION.toString())
-    goto(NEXT[step]!, { replaceState: true })
+    goto(NEXT[step]!, { replace: true })
   }
 </script>
 

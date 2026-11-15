@@ -1,10 +1,10 @@
 <script lang='ts'>
   import { set } from 'idb-keyval'
 
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { Input } from '$lib/components/ui/input'
-  import connect, { HOSTNAME, REMOTE_HOSTS_KEY, type LocalHostInfo, type SavedHostInfo } from '$lib/modules/remote'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { Input } from '#lib/components/ui/input'
+  import connect, { HOSTNAME, REMOTE_HOSTS_KEY, type LocalHostInfo, type SavedHostInfo } from '#lib/modules/remote'
 
   const PORT = 49734
   const HOST = `https://${HOSTNAME}:${PORT}`

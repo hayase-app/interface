@@ -1,5 +1,5 @@
 <script lang='ts' context='module'>
-  import { client, currentSeason, currentYear } from '$lib/modules/anilist'
+  import { client, currentSeason, currentYear } from '#lib/modules/anilist'
 
   const query = client.search({ sort: ['SCORE_DESC'], perPage: 15, season: currentSeason, seasonYear: currentYear, statusNot: ['NOT_YET_RELEASED'] }, true)
   query.subscribe(() => undefined) // this is hacky, but prevents query from re-running

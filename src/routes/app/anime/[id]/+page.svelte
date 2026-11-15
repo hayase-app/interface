@@ -3,15 +3,15 @@
 
   import type { PageData } from './$types'
 
-  import EpisodesList from '$lib/components/EpisodesList.svelte'
-  import Recommendation from '$lib/components/ui/cards/recommendation.svelte'
-  import { Threads } from '$lib/components/ui/forums'
-  import { Relations } from '$lib/components/ui/relations'
-  import * as Tabs from '$lib/components/ui/tabs'
-  import { Themes } from '$lib/components/ui/themes'
+  import EpisodesList from '#lib/components/EpisodesList.svelte'
+  import Recommendation from '#lib/components/ui/cards/recommendation.svelte'
+  import { Threads } from '#lib/components/ui/forums'
+  import { Relations } from '#lib/components/ui/relations'
+  import * as Tabs from '#lib/components/ui/tabs'
+  import { Themes } from '#lib/components/ui/themes'
   import '@xyflow/svelte/dist/style.css'
-  import { dragScroll } from '$lib/modules/navigate'
-  import { cn } from '$lib/utils'
+  import { dragScroll } from '#lib/modules/navigate'
+  import { cn } from '#lib/utils'
 
   export let data: PageData
 

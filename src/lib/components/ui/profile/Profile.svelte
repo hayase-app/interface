@@ -1,13 +1,13 @@
 <script lang='ts'>
-  import type { UserFrag } from '$lib/modules/anilist/queries'
+  import type { UserFrag } from '#lib/modules/anilist/queries'
   import type { ResultOf } from 'gql.tada'
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import Shadow from '$lib/components/Shadow.svelte'
-  import * as Avatar from '$lib/components/ui/avatar'
-  import { Load } from '$lib/components/ui/img'
-  import * as Popover from '$lib/components/ui/popover'
-  import { cn, since } from '$lib/utils'
+  import Shadow from '#lib/components/Shadow.svelte'
+  import * as Avatar from '#lib/components/ui/avatar'
+  import { Load } from '#lib/components/ui/img'
+  import * as Popover from '#lib/components/ui/popover'
+  import { cn, since } from '#lib/utils'
 
   type $$Props = HTMLAttributes<HTMLImageElement> & {
     user: Omit<Partial<ResultOf<typeof UserFrag>>, 'id'> & { id: string | number }

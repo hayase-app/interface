@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import { page } from '$app/stores'
-  import SettingsNav from '$lib/components/SettingsNav.svelte'
-  import { Separator } from '$lib/components/ui/separator'
-  import { Globe } from '$lib/components/ui/torrentclient'
-  import { dragScroll } from '$lib/modules/navigate'
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { cn } from '$lib/utils'
+  import { page } from '#lib/app-state'
+  import SettingsNav from '#lib/components/SettingsNav.svelte'
+  import { Separator } from '#lib/components/ui/separator'
+  import { Globe } from '#lib/components/ui/torrentclient'
+  import { dragScroll } from '#lib/modules/navigate'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { cn } from '#lib/utils'
 
   const items = [
     {

@@ -2,7 +2,7 @@
   import { ContextMenu as ContextMenuPrimitive } from 'bits-ui'
   import Check from 'svelte-radix/Check.svelte'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = ContextMenuPrimitive.CheckboxItemProps
   type $$Events = ContextMenuPrimitive.CheckboxItemEvents

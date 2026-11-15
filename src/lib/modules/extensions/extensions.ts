@@ -13,9 +13,9 @@ import type { TorrentResult, WebSeedResult, WebSeedFile } from './types'
 import type { EpisodesResponse, Titles, Episode } from '../anizip/types'
 import type { AnitomyResult } from 'anitomyscript'
 
-import { dev } from '$app/environment'
-import { savedOptions as extensionOptions, savedConfigs } from '$lib/modules/extensions'
-import { anitomyscript, toSettled } from '$lib/utils'
+import { savedOptions as extensionOptions, savedConfigs } from '#lib/modules/extensions'
+import { anitomyscript, toSettled } from '#lib/utils'
+import { dev } from '$app/env'
 
 const exclusions: string[] = []
 

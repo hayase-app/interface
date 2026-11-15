@@ -2,8 +2,8 @@
   import { Button } from '../button'
   import { Markdown } from '../markdown'
 
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { client } from '$lib/modules/anilist'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { client } from '#lib/modules/anilist'
 
   export let isLocked = false
 

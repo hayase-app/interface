@@ -2,7 +2,7 @@
   import { ContextMenu as ContextMenuPrimitive } from 'bits-ui'
   import DotFilled from 'svelte-radix/DotFilled.svelte'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = ContextMenuPrimitive.RadioItemProps
   type $$Events = ContextMenuPrimitive.RadioItemEvents

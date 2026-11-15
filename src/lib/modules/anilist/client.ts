@@ -14,7 +14,7 @@ import type { Edge, Node } from '@xyflow/svelte'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 import type { AnyVariables, OperationContext, RequestPolicy, TypedDocumentNode } from 'urql'
 
-import { derivedArray } from '$lib/utils'
+import { derivedArray } from '#lib/utils'
 
 const debug = Debug('ui:anilist')
 

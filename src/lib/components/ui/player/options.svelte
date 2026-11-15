@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical'
+  import EllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical'
   import { tick } from 'svelte'
 
   import { Input } from '../input'
@@ -15,13 +15,13 @@
   import type { Writable } from 'simple-store-svelte'
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import * as Tree from '$lib/components/ui/tree'
-  import { dragScroll, keywrap } from '$lib/modules/navigate'
-  import { settings } from '$lib/modules/settings'
-  import { cn, toTS } from '$lib/utils'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import * as Tree from '#lib/components/ui/tree'
+  import { dragScroll, keywrap } from '#lib/modules/navigate'
+  import { settings } from '#lib/modules/settings'
+  import { cn, toTS } from '#lib/utils'
 
   export let wrapper: HTMLDivElement
 

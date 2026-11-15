@@ -1,8 +1,8 @@
 <script lang='ts'>
   import { Handle, Position } from '@xyflow/svelte'
 
-  import { format, status, type RelationTreeMedia } from '$lib/modules/anilist'
-  import { cn } from '$lib/utils'
+  import { format, status, type RelationTreeMedia } from '#lib/modules/anilist'
+  import { cn } from '#lib/utils'
 
   export let data: { media: RelationTreeMedia, id: number, current?: boolean }
   export let targetPosition: Position = Position.Left

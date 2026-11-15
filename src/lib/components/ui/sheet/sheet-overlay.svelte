@@ -1,8 +1,8 @@
 <script lang='ts'>
   import { Overlay as DialogOverlay } from '../dialog/index.js'
 
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { cn } from '$lib/utils.js'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { cn } from '#lib/utils'
 
   let className: string | undefined = undefined
   export { className as class }

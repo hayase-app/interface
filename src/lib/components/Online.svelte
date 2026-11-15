@@ -1,10 +1,10 @@
 <script lang='ts'>
-  import CloudOff from 'lucide-svelte/icons/cloud-off'
+  import CloudOff from '@lucide/svelte/icons/cloud-off'
 
   import AnilistError from './icons/AnilistError.svelte'
 
-  import urqlClient from '$lib/modules/anilist/urql-client'
-  import online from '$lib/modules/online'
+  import urqlClient from '#lib/modules/anilist/urql-client'
+  import online from '#lib/modules/online'
 
   let hideFirst = false
   $: if (!$online && !hideFirst) {

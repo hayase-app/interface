@@ -1,9 +1,9 @@
 import { redirect } from '@sveltejs/kit'
 import { get } from 'svelte/store'
 
-import { server } from '$lib/modules/torrent'
-import { generateRandomHexCode, W2GClient } from '$lib/modules/w2g'
-import { w2globby } from '$lib/modules/w2g/lobby'
+import { server } from '#lib/modules/torrent'
+import { generateRandomHexCode, W2GClient } from '#lib/modules/w2g'
+import { w2globby } from '#lib/modules/w2g/lobby'
 
 export function load () {
   const lastVal = get(server.last)

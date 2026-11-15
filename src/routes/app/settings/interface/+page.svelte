@@ -16,19 +16,19 @@
 <script lang='ts'>
   import { toast } from 'svelte-sonner'
 
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { Input } from '$lib/components/ui/input'
-  import { Slider } from '$lib/components/ui/slider'
-  import { Switch } from '$lib/components/ui/switch'
-  // import { Textarea } from '$lib/components/ui/textarea'
-  import * as ToggleGroup from '$lib/components/ui/toggle-group'
-  // import native from '$lib/modules/native'
-  import { navigate } from '$lib/modules/navigate'
-  import { defaults, settings, SUPPORTS } from '$lib/modules/settings'
-  import { readFile, saveFile } from '$lib/utils'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { Input } from '#lib/components/ui/input'
+  import { Slider } from '#lib/components/ui/slider'
+  import { Switch } from '#lib/components/ui/switch'
+  // import { Textarea } from '#lib/components/ui/textarea'
+  import * as ToggleGroup from '#lib/components/ui/toggle-group'
+  // import native from '#lib/modules/native'
+  import { navigate } from '#lib/modules/navigate'
+  import { defaults, settings, SUPPORTS } from '#lib/modules/settings'
+  import { readFile, saveFile } from '#lib/utils'
 
   const angle = {
     default: 'Default',

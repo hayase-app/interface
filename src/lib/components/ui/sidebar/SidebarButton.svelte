@@ -11,9 +11,9 @@
 </script>
 
 <script lang='ts'>
-  import { page } from '$app/stores'
-  import { Button, type Props } from '$lib/components/ui/button'
-  import { cn } from '$lib/utils.js'
+  import { page } from '#lib/app-state'
+  import { Button, type Props } from '#lib/components/ui/button'
+  import { cn } from '#lib/utils'
 
   type $$Props = Props
   export let href: string | null | undefined = undefined

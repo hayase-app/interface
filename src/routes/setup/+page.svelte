@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import { WEB_URL } from '$lib'
-  import Logo from '$lib/components/icons/Logo.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { Checkbox } from '$lib/components/ui/checkbox'
-  import { Label } from '$lib/components/ui/label'
-  import native from '$lib/modules/native'
-  import { click, dragScroll } from '$lib/modules/navigate'
+  import { WEB_URL } from '#lib'
+  import Logo from '#lib/components/icons/Logo.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { Checkbox } from '#lib/components/ui/checkbox'
+  import { Label } from '#lib/components/ui/label'
+  import native from '#lib/modules/native'
+  import { click, dragScroll } from '#lib/modules/navigate'
 
   let checked = false
 </script>

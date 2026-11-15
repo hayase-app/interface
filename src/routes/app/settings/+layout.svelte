@@ -1,16 +1,16 @@
 <script lang='ts'>
-  import Heart from 'lucide-svelte/icons/heart'
+  import Heart from '@lucide/svelte/icons/heart'
 
-  import { version } from '$app/environment'
-  import { page } from '$app/stores'
-  import SettingsNav from '$lib/components/SettingsNav.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { Separator } from '$lib/components/ui/separator'
-  import { activityState, idleState, lockedState } from '$lib/modules/idle'
-  import native from '$lib/modules/native'
-  import { dragScroll } from '$lib/modules/navigate'
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { cn, highEntropyValues } from '$lib/utils'
+  import { page } from '#lib/app-state'
+  import SettingsNav from '#lib/components/SettingsNav.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { Separator } from '#lib/components/ui/separator'
+  import { activityState, idleState, lockedState } from '#lib/modules/idle'
+  import native from '#lib/modules/native'
+  import { dragScroll } from '#lib/modules/navigate'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { cn, highEntropyValues } from '#lib/utils'
+  import { version } from '$app/env'
 
   const items = [
     {

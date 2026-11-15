@@ -21,7 +21,7 @@ import {
 
 import { sendCommand, refWorker, unrefWorker } from './worker-client'
 
-import SUPPORTS from '$lib/modules/settings/supports'
+import SUPPORTS from '#lib/modules/settings/supports'
 
 class CombinedDecoder extends CustomAudioDecoder {
   private ctx = 0

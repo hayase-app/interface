@@ -4,8 +4,8 @@
 
   import { DIALOG_KEY, type DialogContext } from './dialog-context.js'
 
+  import { page } from '#lib/app-state'
   import { pushState } from '$app/navigation'
-  import { page } from '$app/stores'
 
   const dialog = crypto.randomUUID()
 

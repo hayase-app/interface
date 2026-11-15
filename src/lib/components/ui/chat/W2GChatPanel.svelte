@@ -1,12 +1,12 @@
 <script lang='ts'>
-  import SendHorizontal from 'lucide-svelte/icons/send-horizontal'
+  import SendHorizontal from '@lucide/svelte/icons/send-horizontal'
 
   import Messages from './Messages.svelte'
 
-  import { Button } from '$lib/components/ui/button'
-  import { Textarea } from '$lib/components/ui/textarea'
-  import { navigate } from '$lib/modules/navigate'
-  import { w2globby } from '$lib/modules/w2g/lobby'
+  import { Button } from '#lib/components/ui/button'
+  import { Textarea } from '#lib/components/ui/textarea'
+  import { navigate } from '#lib/modules/navigate'
+  import { w2globby } from '#lib/modules/w2g/lobby'
 
   let message = ''
 

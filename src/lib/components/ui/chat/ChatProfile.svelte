@@ -1,8 +1,8 @@
 <script lang='ts'>
   import type { ChatUser } from '.'
 
-  import Profile from '$lib/components/ui/profile/Profile.svelte'
-  import client from '$lib/modules/anilist/client'
+  import Profile from '#lib/components/ui/profile/Profile.svelte'
+  import client from '#lib/modules/anilist/client'
 
   export let user: ChatUser
 

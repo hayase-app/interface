@@ -1,10 +1,10 @@
 <script lang='ts'>
-  import VolumeX from 'lucide-svelte/icons/volume-x'
+  import VolumeX from '@lucide/svelte/icons/volume-x'
   import { createEventDispatcher } from 'svelte'
 
-  import Volume2 from '$lib/components/icons/Volume2.svelte'
-  import { click } from '$lib/modules/navigate'
-  import SUPPORTS from '$lib/modules/settings/supports'
+  import Volume2 from '#lib/components/icons/Volume2.svelte'
+  import { click } from '#lib/modules/navigate'
+  import SUPPORTS from '#lib/modules/settings/supports'
 
   export let src: string
 

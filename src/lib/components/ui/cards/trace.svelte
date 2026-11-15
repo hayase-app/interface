@@ -1,8 +1,8 @@
 <script lang='ts'>
-  import type { client } from '$lib/modules/anilist'
-  import type { TraceAnime } from '$lib/utils'
+  import type { client } from '#lib/modules/anilist'
+  import type { TraceAnime } from '#lib/utils'
 
-  import { EpisodeCard, SkeletonTraceCard } from '$lib/components/ui/cards'
+  import { EpisodeCard, SkeletonTraceCard } from '#lib/components/ui/cards'
 
   export let query: ReturnType<typeof client.search>
 

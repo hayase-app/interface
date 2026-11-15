@@ -14,7 +14,7 @@ import { w2globby } from '../w2g/lobby'
 import type { Media } from '../anilist'
 import type { TorrentFile, TorrentInfo } from 'native'
 
-import { fastPrettyBytes } from '$lib/utils'
+import { fastPrettyBytes } from '#lib/utils'
 
 const debug = Debug('ui:torrent-client')
 

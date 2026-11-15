@@ -1,12 +1,12 @@
 <script lang='ts'>
-  import Menu from 'lucide-svelte/icons/menu'
-  import X from 'lucide-svelte/icons/x'
+  import Menu from '@lucide/svelte/icons/menu'
+  import X from '@lucide/svelte/icons/x'
 
   import { Button } from '../button'
 
+  import { page } from '#lib/app-state'
+  import { breakpoints } from '#lib/utils'
   import { afterNavigate } from '$app/navigation'
-  import { page } from '$app/stores'
-  import { breakpoints } from '$lib/utils'
 
   let open = false // 152 x 140
 

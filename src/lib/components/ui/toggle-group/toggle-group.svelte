@@ -4,10 +4,10 @@
 
   import { setToggleGroupCtx } from './index.js'
 
-  import type { toggleVariants } from '$lib/components/ui/toggle/index.js'
+  import type { toggleVariants } from '#lib/components/ui/toggle'
   import type { VariantProps } from 'tailwind-variants'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   // eslint-disable-next-line no-undef
   type T = $$Generic<'single' | 'multiple'>

@@ -1,22 +1,22 @@
 <script lang='ts' context='module'>
-  import Check from 'lucide-svelte/icons/check'
-  import DoorOpen from 'lucide-svelte/icons/door-open'
-  import SendHorizontal from 'lucide-svelte/icons/send-horizontal'
-  import UserPlus from 'lucide-svelte/icons/user-plus'
+  import Check from '@lucide/svelte/icons/check'
+  import DoorOpen from '@lucide/svelte/icons/door-open'
+  import SendHorizontal from '@lucide/svelte/icons/send-horizontal'
+  import UserPlus from '@lucide/svelte/icons/user-plus'
 
-  import { Button } from '$lib/components/ui/button'
-  import { Messages, UserList } from '$lib/components/ui/chat'
-  import { Textarea } from '$lib/components/ui/textarea'
+  import { Button } from '#lib/components/ui/button'
+  import { Messages, UserList } from '#lib/components/ui/chat'
+  import { Textarea } from '#lib/components/ui/textarea'
 </script>
 
 <script lang='ts'>
   import { onDestroy } from 'svelte'
 
+  import { TransitionButton } from '#lib/components/ui/button/extra'
+  import { Separator } from '#lib/components/ui/separator'
+  import native from '#lib/modules/native'
+  import { w2globby } from '#lib/modules/w2g/lobby'
   import { goto } from '$app/navigation'
-  import { TransitionButton } from '$lib/components/ui/button/extra'
-  import { Separator } from '$lib/components/ui/separator'
-  import native from '$lib/modules/native'
-  import { w2globby } from '$lib/modules/w2g/lobby'
 
   $: users = $w2globby!.peers
   $: messages = $w2globby!.messages

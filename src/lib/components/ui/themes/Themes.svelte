@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import Play from 'lucide-svelte/icons/play'
+  import Play from '@lucide/svelte/icons/play'
 
   import { Button, iconSizes } from '../button'
 
-  import type { Media } from '$lib/modules/anilist'
+  import type { Media } from '#lib/modules/anilist'
 
-  import { themes } from '$lib/modules/animethemes'
+  import { themes } from '#lib/modules/animethemes'
 
   export let media: Media
 

@@ -6,7 +6,7 @@
 
   import { SheetOverlay, SheetPortal, type Side, sheetTransitions, sheetVariants } from './index.js'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   let className: string | undefined = undefined
   export let side: Side = 'right'

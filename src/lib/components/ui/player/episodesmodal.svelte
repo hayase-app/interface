@@ -1,12 +1,12 @@
 <script lang='ts'>
   import type { MediaInfo } from './util'
 
+  import EpisodesList from '#lib/components/EpisodesList.svelte'
+  import * as Sheet from '#lib/components/ui/sheet'
+  import { client } from '#lib/modules/anilist'
+  import { episodes as eps } from '#lib/modules/anizip'
+  import { click } from '#lib/modules/navigate'
   import { goto } from '$app/navigation'
-  import EpisodesList from '$lib/components/EpisodesList.svelte'
-  import * as Sheet from '$lib/components/ui/sheet'
-  import { client } from '$lib/modules/anilist'
-  import { episodes as eps } from '$lib/modules/anizip'
-  import { click } from '$lib/modules/navigate'
 
   export let portal: HTMLElement
   let episodeListOpen = false

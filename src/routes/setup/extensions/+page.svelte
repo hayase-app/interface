@@ -5,15 +5,15 @@
   import Footer, { type Checks } from '../Footer.svelte'
   import Progress from '../Progress.svelte'
 
-  // import { DEFAULT_EXTENSIONS } from '$lib'
-  import type { ExtensionConfig } from '$lib/modules/extensions/types'
+  // import { DEFAULT_EXTENSIONS } from '#lib'
+  import type { ExtensionConfig } from '#lib/modules/extensions/types'
 
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import { Extensions } from '$lib/components/ui/extensions'
-  import { savedConfigs, savedOptions } from '$lib/modules/extensions'
-  import { dragScroll } from '$lib/modules/navigate'
-  import { lookupPreferences, settings } from '$lib/modules/settings'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import { Extensions } from '#lib/components/ui/extensions'
+  import { savedConfigs, savedOptions } from '#lib/modules/extensions'
+  import { dragScroll } from '#lib/modules/navigate'
+  import { lookupPreferences, settings } from '#lib/modules/settings'
 
   function checkExtensions (svd: Record<string, ExtensionConfig>, opts: Record<string, {
     options: Record<string, string | number | boolean | undefined>

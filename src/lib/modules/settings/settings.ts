@@ -9,8 +9,8 @@ import SUPPORTS from './supports'
 
 import { defaults } from '.'
 
-import { dev } from '$app/environment'
-import { derivedDeep, skipFirst } from '$lib/utils'
+import { derivedDeep, skipFirst } from '#lib/utils'
+import { dev } from '$app/env'
 
 const _debug = Debug('ui:settings')
 

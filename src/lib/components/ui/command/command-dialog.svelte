@@ -4,7 +4,7 @@
   import type { Command as CommandPrimitive } from 'cmdk-sv'
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import * as Dialog from '$lib/components/ui/dialog/index.js'
+  import * as Dialog from '#lib/components/ui/dialog'
 
   type $$Props = HTMLAttributes<HTMLElement> & CommandPrimitive.CommandProps
 

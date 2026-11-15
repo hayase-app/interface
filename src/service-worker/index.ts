@@ -3,8 +3,9 @@ import { cleanupOutdatedCaches, matchPrecache, precacheAndRoute, PrecacheFallbac
 import { registerRoute, Route } from 'workbox-routing'
 import { NetworkOnly } from 'workbox-strategies'
 
-import SUPPORTS from '$lib/modules/settings/supports'
-import { build, files, prerendered, version } from '$service-worker'
+import SUPPORTS from '#lib/modules/settings/supports'
+import { version } from '$app/env'
+import { assets, immutable, prerendered } from '$app/manifest'
 
 const fallbackURL = '/offline.html'
 
@@ -14,7 +15,13 @@ const filterOutWorkers = (url: string) => {
   return !(url.includes('codec.worker') || url.includes('audioWorklet'))
 }
 
-precacheAndRoute(['JASSUB-WORKER-URLS', fallbackURL, ...prerendered, ...build, ...files].filter(filterOutWorkers).map(url => ({ url, revision: version })))
+const filterOutLargeAssets = (url: string) => !/(video\.mkv|NotoSans(HK|JP|KR)\.woff2)$/.test(url)
+
+precacheAndRoute([{ path: fallbackURL }, ...prerendered, ...immutable, ...assets]
+  .filter(({ path }) => filterOutLargeAssets(path) && filterOutWorkers(path))
+  .map(({ path }) => ({ url: path, revision: version }))
+)
+
 cleanupOutdatedCaches()
 clientsClaim()
 skipWaiting()

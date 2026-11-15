@@ -19,10 +19,10 @@ import ContinuousSource from './continuousSource'
 import VideoPipeline from './videoPipeline'
 import ScreenWakeLock from './wakeLock'
 
-import type { EventDetail } from '$lib/modules/target'
+import type { EventDetail } from '#lib/modules/target'
 
-import TypedEventTarget from '$lib/modules/target'
-import { clamp } from '$lib/utils'
+import TypedEventTarget from '#lib/modules/target'
+import { clamp } from '#lib/utils'
 
 const READY_AHEAD_SECONDS = 0.25
 

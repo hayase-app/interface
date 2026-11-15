@@ -8,7 +8,7 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import { cn, flyAndScale } from '$lib/utils.js'
+  import { cn, flyAndScale } from '#lib/utils'
 
   // const api = getContext<DialogContext>(DIALOG_KEY)
 

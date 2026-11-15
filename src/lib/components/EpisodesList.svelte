@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import Download from 'lucide-svelte/icons/download'
-  import Play from 'lucide-svelte/icons/play'
-  import Star from 'lucide-svelte/icons/star'
+  import Download from '@lucide/svelte/icons/download'
+  import Play from '@lucide/svelte/icons/play'
+  import Star from '@lucide/svelte/icons/star'
 
   import Pagination from './Pagination.svelte'
   import { ChevronLeft, ChevronRight } from './icons/animated'
@@ -10,17 +10,17 @@
   import { playEp } from './ui/player/mediahandler.svelte'
   import { Profile } from './ui/profile'
 
-  import type { EpisodesResponse } from '$lib/modules/anizip/types'
+  import type { EpisodesResponse } from '#lib/modules/anizip/types'
 
-  import { searchStore } from '$lib'
-  import Logo from '$lib/components/icons/Logo.svelte'
-  import { episodes as _episodes, client, notes, type Media } from '$lib/modules/anilist'
-  import { list, progress } from '$lib/modules/auth'
-  import { makeEpisodeList } from '$lib/modules/extensions'
-  import { click, dragScroll } from '$lib/modules/navigate'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
-  import { liveAnimeProgress } from '$lib/modules/watchProgress'
-  import { breakpoints, cn, since } from '$lib/utils'
+  import { searchStore } from '#lib'
+  import Logo from '#lib/components/icons/Logo.svelte'
+  import { episodes as _episodes, client, notes, type Media } from '#lib/modules/anilist'
+  import { list, progress } from '#lib/modules/auth'
+  import { makeEpisodeList } from '#lib/modules/extensions'
+  import { click, dragScroll } from '#lib/modules/navigate'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
+  import { liveAnimeProgress } from '#lib/modules/watchProgress'
+  import { breakpoints, cn, since } from '#lib/utils'
 
   let classList = ''
   export { classList as class }

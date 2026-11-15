@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { client } from '$lib/modules/anilist'
+  import { client } from '#lib/modules/anilist'
 
   export let mediaID: number
   export let episode: number | undefined

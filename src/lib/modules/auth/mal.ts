@@ -12,8 +12,8 @@ import { malClientID, SUPPORTS } from '../settings'
 import type { Entry, FullMediaList, UserFrag } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 
-import { dev } from '$app/environment'
-import { arrayEqual } from '$lib/utils'
+import { arrayEqual } from '#lib/utils'
+import { dev } from '$app/env'
 
 const debug = Debug('ui:mal')
 

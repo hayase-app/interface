@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import HoldToConfirm from '$lib/components/ui/button/hold-to-confirm.svelte'
-  import { TorrentsTable } from '$lib/components/ui/torrentclient'
-  import { settings } from '$lib/modules/settings'
+  import HoldToConfirm from '#lib/components/ui/button/hold-to-confirm.svelte'
+  import { TorrentsTable } from '#lib/components/ui/torrentclient'
+  import { settings } from '#lib/modules/settings'
 
   const warnings = [
     'High CPU and memory usage. This can cause lag on lower-end devices.',

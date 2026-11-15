@@ -3,8 +3,8 @@
 
   import { type ToggleVariants, getToggleGroupCtx } from './index.js'
 
-  import { toggleVariants } from '$lib/components/ui/toggle/index.js'
-  import { cn } from '$lib/utils.js'
+  import { toggleVariants } from '#lib/components/ui/toggle'
+  import { cn } from '#lib/utils'
 
   type $$Props = ToggleGroupPrimitive.ItemProps & ToggleVariants
 

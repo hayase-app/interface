@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import { page } from '$app/stores'
-  import Load from '$lib/components/ui/img/load.svelte'
-  import { Separator } from '$lib/components/ui/separator'
+  import { page } from '#lib/app-state'
+  import Load from '#lib/components/ui/img/load.svelte'
+  import { Separator } from '#lib/components/ui/separator'
 </script>
 
 <div class='size-full flex flex-col grow items-center justify-center gap-9'>

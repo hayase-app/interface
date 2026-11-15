@@ -1,7 +1,7 @@
 <script lang='ts' context='module'>
   import { writable } from 'svelte/store'
 
-  import { searchStore } from '$lib'
+  import { searchStore } from '#lib'
 
   export const playEp = writable((media: Media, episode: number) => searchStore.set({ media, episode }))
 </script>
@@ -11,15 +11,15 @@
   import Externalplayer from './externalplayer.svelte'
   import Player from './player.svelte'
 
-  import type { MediaInfo } from '$lib/components/ui/player/util'
+  import type { MediaInfo } from '#lib/components/ui/player/util'
   import type { resolveFilesPoorly, ResolvedFile } from './resolver'
 
+  import { cover, episodes, title, type Media } from '#lib/modules/anilist'
+  import { fillerEpisodes } from '#lib/modules/extensions'
+  import { settings } from '#lib/modules/settings'
+  import { server } from '#lib/modules/torrent'
+  import { w2globby } from '#lib/modules/w2g/lobby'
   import { goto } from '$app/navigation'
-  import { cover, episodes, title, type Media } from '$lib/modules/anilist'
-  import { fillerEpisodes } from '$lib/modules/extensions'
-  import { settings } from '$lib/modules/settings'
-  import { server } from '$lib/modules/torrent'
-  import { w2globby } from '$lib/modules/w2g/lobby'
 
   export let mediaInfo: NonNullable<Awaited<ReturnType<typeof resolveFilesPoorly>>>
 

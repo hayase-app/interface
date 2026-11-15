@@ -7,7 +7,7 @@ import { client, type Media } from '../anilist'
 import type { Entry, FullMediaList } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 
-import { arrayEqual } from '$lib/utils'
+import { arrayEqual } from '#lib/utils'
 
 export interface StoredMedia {
   id: number

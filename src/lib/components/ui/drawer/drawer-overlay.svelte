@@ -1,8 +1,8 @@
 <script lang='ts'>
   import { Drawer as DrawerPrimitive } from 'vaul-svelte'
 
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { cn } from '$lib/utils.js'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { cn } from '#lib/utils'
 
   type $$Props = DrawerPrimitive.OverlayProps
 

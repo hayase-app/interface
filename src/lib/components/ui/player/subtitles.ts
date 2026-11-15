@@ -10,10 +10,10 @@ import type { MediaInfo } from './util'
 import type { ASSStyle } from 'jassub/dist/worker/util'
 import type { SubtitleTrack, TorrentFile } from 'native'
 
-import { extensions } from '$lib/modules/extensions'
-import native from '$lib/modules/native'
-import { type defaults, settings } from '$lib/modules/settings'
-import { fontRx, subRx, subtitleExtensions, toTS } from '$lib/utils'
+import { extensions } from '#lib/modules/extensions'
+import native from '#lib/modules/native'
+import { type defaults, settings } from '#lib/modules/settings'
+import { fontRx, subRx, subtitleExtensions, toTS } from '#lib/utils'
 
 const defaultHeader = `[Script Info]
 Title: English (US)

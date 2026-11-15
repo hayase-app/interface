@@ -10,8 +10,8 @@ import { server } from '../torrent'
 
 import Event, { type MediaState, type PlayerState, type W2GEvents } from './events.js'
 
+import { MessageToast, type ChatMessage, type ChatUser } from '#lib/components/ui/chat'
 import { page } from '$app/state'
-import { MessageToast, type ChatMessage, type ChatUser } from '$lib/components/ui/chat'
 
 const debug = Debug('ui:w2g')
 
@@ -202,7 +202,6 @@ export class W2GClient extends EventEmitter<{index: [number], player: [PlayerSta
       case 'message': {
         const msg: ChatMessage = { message: data.payload, user: this.peers.value[peer.id]!.user, type: 'incoming', date: new Date() }
         if (page.route.id !== '/app/w2g/[id]') {
-          // @ts-expect-error using svelte 4 components in s5
           toast.custom(MessageToast, {
             classes: { toast: '!bg-transparent w-full !shadow-none h-auto flex' },
             componentProps: { msg }

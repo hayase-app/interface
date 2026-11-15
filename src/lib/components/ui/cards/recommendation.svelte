@@ -4,9 +4,9 @@
 </script>
 
 <script lang='ts'>
-  import type { client, Media } from '$lib/modules/anilist'
+  import type { client, Media } from '#lib/modules/anilist'
 
-  import { SkeletonCard, SmallCard } from '$lib/components/ui/cards'
+  import { SkeletonCard, SmallCard } from '#lib/components/ui/cards'
 
   export let query: ReturnType<typeof client.animePage>
 

@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import { Extensions } from '$lib/components/ui/extensions'
-  import { Switch } from '$lib/components/ui/switch'
-  import { lookupPreferences, settings, videoResolutions } from '$lib/modules/settings'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import { Extensions } from '#lib/components/ui/extensions'
+  import { Switch } from '#lib/components/ui/switch'
+  import { lookupPreferences, settings, videoResolutions } from '#lib/modules/settings'
 </script>
 
 <div class='font-weight-bold text-xl font-bold'>Lookup Settings</div>

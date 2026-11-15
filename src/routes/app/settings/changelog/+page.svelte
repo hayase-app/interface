@@ -1,6 +1,6 @@
 <script lang='ts' context='module'>
-  import { COMMITS_URL } from '$lib'
-  import { Separator } from '$lib/components/ui/separator'
+  import { COMMITS_URL } from '#lib'
+  import { Separator } from '#lib/components/ui/separator'
 
   const changeLog = (async () => {
     const res = await fetch(COMMITS_URL)

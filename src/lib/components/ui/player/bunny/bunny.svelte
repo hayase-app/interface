@@ -23,8 +23,8 @@
   import type { TorrentFile } from 'native'
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
-  import { customDoubleClick } from '$lib/modules/navigate'
-  import { cn } from '$lib/utils'
+  import { customDoubleClick } from '#lib/modules/navigate'
+  import { cn } from '#lib/utils'
 
   export let src = ''
   export let current: MediaInfo | undefined = undefined

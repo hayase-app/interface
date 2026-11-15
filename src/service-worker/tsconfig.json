@@ -1,0 +1,13 @@
+{
+  "extends": "$app/tsconfig/service-worker",
+  "compilerOptions": {
+    "paths": {
+      "#lib": [
+        "../lib"
+      ],
+      "#lib/*": [
+        "../lib/*"
+      ]
+    }
+  }
+}

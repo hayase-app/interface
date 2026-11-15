@@ -4,8 +4,8 @@ import { get } from 'svelte/store'
 import type Subtitles from './subtitles'
 import type VideoDeband from 'video-deband'
 
-import native from '$lib/modules/native'
-import { settings } from '$lib/modules/settings'
+import native from '#lib/modules/native'
+import { settings } from '#lib/modules/settings'
 
 export default class PictureInPicture {
   element = writable<HTMLVideoElement | null>(null)

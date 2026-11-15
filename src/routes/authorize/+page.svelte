@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { Separator } from '$lib/components/ui/separator'
-  import SUPPORTS from '$lib/modules/settings/supports'
+  import { Separator } from '#lib/components/ui/separator'
+  import SUPPORTS from '#lib/modules/settings/supports'
 
   const search = new URL(location.hash.slice('#/authorize'.length), location.origin).search
 

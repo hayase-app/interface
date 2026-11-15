@@ -1,4 +1,4 @@
-import type { Viewer } from '$lib/modules/anilist/queries'
+import type { Viewer } from '#lib/modules/anilist/queries'
 import type { ResultOf } from 'gql.tada'
 
 export type ChatUser = Omit<NonNullable<ResultOf<typeof Viewer>['Viewer']>, 'id' | 'bannerImage' | 'about' | 'isFollowing' | 'isFollower' | 'donatorBadge' | 'options' | 'createdAt' | 'statistics' | 'mediaListOptions'> & { id: string | number, guest: boolean }

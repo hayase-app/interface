@@ -6,10 +6,10 @@
   import YoutubeIframe from './YoutubeIframe.svelte'
   import Videoframe from './videoframe.svelte'
 
-  import { desc, duration, format, season, title, type Media } from '$lib/modules/anilist'
-  import { list, of } from '$lib/modules/auth'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
-  import { cn, type TraceAnime } from '$lib/utils'
+  import { desc, duration, format, season, title, type Media } from '#lib/modules/anilist'
+  import { list, of } from '#lib/modules/auth'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
+  import { cn, type TraceAnime } from '#lib/utils'
 
   export let media: Media
 

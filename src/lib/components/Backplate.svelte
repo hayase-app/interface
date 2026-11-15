@@ -1,7 +1,7 @@
 <!-- <script lang='ts'>
-  import { activityState, idleState, isPlaying, lockedState } from '$lib/modules/idle'
-  import { settings } from '$lib/modules/settings'
-  import { sleep } from '$lib/utils'
+  import { activityState, idleState, isPlaying, lockedState } from '#lib/modules/idle'
+  import { settings } from '#lib/modules/settings'
+  import { sleep } from '#lib/utils'
 
   let plate: HTMLDivElement
   export let root: HTMLDivElement

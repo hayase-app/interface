@@ -1,20 +1,20 @@
 <script lang='ts'>
   import Dagre from '@dagrejs/dagre'
+  import Maximize2 from '@lucide/svelte/icons/maximize-2'
+  import Minimize2 from '@lucide/svelte/icons/minimize-2'
   import { SvelteFlow, Background, useSvelteFlow, type Node, type Edge, Controls, ControlButton, type NodeTypes } from '@xyflow/svelte'
   import '@xyflow/svelte/dist/style.css'
-  import Maximize2 from 'lucide-svelte/icons/maximize-2'
-  import Minimize2 from 'lucide-svelte/icons/minimize-2'
   import { writable } from 'simple-store-svelte'
   import { onMount } from 'svelte'
 
   import TextNode from './TextNode.svelte'
 
-  import type { Media } from '$lib/modules/anilist'
-  import type { FullMedia } from '$lib/modules/anilist/queries'
+  import type { Media } from '#lib/modules/anilist'
+  import type { FullMedia } from '#lib/modules/anilist/queries'
   import type { FragmentOf } from 'gql.tada'
 
-  import Refresh from '$lib/components/icons/animated/refresh.svelte'
-  import { client } from '$lib/modules/anilist'
+  import Refresh from '#lib/components/icons/animated/refresh.svelte'
+  import { client } from '#lib/modules/anilist'
 
   export let media: Media
 
@@ -125,7 +125,7 @@
   }
 </script>
 
-<SvelteFlow {nodes} {edges} colorMode='dark'
+<SvelteFlow nodes={$nodes} edges={$edges} colorMode='dark'
   proOptions={{ hideAttribution: true }}
   nodesConnectable={false}
   nodesDraggable={false}
@@ -141,14 +141,14 @@
   class='!overflow-clip'>
   <Background bgColor='black' />
   <Controls showLock={false} orientation='horizontal'>
-    <ControlButton on:click={expand}>
+    <ControlButton onclick={expand}>
       {#if expanded}
         <Minimize2 />
       {:else}
         <Maximize2 />
       {/if}
     </ControlButton>
-    <ControlButton on:click={refresh} class='animated-icon'>
+    <ControlButton onclick={refresh} class='animated-icon'>
       <Refresh />
     </ControlButton>
   </Controls>

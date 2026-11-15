@@ -1,9 +1,9 @@
 <script lang='ts'>
   import createGlobe, { type Marker } from 'cobe'
 
-  import { lookup } from '$lib/modules/geoip'
-  import { server } from '$lib/modules/torrent'
-  import { breakpoints } from '$lib/utils'
+  import { lookup } from '#lib/modules/geoip'
+  import { server } from '#lib/modules/torrent'
+  import { breakpoints } from '#lib/utils'
 
   const normalize = (val = 0, max = 0, min = 0) => (val - min) / (max - min) || 0
 

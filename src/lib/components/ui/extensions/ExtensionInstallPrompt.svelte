@@ -9,13 +9,13 @@
 
   import ExtensionCard from './ExtensionCard.svelte'
 
-  import type { ExtensionConfig } from '$lib/modules/extensions/types'
+  import type { ExtensionConfig } from '#lib/modules/extensions/types'
 
+  import { Code } from '#lib/components/icons/animated'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { safejson, safejs, savedConfigs, storage } from '#lib/modules/extensions/storage'
   import { afterNavigate } from '$app/navigation'
-  import { Code } from '$lib/components/icons/animated'
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { safejson, safejs, savedConfigs, storage } from '$lib/modules/extensions/storage'
 
   let configs: ExtensionConfig[] = []
   let error: string | null = null

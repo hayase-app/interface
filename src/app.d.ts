@@ -1,5 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
-import type { Search } from '$lib/modules/anilist/queries'
+import type { Search } from '#lib/modules/anilist/queries'
 import type { ClassValue as ClsxClassValue } from 'clsx'
 import type { VariablesOf } from 'gql.tada'
 import type { CompositionEventHandler } from 'svelte/elements'

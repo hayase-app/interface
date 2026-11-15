@@ -1,8 +1,8 @@
 <script lang='ts'>
   import { Command as CommandPrimitive } from 'cmdk-sv'
 
-  import { keywrap } from '$lib/modules/navigate'
-  import { cn } from '$lib/utils.js'
+  import { keywrap } from '#lib/modules/navigate'
+  import { cn } from '#lib/utils'
 
   type $$Props = CommandPrimitive.ItemProps
 

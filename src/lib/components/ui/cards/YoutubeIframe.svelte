@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import VolumeX from 'lucide-svelte/icons/volume-x'
+  import VolumeX from '@lucide/svelte/icons/volume-x'
   import { createEventDispatcher, onDestroy, tick } from 'svelte'
 
-  import Volume2 from '$lib/components/icons/Volume2.svelte'
-  import { click } from '$lib/modules/navigate'
+  import Volume2 from '#lib/components/icons/Volume2.svelte'
+  import { click } from '#lib/modules/navigate'
 
   export let id: string
 

@@ -1,7 +1,7 @@
 <script lang='ts' context='module'>
   import { writable } from 'svelte/store'
 
-  import native from '$lib/modules/native'
+  import native from '#lib/modules/native'
 
   export const displays = writable<Array<{ friendlyName: string, host: string }>>([])
   native.getDisplays(dis => displays.set(dis))
@@ -15,9 +15,9 @@
 </script>
 
 <script lang='ts'>
-  import SkipBack from 'lucide-svelte/icons/skip-back'
-  import SkipForward from 'lucide-svelte/icons/skip-forward'
-  import Square from 'lucide-svelte/icons/square'
+  import SkipBack from '@lucide/svelte/icons/skip-back'
+  import SkipForward from '@lucide/svelte/icons/skip-forward'
+  import Square from '@lucide/svelte/icons/square'
 
   import { Button } from '../button'
 
@@ -26,12 +26,12 @@
   import type { ResolvedFile } from './resolver'
   import type { MediaInfo } from './util'
 
+  import { page } from '#lib/app-state'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { authAggregator } from '#lib/modules/auth'
+  import { settings } from '#lib/modules/settings'
+  import { breakpoints, clamp, cn, toTS } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { page } from '$app/stores'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { authAggregator } from '$lib/modules/auth'
-  import { settings } from '$lib/modules/settings'
-  import { breakpoints, clamp, cn, toTS } from '$lib/utils'
 
   export let mediaInfo: MediaInfo
   export let videoFiles: ResolvedFile[]

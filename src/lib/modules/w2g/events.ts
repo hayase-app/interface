@@ -1,4 +1,4 @@
-import type { ChatUser } from '$lib/components/ui/chat'
+import type { ChatUser } from '#lib/components/ui/chat'
 
 export default class Event<K extends keyof W2GEvents = keyof W2GEvents> {
   readonly type: K

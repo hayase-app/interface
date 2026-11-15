@@ -1,6 +1,6 @@
 <script lang='ts' context='module'>
   /* eslint-disable no-self-assign */
-  import BadgeCheck from 'lucide-svelte/icons/badge-check'
+  import BadgeCheck from '@lucide/svelte/icons/badge-check'
   import Download from 'svelte-radix/Download.svelte'
   import File from 'svelte-radix/File.svelte'
   import MagnifyingGlass from 'svelte-radix/MagnifyingGlass.svelte'
@@ -11,12 +11,12 @@
 
   import type { AnitomyResult } from 'anitomyscript'
 
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { title } from '$lib/modules/anilist'
-  import { type ExtensionError, extensions, type StreamedTorrentResult } from '$lib/modules/extensions/extensions'
-  import { click, dragScroll } from '$lib/modules/navigate'
-  import { settings, videoResolutions } from '$lib/modules/settings'
-  import { breakpoints, cn, colors, fastPrettyBytes, since, sleep, transferToFileList } from '$lib/utils'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { title } from '#lib/modules/anilist'
+  import { type ExtensionError, extensions, type StreamedTorrentResult } from '#lib/modules/extensions/extensions'
+  import { click, dragScroll } from '#lib/modules/navigate'
+  import { settings, videoResolutions } from '#lib/modules/settings'
+  import { breakpoints, cn, colors, fastPrettyBytes, since, sleep, transferToFileList } from '#lib/utils'
 
   const termMapping: Record<string, {text: string, color: string}> = {}
   termMapping['5.1'] = termMapping['5.1CH'] = { text: '5.1', color: '#f67255' }
@@ -60,19 +60,19 @@
 </script>
 
 <script lang='ts'>
-  import Folder from 'lucide-svelte/icons/folder'
+  import Folder from '@lucide/svelte/icons/folder'
   import { flip } from 'svelte/animate'
   import { quartInOut } from 'svelte/easing'
 
   import ProgressButton from './ui/button/progress-button.svelte'
   import { Banner } from './ui/img'
 
-  import type { TorrentResult } from '$lib/modules/extensions/types'
+  import type { TorrentResult } from '#lib/modules/extensions/types'
 
+  import { searchStore } from '#lib'
+  import { savedConfigs } from '#lib/modules/extensions'
+  import { server } from '#lib/modules/torrent'
   import { goto } from '$app/navigation'
-  import { searchStore } from '$lib'
-  import { savedConfigs } from '$lib/modules/extensions'
-  import { server } from '$lib/modules/torrent'
 
   const downloaded = server.downloaded
 

@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { lookup } from '$lib/modules/geoip'
-  import { codeToEmoji } from '$lib/utils'
+  import { lookup } from '#lib/modules/geoip'
+  import { codeToEmoji } from '#lib/utils'
 
   export let value: string
 </script>

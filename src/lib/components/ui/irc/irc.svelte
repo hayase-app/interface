@@ -1,6 +1,6 @@
 <script lang='ts' context='module'>
-  import { client } from '$lib/modules/anilist'
-  import MessageClient from '$lib/modules/irc'
+  import { client } from '#lib/modules/anilist'
+  import MessageClient from '#lib/modules/irc'
 </script>
 
 <script lang='ts'>
@@ -8,7 +8,7 @@
 
   import Interface from './interface.svelte'
 
-  import { irc } from '$lib/modules/irc/lobby'
+  import { irc } from '#lib/modules/irc/lobby'
 
   const viewer = client.client.viewer
 

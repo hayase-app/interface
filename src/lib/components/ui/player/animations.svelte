@@ -1,13 +1,13 @@
 <script lang='ts' context='module'>
-  import FastForward from 'lucide-svelte/icons/fast-forward'
-  import Pause from 'lucide-svelte/icons/pause'
-  import Rewind from 'lucide-svelte/icons/rewind'
-  import Volume1 from 'lucide-svelte/icons/volume-1'
+  import FastForward from '@lucide/svelte/icons/fast-forward'
+  import Pause from '@lucide/svelte/icons/pause'
+  import Rewind from '@lucide/svelte/icons/rewind'
+  import Volume1 from '@lucide/svelte/icons/volume-1'
   import { writable } from 'simple-store-svelte'
 
-  import Play from '$lib/components/icons/Play.svelte'
-  import Volume2 from '$lib/components/icons/Volume2.svelte'
-  import { settings } from '$lib/modules/settings'
+  import Play from '#lib/components/icons/Play.svelte'
+  import Volume2 from '#lib/components/icons/Volume2.svelte'
+  import { settings } from '#lib/modules/settings'
 
   type AnimationType = 'play' | 'pause' | 'seekforw' | 'seekback' | 'volumeup' | 'volumedown' | (string & {})
 

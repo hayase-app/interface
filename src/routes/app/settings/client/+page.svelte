@@ -1,13 +1,13 @@
 <script lang='ts'>
   import { toast } from 'svelte-sonner'
 
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import { Input } from '$lib/components/ui/input'
-  import { Switch } from '$lib/components/ui/switch'
-  import native from '$lib/modules/native'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import { Input } from '#lib/components/ui/input'
+  import { Switch } from '#lib/components/ui/switch'
+  import native from '#lib/modules/native'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
 
   async function selectDownloadFolder (type?: string) {
     try {

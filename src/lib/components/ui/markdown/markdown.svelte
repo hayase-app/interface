@@ -1,7 +1,7 @@
 <script lang='ts'>
   import OverType from 'overtype'
 
-  import { cn } from '$lib/utils'
+  import { cn } from '#lib/utils'
 
   let className: string | undefined | null = ''
   export let value = ''

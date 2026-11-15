@@ -1,8 +1,8 @@
 <script lang='ts'>
   import { Button, type Props } from './index.js'
 
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import { cn } from '$lib/utils.js'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import { cn } from '#lib/utils'
 
   type $$Props = Props & {
     label?: string

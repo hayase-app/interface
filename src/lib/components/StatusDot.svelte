@@ -3,7 +3,7 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import { cn } from '$lib/utils'
+  import { cn } from '#lib/utils'
 
   const dotvariants = tv({
     base: 'inline-flex size-[0.55rem] me-1 rounded-full',

@@ -1,8 +1,8 @@
 <script lang='ts'>
-  import ClockFading from 'lucide-svelte/icons/clock-fading'
+  import ClockFading from '@lucide/svelte/icons/clock-fading'
 
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import { cn } from '$lib/utils'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import { cn } from '#lib/utils'
 
   export let value: number
 

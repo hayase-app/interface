@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import { X } from 'lucide-svelte'
+  import { X } from '@lucide/svelte'
   import { onDestroy } from 'svelte'
 
   import type { SvelteMediaTimeRange } from 'svelte/elements'
 
-  import { Button } from '$lib/components/ui/button'
-  import { toTS } from '$lib/utils'
+  import { Button } from '#lib/components/ui/button'
+  import { toTS } from '#lib/utils'
 
   export let subtitleDelay: number
   export let currentTime: number

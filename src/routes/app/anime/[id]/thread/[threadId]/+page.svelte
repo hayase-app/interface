@@ -1,19 +1,19 @@
 <script lang='ts'>
-  import ChevronLeft from 'lucide-svelte/icons/chevron-left'
-  import Eye from 'lucide-svelte/icons/eye'
-  import Heart from 'lucide-svelte/icons/heart'
-  import Lock from 'lucide-svelte/icons/lock'
-  import MessagesSquare from 'lucide-svelte/icons/messages-square'
-  import Reply from 'lucide-svelte/icons/reply'
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left'
+  import Eye from '@lucide/svelte/icons/eye'
+  import Heart from '@lucide/svelte/icons/heart'
+  import Lock from '@lucide/svelte/icons/lock'
+  import MessagesSquare from '@lucide/svelte/icons/messages-square'
+  import Reply from '@lucide/svelte/icons/reply'
 
   import type { PageData } from './$types'
 
-  import Shadow from '$lib/components/Shadow.svelte'
-  import { Button, iconSizes } from '$lib/components/ui/button'
-  import { Comments, Write } from '$lib/components/ui/forums'
-  import { Profile } from '$lib/components/ui/profile'
-  import { client } from '$lib/modules/anilist'
-  import { since } from '$lib/utils'
+  import Shadow from '#lib/components/Shadow.svelte'
+  import { Button, iconSizes } from '#lib/components/ui/button'
+  import { Comments, Write } from '#lib/components/ui/forums'
+  import { Profile } from '#lib/components/ui/profile'
+  import { client } from '#lib/modules/anilist'
+  import { since } from '#lib/utils'
 
   export let data: PageData
 

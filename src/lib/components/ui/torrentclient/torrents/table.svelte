@@ -10,14 +10,14 @@
 
   import type { TorrentInfo } from 'native'
 
+  import { Trash } from '#lib/components/icons/animated'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import * as Table from '#lib/components/ui/table'
+  import { client } from '#lib/modules/anilist'
+  import { server } from '#lib/modules/torrent'
+  import { cn, eta, fastPrettyBytes } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { Trash } from '$lib/components/icons/animated'
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import * as Table from '$lib/components/ui/table'
-  import { client } from '$lib/modules/anilist'
-  import { server } from '$lib/modules/torrent'
-  import { cn, eta, fastPrettyBytes } from '$lib/utils'
 
   async function playTorrent (hash: string) {
     const entry = get(server.library).find(({ hash: entryHash }) => entryHash === hash)

@@ -3,7 +3,7 @@
 
   import { resolveFilesPoorly } from './resolver'
 
-  import { server } from '$lib/modules/torrent'
+  import { server } from '#lib/modules/torrent'
 
   const active = derived(server.active, $active => resolveFilesPoorly($active))
 </script>
@@ -13,11 +13,11 @@
 
   import Mediahandler from './mediahandler.svelte'
 
+  import { page } from '#lib/app-state'
+  import { isPlaying } from '#lib/modules/idle'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { cn } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { page } from '$app/stores'
-  import { isPlaying } from '$lib/modules/idle'
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { cn } from '$lib/utils'
 
   $: isMiniplayer = $page.route.id !== '/app/player'
 

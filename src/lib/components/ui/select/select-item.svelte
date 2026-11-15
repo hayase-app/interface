@@ -2,7 +2,7 @@
   import { Select as SelectPrimitive } from 'bits-ui'
   import Check from 'svelte-radix/Check.svelte'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = SelectPrimitive.ItemProps
   type $$Events = Required<SelectPrimitive.ItemEvents>

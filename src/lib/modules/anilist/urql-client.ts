@@ -20,8 +20,8 @@ import schema from './schema.json' with { type: 'json' }
 import type { CombinedError } from '@urql/core'
 import type { ResultOf } from 'gql.tada'
 
-import native from '$lib/modules/native'
-import { safeLocalStorage } from '$lib/utils'
+import native from '#lib/modules/native'
+import { safeLocalStorage } from '#lib/utils'
 
 const debug = Debug('ui:urql')
 

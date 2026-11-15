@@ -1,8 +1,10 @@
+import { loadConfig } from '@sveltejs/load-config'
 import config from 'eslint-config-standard-universal'
 import _globals from 'globals'
 import tseslint from 'typescript-eslint'
 
-import svelteConfig from './svelte.config.js'
+const configResult = await loadConfig('./', { traverse: false })
+const svelteConfig = configResult && 'config' in configResult ? configResult.config : undefined
 
 export default tseslint.config(
   ...config({

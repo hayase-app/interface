@@ -13,17 +13,17 @@
 </script>
 
 <script lang='ts'>
-  import X from 'lucide-svelte/icons/x'
+  import X from '@lucide/svelte/icons/x'
   import { tick } from 'svelte'
   import CaretSort from 'svelte-radix/CaretSort.svelte'
   import Check from 'svelte-radix/Check.svelte'
 
   import ComboboxShell from './ComboboxShell.svelte'
 
-  import { Button } from '$lib/components/ui/button'
-  import * as Command from '$lib/components/ui/command'
-  import { inputType, navigate } from '$lib/modules/navigate'
-  import { breakpoints, cn } from '$lib/utils.js'
+  import { Button } from '#lib/components/ui/button'
+  import * as Command from '#lib/components/ui/command'
+  import { inputType, navigate } from '#lib/modules/navigate'
+  import { breakpoints, cn } from '#lib/utils'
 
   export let items: readonly value[] = []
 

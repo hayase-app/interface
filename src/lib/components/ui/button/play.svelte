@@ -1,14 +1,14 @@
 <script lang='ts'>
-  import Play from 'lucide-svelte/icons/play'
+  import Play from '@lucide/svelte/icons/play'
 
   import { playEp } from '../player/mediahandler.svelte'
 
-  import type { Media } from '$lib/modules/anilist'
+  import type { Media } from '#lib/modules/anilist'
 
-  import { Button, iconSizes, type Props } from '$lib/components/ui/button'
-  import { list, progress } from '$lib/modules/auth'
-  import { clickwrap, keywrap } from '$lib/modules/navigate'
-  import { cn } from '$lib/utils'
+  import { Button, iconSizes, type Props } from '#lib/components/ui/button'
+  import { list, progress } from '#lib/modules/auth'
+  import { clickwrap, keywrap } from '#lib/modules/navigate'
+  import { cn } from '#lib/utils'
 
   type $$Props = Props & { media: Media }
 

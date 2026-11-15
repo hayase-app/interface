@@ -1,14 +1,14 @@
 <script lang='ts'>
-  import ChevronLeft from 'lucide-svelte/icons/chevron-left'
-  import ChevronRight from 'lucide-svelte/icons/chevron-right'
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left'
+  import ChevronRight from '@lucide/svelte/icons/chevron-right'
 
   import Pagination from '../../Pagination.svelte'
   import { Button } from '../button'
 
   import { Comment } from './'
 
-  import { client } from '$lib/modules/anilist'
-  import { breakpoints } from '$lib/utils'
+  import { client } from '#lib/modules/anilist'
+  import { breakpoints } from '#lib/utils'
 
   export let isLocked = false
   export let threadId: number

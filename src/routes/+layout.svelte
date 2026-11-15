@@ -2,21 +2,21 @@
   import '../app.css'
   import '@fontsource-variable/nunito'
   import '@fontsource/geist-mono'
-  import '$lib/modules/gamepad'
+  import '#lib/modules/gamepad'
   import { ProgressBar } from '@prgm/sveltekit-progress-bar'
   import { toast } from 'svelte-sonner'
 
+  // import Backplate from '#lib/components/Backplate.svelte'
+  import Online from '#lib/components/Online.svelte'
+  import InstallPrompt, { extensionInstalURL } from '#lib/components/ui/extensions/ExtensionInstallPrompt.svelte'
+  import { Menubar } from '#lib/components/ui/menubar'
+  import { Toaster } from '#lib/components/ui/sonner'
+  import { sanitizeExtensionUrl } from '#lib/modules/extensions/storage'
+  import native from '#lib/modules/native'
+  import { inputType } from '#lib/modules/navigate'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
+  import { cn } from '#lib/utils'
   import { onNavigate } from '$app/navigation'
-  // import Backplate from '$lib/components/Backplate.svelte'
-  import Online from '$lib/components/Online.svelte'
-  import InstallPrompt, { extensionInstalURL } from '$lib/components/ui/extensions/ExtensionInstallPrompt.svelte'
-  import { Menubar } from '$lib/components/ui/menubar'
-  import { Toaster } from '$lib/components/ui/sonner'
-  import { sanitizeExtensionUrl } from '$lib/modules/extensions/storage'
-  import native from '$lib/modules/native'
-  import { inputType } from '$lib/modules/navigate'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
-  import { cn } from '$lib/utils'
 
   native.errors(error => {
     toast.error('Torrent Process Error!', { description: error?.stack ?? error?.message, duration: 15_000 })
@@ -26,7 +26,9 @@
   const displayThresholdMs = 150
 
   if (document.startViewTransition && !SUPPORTS.isUnderPowered) {
-    onNavigate(async ({ to, complete, delta }) => {
+    onNavigate(async (navigation) => {
+      const { to, complete } = navigation
+      const delta = navigation.type === 'popstate' ? navigation.delta : undefined
       if (
         (SUPPORTS.isIOS && delta != null) || // iOS has their own animations for back/forward navigation that conflict with view transitions, sasuga Apple
         fullscreenElement || // chrome can hang when trying to do view transitions while in fullscreen

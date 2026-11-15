@@ -4,15 +4,15 @@
   import Footer, { type Checks } from '../Footer.svelte'
   import Progress from '../Progress.svelte'
 
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import { Input } from '$lib/components/ui/input'
-  import { Switch } from '$lib/components/ui/switch'
-  import native from '$lib/modules/native'
-  import { dragScroll } from '$lib/modules/navigate'
-  import { SUPPORTS, settings } from '$lib/modules/settings'
-  import { fastPrettyBytes } from '$lib/utils'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import { Input } from '#lib/components/ui/input'
+  import { Switch } from '#lib/components/ui/switch'
+  import native from '#lib/modules/native'
+  import { dragScroll } from '#lib/modules/navigate'
+  import { SUPPORTS, settings } from '#lib/modules/settings'
+  import { fastPrettyBytes } from '#lib/utils'
 
   async function selectDownloadFolder (type?: string) {
     try {

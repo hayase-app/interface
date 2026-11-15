@@ -2,7 +2,7 @@
   import type { TextareaEvents } from './index.js'
   import type { HTMLTextareaAttributes } from 'svelte/elements'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = HTMLTextareaAttributes
   type $$Events = TextareaEvents

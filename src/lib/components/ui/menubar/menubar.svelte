@@ -1,15 +1,15 @@
 <script lang='ts'>
-  import ArrowLeft from 'lucide-svelte/icons/arrow-left'
-  import ArrowRight from 'lucide-svelte/icons/arrow-right'
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left'
+  import ArrowRight from '@lucide/svelte/icons/arrow-right'
 
   import { Button } from '../button'
 
   import Wrapper from './wrapper.svelte'
 
+  import native from '#lib/modules/native'
+  import { click } from '#lib/modules/navigate'
+  import { debug, settings, SUPPORTS } from '#lib/modules/settings'
   import { afterNavigate } from '$app/navigation'
-  import native from '$lib/modules/native'
-  import { click } from '$lib/modules/navigate'
-  import { debug, settings, SUPPORTS } from '$lib/modules/settings'
 
   function tabindex (node: HTMLElement) {
     node.tabIndex = -1
@@ -24,9 +24,9 @@
   $: hasNext = currentPosition < totalPositions
   $: hasPrevious = currentPosition > 1
 
-  afterNavigate(({ type, delta }) => {
-    if (type === 'popstate' && delta !== undefined) {
-      currentPosition += delta
+  afterNavigate((navigation) => {
+    if (navigation.type === 'popstate' && navigation.delta !== undefined) {
+      currentPosition += navigation.delta
     } else {
       // For 'link', 'goto', etc., we are pushing a new entry
       // The new position is the new length of history

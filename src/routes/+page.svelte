@@ -1,7 +1,7 @@
 <script lang='ts'>
+  import Logo from '#lib/components/icons/Logo.svelte'
+  import { storagePromise } from '#lib/modules/anilist/urql-client'
   import { goto, preloadData } from '$app/navigation'
-  import Logo from '$lib/components/icons/Logo.svelte'
-  import { storagePromise } from '$lib/modules/anilist/urql-client'
 
   interface Spotlight {
     tox: number
@@ -25,7 +25,7 @@
 
   async function navigate () {
     await promise
-    goto(data.goto, { replaceState: true })
+    goto(data.goto, { replace: true })
   }
 
   // storing hardcoded objects is faster as json, https://www.youtube.com/watch?v=ff4fgQxPaO0

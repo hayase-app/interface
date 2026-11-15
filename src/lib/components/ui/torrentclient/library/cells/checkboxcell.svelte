@@ -2,7 +2,7 @@
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Writable } from 'svelte/store'
 
-  import { Checkbox } from '$lib/components/ui/checkbox'
+  import { Checkbox } from '#lib/components/ui/checkbox'
 
   type $$Props = HTMLButtonAttributes & {
     checked: Writable<boolean>

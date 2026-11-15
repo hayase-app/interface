@@ -1,9 +1,9 @@
 <script lang='ts' context='module'>
   import { writable } from 'simple-store-svelte'
 
-  import type { Media } from '$lib/modules/anilist'
+  import type { Media } from '#lib/modules/anilist'
 
-  import { cn } from '$lib/utils'
+  import { cn } from '#lib/utils'
 
   export const bannerSrc = writable<Media | null>(null)
 
@@ -15,9 +15,9 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
+  import { page } from '#lib/app-state'
+  import { breakpoints } from '#lib/utils'
   import { afterNavigate } from '$app/navigation'
-  import { page } from '$app/stores'
-  import { breakpoints } from '$lib/utils'
 
   type $$Props = HTMLAttributes<HTMLImageElement>
 

@@ -1,12 +1,12 @@
 // import Debug from 'debug'
 
-import type { MediaEdgeFrag } from '$lib/modules/anilist/queries'
+import type { MediaEdgeFrag } from '#lib/modules/anilist/queries'
 import type { AnitomyResult } from 'anitomyscript'
 import type { ResultOf } from 'gql.tada'
 import type { TorrentFile } from 'native'
 
-import { client, episodes, removeDiacritics, type Media } from '$lib/modules/anilist'
-import { anitomyscript, videoRx } from '$lib/utils'
+import { client, episodes, removeDiacritics, type Media } from '#lib/modules/anilist'
+import { anitomyscript, videoRx } from '#lib/utils'
 
 export type ResolvedFile = TorrentFile & {metadata: { episode: string | number | undefined, parseObject: AnitomyResult, media: Media, failed: boolean }}
 

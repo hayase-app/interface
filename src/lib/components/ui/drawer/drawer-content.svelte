@@ -3,7 +3,7 @@
 
   import DrawerOverlay from './drawer-overlay.svelte'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = DrawerPrimitive.ContentProps
 

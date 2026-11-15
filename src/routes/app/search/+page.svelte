@@ -1,26 +1,26 @@
 <script lang='ts'>
-  import X from 'lucide-svelte/icons/x'
+  import X from '@lucide/svelte/icons/x'
   import { onDestroy, tick } from 'svelte'
   import MagnifyingGlass from 'svelte-radix/MagnifyingGlass.svelte'
   import { toast } from 'svelte-sonner'
 
   import { genres, genresSet, tags, years, seasons, formats, status, sort, onlist } from './values'
 
-  import type { Search } from '$lib/modules/anilist/queries'
+  import type { Search } from '#lib/modules/anilist/queries'
   import type { VariablesOf } from 'gql.tada'
 
+  import { page } from '#lib/app-state'
+  import { Bolt, FileImage, Trash } from '#lib/components/icons/animated'
+  import { badgeVariants } from '#lib/components/ui/badge'
+  import { Button } from '#lib/components/ui/button'
+  import { QueryCard, TraceCards } from '#lib/components/ui/cards'
+  import { ComboBox } from '#lib/components/ui/combobox'
+  import { Input, type FormInputEvent } from '#lib/components/ui/input'
+  import { Toggle } from '#lib/components/ui/toggle'
+  import { client } from '#lib/modules/anilist'
+  import { click, dragScroll } from '#lib/modules/navigate'
+  import { breakpoints, cn, debounce, sleep, traceAnime, type TraceAnime } from '#lib/utils'
   import { replaceState } from '$app/navigation'
-  import { page } from '$app/stores'
-  import { Bolt, FileImage, Trash } from '$lib/components/icons/animated'
-  import { badgeVariants } from '$lib/components/ui/badge'
-  import { Button } from '$lib/components/ui/button'
-  import { QueryCard, TraceCards } from '$lib/components/ui/cards'
-  import { ComboBox } from '$lib/components/ui/combobox'
-  import { Input, type FormInputEvent } from '$lib/components/ui/input'
-  import { Toggle } from '$lib/components/ui/toggle'
-  import { client } from '$lib/modules/anilist'
-  import { click, dragScroll } from '$lib/modules/navigate'
-  import { breakpoints, cn, debounce, sleep, traceAnime, type TraceAnime } from '$lib/utils'
 
   const groups = [
     { group: 'Genres', items: genres },
@@ -135,12 +135,12 @@
     media = [searchQuery(filterEmpty(s), 1)]
   }
 
-  function searchQuery (filter: Partial<typeof search>, page: number) {
+  function searchQuery (filter: Partial<typeof search>, pageIndex: number) {
     const genre = filter.genres?.filter(s => genresSet.has(s.value)).map(g => g.value)
     const tag = filter.genres?.filter(s => !genresSet.has(s.value)).map(g => g.value)
 
     const search = {
-      page,
+      page: pageIndex,
       ids: filter.ids,
       search: filter.name,
       onList: filter.onList?.[0]?.value === 'true' ? true : filter.onList?.[0]?.value === 'false' ? false : undefined,
@@ -153,7 +153,7 @@
       sort: [filter.sort?.[0]?.value ?? 'SEARCH_MATCH'] as Array<'TITLE_ROMAJI_DESC' | 'ID' | 'START_DATE_DESC' | 'SCORE_DESC' | 'POPULARITY_DESC' | 'TRENDING_DESC' | 'UPDATED_AT_DESC' | 'ID_DESC' | 'TITLE_ROMAJI' | 'TITLE_ENGLISH' | 'TITLE_ENGLISH_DESC' | null>
     }
 
-    tick().then(() => replaceState(location.href, { search }))
+    tick().then(() => replaceState(location.href, { ...$page.state, search }))
 
     return client.search(search)
   }
@@ -203,7 +203,12 @@
     }
   }
 
-  $: if ($page.state.image) traceReq($page.state.image)
+  let tracedImage: File | string | undefined
+
+  $: if ($page.state.image && $page.state.image !== tracedImage) {
+    tracedImage = $page.state.image
+    traceReq(tracedImage)
+  }
 
   async function imagePicker (e: Event) {
     const target = e.target as HTMLInputElement

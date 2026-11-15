@@ -131,7 +131,7 @@ export default async function connect (key: string, domain: string) {
 
   Object.assign(native, torrentNative)
 
-  await goto('/#/', { replaceState: true })
+  await goto('/#/', { replace: true })
 }
 
 export const REMOTE_HOSTS_KEY = 'hayase-remote-hosts'

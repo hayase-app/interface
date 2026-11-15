@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import Lock from 'lucide-svelte/icons/lock'
-  import Shield from 'lucide-svelte/icons/shield'
-  import Wifi from 'lucide-svelte/icons/wifi'
-  import WifiOff from 'lucide-svelte/icons/wifi-off'
+  import Lock from '@lucide/svelte/icons/lock'
+  import Shield from '@lucide/svelte/icons/shield'
+  import Wifi from '@lucide/svelte/icons/wifi'
+  import WifiOff from '@lucide/svelte/icons/wifi-off'
 
-  import { Badge } from '$lib/components/ui/badge'
-  import * as Tooltip from '$lib/components/ui/tooltip'
+  import { Badge } from '#lib/components/ui/badge'
+  import * as Tooltip from '#lib/components/ui/tooltip'
 
   export let value: Array<'incoming' | 'outgoing' | 'utp' | 'encrypted'>
 

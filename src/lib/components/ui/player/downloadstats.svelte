@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import ChevronDown from 'lucide-svelte/icons/chevron-down'
-  import ChevronUp from 'lucide-svelte/icons/chevron-up'
-  import Users from 'lucide-svelte/icons/users'
+  import ChevronDown from '@lucide/svelte/icons/chevron-down'
+  import ChevronUp from '@lucide/svelte/icons/chevron-up'
+  import Users from '@lucide/svelte/icons/users'
 
-  import { settings } from '$lib/modules/settings'
-  import { server } from '$lib/modules/torrent'
-  import { fastPrettyBits } from '$lib/utils'
+  import { settings } from '#lib/modules/settings'
+  import { server } from '#lib/modules/torrent'
+  import { fastPrettyBits } from '#lib/utils'
 
   const torrentstats = server.stats
 

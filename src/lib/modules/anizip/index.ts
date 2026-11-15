@@ -2,7 +2,7 @@ import Debug from 'debug'
 
 import type { EpisodesResponse, ImagesResponse, MappingsResponse } from './types'
 
-import { safefetch } from '$lib/utils'
+import { safefetch } from '#lib/utils'
 
 const debug = Debug('ui:anizip')
 

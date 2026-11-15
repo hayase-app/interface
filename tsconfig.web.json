@@ -1,6 +1,14 @@
 {
-  "extends": "./.svelte-kit/tsconfig.json",
+  "extends": "$app/tsconfig",
   "compilerOptions": {
+    "paths": {
+      "#lib": [
+        "./src/lib"
+      ],
+      "#lib/*": [
+        "./src/lib/*"
+      ]
+    },
     "target": "ESNext",
     "module": "esnext",
     "lib": [
@@ -17,8 +25,7 @@
     "sourceMap": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true,
-    "emitDeclarationOnly": false,
+    "emitDeclarationOnly": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "verbatimModuleSyntax": true,
@@ -54,11 +61,8 @@
   "typeAcquisition": {
     "enable": false
   },
-  "files": [
-    "src/service-worker/index.ts"
-  ],
+  "files": [],
   "include": [
-    "src/service-worker/index.ts",
     "src/**/*.js",
     "src/**/*.cjs",
     "src/**/*.ts",
@@ -68,6 +72,7 @@
     "src/patches/debug.ts"
   ],
   "exclude": [
-    "../node_modules/**"
+    "../node_modules/**",
+    "src/service-worker"
   ]
 }

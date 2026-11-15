@@ -10,7 +10,7 @@ import { closeIterator } from './helpers'
 
 import type { VideoSample, VideoSampleSink } from 'mediabunny'
 
-import TypedEventTarget from '$lib/modules/target'
+import TypedEventTarget from '#lib/modules/target'
 
 const VIDEO_TOLERANCE = 0.004
 const VIDEO_DROP_SECONDS = 0.08

@@ -3,9 +3,9 @@
 
   import type { HTMLAttributes } from 'svelte/elements'
 
-  import { banner, cover, title, type Media } from '$lib/modules/anilist'
-  import { episodesCached } from '$lib/modules/anizip'
-  import { breakpoints } from '$lib/utils'
+  import { banner, cover, title, type Media } from '#lib/modules/anilist'
+  import { episodesCached } from '#lib/modules/anizip'
+  import { breakpoints } from '#lib/utils'
 
   export let media: Media
 

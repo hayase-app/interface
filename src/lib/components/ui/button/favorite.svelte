@@ -1,11 +1,11 @@
 <script lang='ts'>
-  import type { Media } from '$lib/modules/anilist'
+  import type { Media } from '#lib/modules/anilist'
 
-  import { Heart } from '$lib/components/icons/animated'
-  import { Button, iconSizes, type Props } from '$lib/components/ui/button'
-  import { authAggregator, fav } from '$lib/modules/auth'
-  import { clickwrap, keywrap } from '$lib/modules/navigate'
-  import { cn } from '$lib/utils'
+  import { Heart } from '#lib/components/icons/animated'
+  import { Button, iconSizes, type Props } from '#lib/components/ui/button'
+  import { authAggregator, fav } from '#lib/modules/auth'
+  import { clickwrap, keywrap } from '#lib/modules/navigate'
+  import { cn } from '#lib/utils'
 
   type $$Props = Props & { media: Media }
 

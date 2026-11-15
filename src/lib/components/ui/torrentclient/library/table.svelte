@@ -11,15 +11,15 @@
 
   import type { LibraryEntry } from 'native'
 
+  import { Download, FolderSync, Trash } from '#lib/components/icons/animated'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { Input } from '#lib/components/ui/input'
+  import * as Table from '#lib/components/ui/table'
+  import { client } from '#lib/modules/anilist'
+  import native from '#lib/modules/native'
+  import { server } from '#lib/modules/torrent'
+  import { cn, fastPrettyBytes } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { Download, FolderSync, Trash } from '$lib/components/icons/animated'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { Input } from '$lib/components/ui/input'
-  import * as Table from '$lib/components/ui/table'
-  import { client } from '$lib/modules/anilist'
-  import native from '$lib/modules/native'
-  import { server } from '$lib/modules/torrent'
-  import { cn, fastPrettyBytes } from '$lib/utils'
 
   const lib = server.library
 

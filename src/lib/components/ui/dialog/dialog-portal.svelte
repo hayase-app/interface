@@ -3,7 +3,7 @@
 
   import { DIALOG_KEY, type DialogContext } from './dialog-context.js'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   const api = getContext<DialogContext>(DIALOG_KEY)
 

@@ -1,7 +1,7 @@
 <script lang='ts'>
-  import * as Dialog from '$lib/components/ui/dialog'
-  import * as Popover from '$lib/components/ui/popover'
-  import { breakpoints, cn, flyAndScale } from '$lib/utils'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import * as Popover from '#lib/components/ui/popover'
+  import { breakpoints, cn, flyAndScale } from '#lib/utils'
 
   export let open = false
   export let portal = '#root'

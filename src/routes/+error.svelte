@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import { page } from '$app/stores'
-  import Load from '$lib/components/ui/img/load.svelte'
-  import { Menubar } from '$lib/components/ui/menubar'
-  import { Separator } from '$lib/components/ui/separator'
-  import SUPPORTS from '$lib/modules/settings/supports'
+  import { page } from '#lib/app-state'
+  import Load from '#lib/components/ui/img/load.svelte'
+  import { Menubar } from '#lib/components/ui/menubar'
+  import { Separator } from '#lib/components/ui/separator'
+  import SUPPORTS from '#lib/modules/settings/supports'
 
   if ($page.status === 401 && SUPPORTS.isIOS) setInterval(() => location.reload(), 2_000)
 </script>

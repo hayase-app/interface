@@ -1,8 +1,8 @@
 <script lang='ts'>
-  import GitBranch from 'lucide-svelte/icons/git-branch'
-  import Globe from 'lucide-svelte/icons/globe'
-  import Plus from 'lucide-svelte/icons/plus'
-  import Trash from 'lucide-svelte/icons/trash-2'
+  import GitBranch from '@lucide/svelte/icons/git-branch'
+  import Globe from '@lucide/svelte/icons/globe'
+  import Plus from '@lucide/svelte/icons/plus'
+  import Trash from '@lucide/svelte/icons/trash-2'
   import { toast } from 'svelte-sonner'
 
   import { Button, iconSizes } from '../button'
@@ -10,11 +10,11 @@
   import ExtensionCard from './ExtensionCard.svelte'
   import ExtensionSettings from './ExtensionSettings.svelte'
 
-  import StatusDot from '$lib/components/StatusDot.svelte'
-  import { Input } from '$lib/components/ui/input'
-  import * as Tabs from '$lib/components/ui/tabs'
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import { savedConfigs, storage } from '$lib/modules/extensions'
+  import StatusDot from '#lib/components/StatusDot.svelte'
+  import { Input } from '#lib/components/ui/input'
+  import * as Tabs from '#lib/components/ui/tabs'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import { savedConfigs, storage } from '#lib/modules/extensions'
   let value = 'extensions'
 
   let extensionInput = ''
@@ -103,7 +103,7 @@
                 <Tooltip.Content class='max-w-full w-52'>
                   {#if res === true || res == null}
                     This extension is online and reachable.
-                  {:else if res === false}
+                  {:else if !res}
                     This extension is offline and unreachable, but the extension expects this.
                   {:else}
                     {res}

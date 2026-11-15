@@ -11,8 +11,8 @@ import { simklClientID, simklClientSecret, SUPPORTS } from '../settings'
 import type { Entry, FullMediaList, UserFrag } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 
-import { dev } from '$app/environment'
-import { arrayEqual } from '$lib/utils'
+import { arrayEqual } from '#lib/utils'
+import { dev } from '$app/env'
 
 type ALMediaStatus = 'CURRENT' | 'PLANNING' | 'COMPLETED' | 'DROPPED' | 'PAUSED' | 'REPEATING'
 type SimklMediaStatus = 'watching' | 'plan_to_watch' | 'completed' | 'dropped' | 'hold'

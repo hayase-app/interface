@@ -10,8 +10,8 @@ import type IrcChannel from '@thaunknown/web-irc/channel'
 import type IrcClient from '@thaunknown/web-irc/client'
 import type { EventEmitter } from 'events'
 
+import { MessageToast, type ChatMessage, type ChatUser } from '#lib/components/ui/chat'
 import { page } from '$app/state'
-import { MessageToast, type ChatMessage, type ChatUser } from '$lib/components/ui/chat'
 
 export const prevAgreed = writable(false)
 
@@ -123,7 +123,6 @@ export default class MessageClient {
         }
 
         if (page.route.id !== '/app/chat' && !msg.user.name.startsWith('Guest-')) {
-          // @ts-expect-error using svelte 4 components in s5
           toast.custom(MessageToast, {
             classes: { toast: '!bg-transparent w-full !shadow-none h-auto flex' },
             componentProps: { msg }

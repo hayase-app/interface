@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { highEntropyValues } from '$lib/utils'
+  import { highEntropyValues } from '#lib/utils'
 </script>
 
 {#if highEntropyValues}

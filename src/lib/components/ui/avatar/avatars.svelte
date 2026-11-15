@@ -4,10 +4,10 @@
 </script>
 
 <script lang='ts'>
-  import type { UserFrag } from '$lib/modules/anilist/queries'
+  import type { UserFrag } from '#lib/modules/anilist/queries'
   import type { ResultOf } from 'gql.tada'
 
-  import { cn } from '$lib/utils'
+  import { cn } from '#lib/utils'
 
   let className: string | undefined | null = undefined
   export { className as class }

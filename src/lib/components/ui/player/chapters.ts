@@ -1,10 +1,10 @@
 import { writable } from 'simple-store-svelte'
 
-import type { AnimeThemesResponse } from '$lib/modules/animethemes/types'
+import type { AnimeThemesResponse } from '#lib/modules/animethemes/types'
 import type { MediaInfo } from './util.ts'
 
-import { themes } from '$lib/modules/animethemes'
-import native from '$lib/modules/native'
+import { themes } from '#lib/modules/animethemes'
+import native from '#lib/modules/native'
 
 export interface Chapter {
   start: number

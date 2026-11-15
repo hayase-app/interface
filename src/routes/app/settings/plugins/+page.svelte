@@ -1,15 +1,15 @@
 <script lang='ts'>
-  import ExternalLink from 'lucide-svelte/icons/external-link'
-  import Plus from 'lucide-svelte/icons/plus'
-  import Trash from 'lucide-svelte/icons/trash-2'
+  import ExternalLink from '@lucide/svelte/icons/external-link'
+  import Plus from '@lucide/svelte/icons/plus'
+  import Trash from '@lucide/svelte/icons/trash-2'
   import { toast } from 'svelte-sonner'
 
   import type { PluginInfo } from 'native'
 
-  import { Button, iconSizes } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import Plugincard from '$lib/components/ui/plugins/plugincard.svelte'
-  import native from '$lib/modules/native'
+  import { Button, iconSizes } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import Plugincard from '#lib/components/ui/plugins/plugincard.svelte'
+  import native from '#lib/modules/native'
 
   let plugins = native.pluginList()
 

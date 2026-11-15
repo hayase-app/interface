@@ -12,7 +12,7 @@ import type { Anime, Fav, KEntry, KitsuError, KitsuMediaStatus, Mapping, OAuth, 
 import type { Entry, FullMediaList, UserFrag } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 
-import { arrayEqual } from '$lib/utils'
+import { arrayEqual } from '#lib/utils'
 
 const debug = Debug('ui:kitsu')
 

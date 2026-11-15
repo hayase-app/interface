@@ -1,6 +1,6 @@
-import type { HandleClientError } from '@sveltejs/kit'
+import type { HandleClientError } from '@sveltejs/kit/hooks'
 
-import SUPPORTS from '$lib/modules/settings/supports'
+import SUPPORTS from '#lib/modules/settings/supports'
 
 // this is for MAL, for they don't support hash routing, so we auth to the root and then redirect to the authorize page with the data in search params
 export const init = () => {
@@ -78,12 +78,14 @@ if (typeof crypto.randomUUID === 'undefined') {
   }
 }
 
-export const handleError: HandleClientError = async ({ error, event, status, message }) => {
+export const handleError: HandleClientError = async ({ error }) => {
   if (error instanceof Error) {
-    return error
+    return { message: error.message }
   }
-  return {
-    status,
-    message
+
+  if (typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string') {
+    return { message: error.message }
   }
+
+  return { message: 'Internal Error' }
 }

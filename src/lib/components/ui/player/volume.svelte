@@ -1,13 +1,13 @@
 <script lang='ts'>
-  import Volume from 'lucide-svelte/icons/volume'
-  import Volume1 from 'lucide-svelte/icons/volume-1'
-  import VolumeOff from 'lucide-svelte/icons/volume-off'
-  import VolumeX from 'lucide-svelte/icons/volume-x'
+  import Volume from '@lucide/svelte/icons/volume'
+  import Volume1 from '@lucide/svelte/icons/volume-1'
+  import VolumeOff from '@lucide/svelte/icons/volume-off'
+  import VolumeX from '@lucide/svelte/icons/volume-x'
 
-  import Volume2 from '$lib/components/icons/Volume2.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { keywrap } from '$lib/modules/navigate'
-  import { clamp } from '$lib/utils'
+  import Volume2 from '#lib/components/icons/Volume2.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { keywrap } from '#lib/modules/navigate'
+  import { clamp } from '#lib/utils'
 
   export let volume: number
   export let muted: boolean

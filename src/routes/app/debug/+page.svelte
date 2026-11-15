@@ -3,14 +3,14 @@
   import { get } from 'svelte/store'
   import { toast } from 'svelte-sonner'
 
-  import { version } from '$app/environment'
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import * as Table from '$lib/components/ui/table'
-  import native from '$lib/modules/native'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
-  import { server } from '$lib/modules/torrent'
-  import { fastPrettyBytes, saveFile } from '$lib/utils'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import * as Table from '#lib/components/ui/table'
+  import native from '#lib/modules/native'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
+  import { server } from '#lib/modules/torrent'
+  import { fastPrettyBytes, saveFile } from '#lib/utils'
+  import { version } from '$app/env'
 
   function wrapToast (fn: () => Promise<unknown>) {
     return async function () {

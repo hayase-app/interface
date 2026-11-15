@@ -3,7 +3,7 @@
 
   import type { Checks } from '../Footer.svelte'
 
-  import { fastPrettyBits } from '$lib/utils'
+  import { fastPrettyBits } from '#lib/utils'
 
   const speedTest = new SpeedTest({
     autoStart: false,
@@ -29,19 +29,19 @@
 </script>
 
 <script lang='ts'>
-  import CircleHelp from 'lucide-svelte/icons/circle-help'
+  import CircleHelp from '@lucide/svelte/icons/circle-help'
   import { persisted } from 'svelte-persisted-store'
 
   import Footer from '../Footer.svelte'
   import Progress from '../Progress.svelte'
 
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { Input } from '$lib/components/ui/input'
-  import { Switch } from '$lib/components/ui/switch'
-  import native from '$lib/modules/native'
-  import { dragScroll } from '$lib/modules/navigate'
-  import { settings, SUPPORTS } from '$lib/modules/settings'
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { Input } from '#lib/components/ui/input'
+  import { Switch } from '#lib/components/ui/switch'
+  import native from '#lib/modules/native'
+  import { dragScroll } from '#lib/modules/navigate'
+  import { settings, SUPPORTS } from '#lib/modules/settings'
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasForwarding = persisted('torrent-port-forwarding', false)

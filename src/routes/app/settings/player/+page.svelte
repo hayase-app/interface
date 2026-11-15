@@ -1,14 +1,14 @@
 <script lang='ts'>
+  import SettingCard from '#lib/components/SettingCard.svelte'
+  import { Button } from '#lib/components/ui/button'
+  import { SingleCombo } from '#lib/components/ui/combobox'
+  import { Input } from '#lib/components/ui/input'
+  import { Switch } from '#lib/components/ui/switch'
+  import * as ToggleGroup from '#lib/components/ui/toggle-group'
+  import native from '#lib/modules/native'
+  import { navigate } from '#lib/modules/navigate'
+  import { settings, languageCodes, subtitleResolutions, SUPPORTS } from '#lib/modules/settings'
   import { dev } from '$app/env'
-  import SettingCard from '$lib/components/SettingCard.svelte'
-  import { Button } from '$lib/components/ui/button'
-  import { SingleCombo } from '$lib/components/ui/combobox'
-  import { Input } from '$lib/components/ui/input'
-  import { Switch } from '$lib/components/ui/switch'
-  import * as ToggleGroup from '$lib/components/ui/toggle-group'
-  import native from '$lib/modules/native'
-  import { navigate } from '$lib/modules/navigate'
-  import { settings, languageCodes, subtitleResolutions, SUPPORTS } from '$lib/modules/settings'
 
   let prevSubStyle = $settings.subtitleStyle
   $: if (!$settings.subtitleStyle) {

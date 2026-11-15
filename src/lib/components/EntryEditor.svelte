@@ -1,14 +1,14 @@
 <script lang='ts'>
   import { PencilLine } from './icons/animated'
 
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { Input } from '$lib/components/ui/input'
-  import * as Select from '$lib/components/ui/select'
-  import { banner, cover, title, type Media } from '$lib/modules/anilist'
-  import { list, progress as _progress, score as _score, repeat as _repeat, authAggregator, lists } from '$lib/modules/auth'
-  import { dragScroll } from '$lib/modules/navigate'
-  import { breakpoints } from '$lib/utils'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { Input } from '#lib/components/ui/input'
+  import * as Select from '#lib/components/ui/select'
+  import { banner, cover, title, type Media } from '#lib/modules/anilist'
+  import { list, progress as _progress, score as _score, repeat as _repeat, authAggregator, lists } from '#lib/modules/auth'
+  import { dragScroll } from '#lib/modules/navigate'
+  import { breakpoints } from '#lib/utils'
 
   export let media: Media
 

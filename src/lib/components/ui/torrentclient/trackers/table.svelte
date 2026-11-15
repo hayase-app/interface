@@ -2,9 +2,9 @@
   import { Render, Subscribe, createTable } from 'svelte-headless-table'
   import { addSortBy } from 'svelte-headless-table/plugins'
 
-  import * as Table from '$lib/components/ui/table'
-  import { server } from '$lib/modules/torrent'
-  import { cn } from '$lib/utils'
+  import * as Table from '#lib/components/ui/table'
+  import { server } from '#lib/modules/torrent'
+  import { cn } from '#lib/utils'
 
   const table = createTable(server.trackers, {
     sort: addSortBy({ toggleOrder: ['asc', 'desc'] })

@@ -1,8 +1,8 @@
 <script lang='ts'>
-  import Heart from 'lucide-svelte/icons/heart'
-  import PenLine from 'lucide-svelte/icons/pen-line'
-  import Reply from 'lucide-svelte/icons/reply'
-  import Trash2 from 'lucide-svelte/icons/trash-2'
+  import Heart from '@lucide/svelte/icons/heart'
+  import PenLine from '@lucide/svelte/icons/pen-line'
+  import Reply from '@lucide/svelte/icons/reply'
+  import Trash2 from '@lucide/svelte/icons/trash-2'
 
   import Shadow from '../../Shadow.svelte'
   import { Button, iconSizes } from '../button'
@@ -10,11 +10,11 @@
 
   import { Write } from '.'
 
-  import type { CommentFrag } from '$lib/modules/anilist/queries'
+  import type { CommentFrag } from '#lib/modules/anilist/queries'
   import type { ResultOf } from 'gql.tada'
 
-  import { client } from '$lib/modules/anilist'
-  import { since } from '$lib/utils'
+  import { client } from '#lib/modules/anilist'
+  import { since } from '#lib/utils'
 
   export let comment: ResultOf<typeof CommentFrag>
   export let depth = 0

@@ -2,7 +2,9 @@ const isAndroid = typeof navigator !== 'undefined' && navigator.userAgent.includ
 const isIOS = typeof navigator !== 'undefined' && /applewebkit\/[\d.]+ \(khtml, like gecko\)(?!.*chrome\/)(?!.*safari\/)/i.test(navigator.userAgent)
 const isIPad = typeof navigator !== 'undefined' && (
   navigator.userAgent.includes('iPad') ||
-  (navigator.userAgent.includes('Macintosh') && !navigator.userAgent.includes('Chrome') && navigator.maxTouchPoints > 0)
+  (navigator.userAgent.includes('Macintosh') && !navigator.userAgent.includes('Chrome') &&
+    // WorkerNavigator has no maxTouchPoints, but the service worker imports this module
+    ((navigator as typeof navigator & { maxTouchPoints?: number }).maxTouchPoints ?? 0) > 0)
 )
 
 export default {

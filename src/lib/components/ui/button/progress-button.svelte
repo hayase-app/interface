@@ -3,7 +3,7 @@
 
   import { type Props, buttonVariants } from './index.js'
 
-  import { cn } from '$lib/utils.js'
+  import { cn } from '#lib/utils'
 
   type $$Props = Props & { duration?: number, autoStart?: boolean, onclick: () => void, animating?: boolean }
 

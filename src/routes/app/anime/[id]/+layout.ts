@@ -3,10 +3,10 @@ import { get } from 'svelte/store'
 
 import type { LayoutLoad } from './$types'
 
-import { getParentForSpecial } from '$lib/modules/anilist'
-import client, { asyncStore } from '$lib/modules/anilist/client'
-import { IDMedia } from '$lib/modules/anilist/queries'
-import { episodes } from '$lib/modules/anizip'
+import { getParentForSpecial } from '#lib/modules/anilist'
+import client, { asyncStore } from '#lib/modules/anilist/client'
+import { IDMedia } from '#lib/modules/anilist/queries'
+import { episodes } from '#lib/modules/anizip'
 
 export const load: LayoutLoad = async ({ params, fetch }) => {
   const id = Number(params.id)

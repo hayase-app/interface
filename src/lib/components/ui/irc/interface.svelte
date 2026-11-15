@@ -1,17 +1,17 @@
 <script lang='ts'>
-  import DoorOpen from 'lucide-svelte/icons/door-open'
-  import SendHorizontal from 'lucide-svelte/icons/send-horizontal'
+  import DoorOpen from '@lucide/svelte/icons/door-open'
+  import SendHorizontal from '@lucide/svelte/icons/send-horizontal'
 
   import { Button } from '../button'
   import { Messages, UserList } from '../chat'
   import { Separator } from '../separator'
 
-  import type MessageClient from '$lib/modules/irc'
+  import type MessageClient from '#lib/modules/irc'
 
+  import { Textarea } from '#lib/components/ui/textarea'
+  import { prevAgreed } from '#lib/modules/irc'
+  import { irc } from '#lib/modules/irc/lobby'
   import { goto } from '$app/navigation'
-  import { Textarea } from '$lib/components/ui/textarea'
-  import { prevAgreed } from '$lib/modules/irc'
-  import { irc } from '$lib/modules/irc/lobby'
 
   export let client: MessageClient
 

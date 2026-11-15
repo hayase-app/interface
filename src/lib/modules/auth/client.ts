@@ -12,7 +12,7 @@ import simkl from './simkl'
 import type { Entry, FullMediaList, UserFrag } from '../anilist/queries'
 import type { ResultOf, VariablesOf } from 'gql.tada'
 
-import { derivedArray, derivedTeardown } from '$lib/utils'
+import { derivedArray, derivedTeardown } from '#lib/utils'
 
 export default new class AuthAggregator {
   hasAuth = readable(this.checkAuth(), set => {

@@ -3,7 +3,7 @@ import { getContext, setContext } from 'svelte'
 import Item from './toggle-group-item.svelte'
 import Root from './toggle-group.svelte'
 
-import type { toggleVariants } from '$lib/components/ui/toggle/index.js'
+import type { toggleVariants } from '#lib/components/ui/toggle'
 import type { VariantProps } from 'tailwind-variants'
 
 export type ToggleVariants = VariantProps<typeof toggleVariants>

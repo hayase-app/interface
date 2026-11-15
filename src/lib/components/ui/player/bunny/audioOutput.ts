@@ -10,8 +10,8 @@ import { AudioBufferSink, type InputAudioTrack, type WrappedAudioBuffer } from '
 import { closeIterator } from './helpers'
 import processorUrl from './pcmScheduler.worklet.ts?worker&url'
 
-import TypedEventTarget from '$lib/modules/target'
-import { clamp, sleep } from '$lib/utils'
+import TypedEventTarget from '#lib/modules/target'
+import { clamp, sleep } from '#lib/utils'
 
 const AUDIO_BUFFER_SECONDS = 3
 const AUDIO_LOW_WATER_SECONDS = 0.5

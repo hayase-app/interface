@@ -1,11 +1,11 @@
 <script lang='ts'>
   import InstallWaitButton from './InstallWaitButton.svelte'
 
-  import { Button } from '$lib/components/ui/button'
-  import { Menubar } from '$lib/components/ui/menubar'
-  import { Separator } from '$lib/components/ui/separator'
-  import native from '$lib/modules/native'
-  import { outdatedComponent, uiUpdate } from '$lib/modules/update'
+  import { Button } from '#lib/components/ui/button'
+  import { Menubar } from '#lib/components/ui/menubar'
+  import { Separator } from '#lib/components/ui/separator'
+  import native from '#lib/modules/native'
+  import { outdatedComponent, uiUpdate } from '#lib/modules/update'
 
   navigator.serviceWorker.getRegistration().then(registration => registration?.update())
 </script>

@@ -2,16 +2,16 @@
   // @ts-nocheck i give up with dynamic keys
   import { get } from 'idb-keyval'
 
-  import type { ExtensionConfig } from '$lib/modules/extensions/types'
+  import type { ExtensionConfig } from '#lib/modules/extensions/types'
 
-  import { Bolt, Code } from '$lib/components/icons/animated'
-  import { Button } from '$lib/components/ui/button'
-  import * as Dialog from '$lib/components/ui/dialog'
-  import { Input } from '$lib/components/ui/input'
-  import { Label } from '$lib/components/ui/label'
-  import * as Select from '$lib/components/ui/select'
-  import { Switch } from '$lib/components/ui/switch'
-  import { savedOptions as exopts } from '$lib/modules/extensions'
+  import { Bolt, Code } from '#lib/components/icons/animated'
+  import { Button } from '#lib/components/ui/button'
+  import * as Dialog from '#lib/components/ui/dialog'
+  import { Input } from '#lib/components/ui/input'
+  import { Label } from '#lib/components/ui/label'
+  import * as Select from '#lib/components/ui/select'
+  import { Switch } from '#lib/components/ui/switch'
+  import { savedOptions as exopts } from '#lib/modules/extensions'
 
   export let config: ExtensionConfig
 </script>

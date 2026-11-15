@@ -7,12 +7,12 @@
 
   import { bannerSrc } from './banner-image.svelte'
 
+  import { client, desc, duration, format, getTextColorForRating, season, status, title, type Media } from '#lib/modules/anilist'
+  import { episodesCached } from '#lib/modules/anizip'
+  import { of } from '#lib/modules/auth'
+  import { click } from '#lib/modules/navigate'
+  import { colors } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { client, desc, duration, format, getTextColorForRating, season, status, title, type Media } from '$lib/modules/anilist'
-  import { episodesCached } from '$lib/modules/anizip'
-  import { of } from '$lib/modules/auth'
-  import { click } from '$lib/modules/navigate'
-  import { colors } from '$lib/utils'
   export let mediaList: Array<Media | null>
 
   function shuffleAndFilter (media: Array<Media | null>) {

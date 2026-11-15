@@ -2,7 +2,7 @@ import { compare, diff } from 'semver'
 
 import native from './native'
 
-import { version } from '$app/environment'
+import { version } from '$app/env'
 
 async function compareVersions (): Promise<'ui' | 'client' | undefined> {
   const nativeVersion = await native.version()

@@ -8,9 +8,9 @@
 
   import { NameCell, ProgressCell } from './cells'
 
-  import * as Table from '$lib/components/ui/table'
-  import { server } from '$lib/modules/torrent'
-  import { cn, fastPrettyBytes } from '$lib/utils'
+  import * as Table from '#lib/components/ui/table'
+  import { server } from '#lib/modules/torrent'
+  import { cn, fastPrettyBytes } from '#lib/utils'
 
   const table = createTable(server.files, {
     sort: addSortBy({ toggleOrder: ['asc', 'desc'] }),

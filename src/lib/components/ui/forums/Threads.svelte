@@ -1,18 +1,18 @@
 <script lang='ts'>
-  import ChevronLeft from 'lucide-svelte/icons/chevron-left'
-  import ChevronRight from 'lucide-svelte/icons/chevron-right'
-  import Eye from 'lucide-svelte/icons/eye'
-  import Heart from 'lucide-svelte/icons/heart'
-  import Lock from 'lucide-svelte/icons/lock'
-  import MessagesSquare from 'lucide-svelte/icons/messages-square'
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left'
+  import ChevronRight from '@lucide/svelte/icons/chevron-right'
+  import Eye from '@lucide/svelte/icons/eye'
+  import Heart from '@lucide/svelte/icons/heart'
+  import Lock from '@lucide/svelte/icons/lock'
+  import MessagesSquare from '@lucide/svelte/icons/messages-square'
 
   import Pagination from '../../Pagination.svelte'
   import { Button } from '../button'
 
-  import * as Avatar from '$lib/components/ui/avatar'
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import { client, type Media } from '$lib/modules/anilist'
-  import { breakpoints, since } from '$lib/utils'
+  import * as Avatar from '#lib/components/ui/avatar'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import { client, type Media } from '#lib/modules/anilist'
+  import { breakpoints, since } from '#lib/utils'
 
   export let media: Media
   export let initial: ReturnType<typeof client.animePage>

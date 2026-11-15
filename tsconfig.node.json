@@ -37,7 +37,6 @@
   "include": [
     "eslint.config.js",
     "vite.config.ts",
-    "svelte.config.js",
     "tailwind.config.ts",
     "generateALIntrospection.ts",
     "src/types/**/*.d.ts",

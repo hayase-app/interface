@@ -1,12 +1,12 @@
 <script lang='ts'>
+  import SearchModal from '#lib/components/SearchModal.svelte'
+  import { BannerImage } from '#lib/components/ui/banner'
+  import { Player } from '#lib/components/ui/player'
+  import { Sidebar } from '#lib/components/ui/sidebar'
+  import Sidebarlist from '#lib/components/ui/sidebar/sidebarlist.svelte'
+  import native from '#lib/modules/native'
+  import { transferToFileList } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import SearchModal from '$lib/components/SearchModal.svelte'
-  import { BannerImage } from '$lib/components/ui/banner'
-  import { Player } from '$lib/components/ui/player'
-  import { Sidebar } from '$lib/components/ui/sidebar'
-  import Sidebarlist from '$lib/components/ui/sidebar/sidebarlist.svelte'
-  import native from '$lib/modules/native'
-  import { transferToFileList } from '$lib/utils'
 
   const NAVIGATE_TARGETS = {
     schedule: 'schedule',

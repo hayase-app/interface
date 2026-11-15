@@ -1,27 +1,27 @@
 <script lang='ts'>
-  import Heart from 'lucide-svelte/icons/heart'
-  import Play from 'lucide-svelte/icons/play'
+  import Heart from '@lucide/svelte/icons/heart'
+  import Play from '@lucide/svelte/icons/play'
 
   import { BannerImage } from '../banner'
   import { Button } from '../button'
 
   import SidebarButton from './SidebarButton.svelte'
 
+  import { page } from '#lib/app-state'
+  import StatusDot from '#lib/components/StatusDot.svelte'
+  import Logo from '#lib/components/icons/Logo.svelte'
+  import { Home, Search, Calendar, Users, Download, Bolt, LogIn, Messages } from '#lib/components/icons/animated'
+  import CloudDownload from '#lib/components/icons/animated/cloud-download.svelte'
+  import * as Avatar from '#lib/components/ui/avatar'
+  import * as Tooltip from '#lib/components/ui/tooltip'
+  import client from '#lib/modules/auth/client'
+  import { lockedState, idleState, activityState } from '#lib/modules/idle'
+  import { irc } from '#lib/modules/irc/lobby'
+  import native from '#lib/modules/native'
+  import SUPPORTS from '#lib/modules/settings/supports'
+  import { w2globby } from '#lib/modules/w2g/lobby'
+  import { breakpoints, cn, highEntropyValues } from '#lib/utils'
   import { goto } from '$app/navigation'
-  import { page } from '$app/stores'
-  import StatusDot from '$lib/components/StatusDot.svelte'
-  import Logo from '$lib/components/icons/Logo.svelte'
-  import { Home, Search, Calendar, Users, Download, Bolt, LogIn, Messages } from '$lib/components/icons/animated'
-  import CloudDownload from '$lib/components/icons/animated/cloud-download.svelte'
-  import * as Avatar from '$lib/components/ui/avatar'
-  import * as Tooltip from '$lib/components/ui/tooltip'
-  import client from '$lib/modules/auth/client'
-  import { lockedState, idleState, activityState } from '$lib/modules/idle'
-  import { irc } from '$lib/modules/irc/lobby'
-  import native from '$lib/modules/native'
-  import SUPPORTS from '$lib/modules/settings/supports'
-  import { w2globby } from '$lib/modules/w2g/lobby'
-  import { breakpoints, cn, highEntropyValues } from '$lib/utils'
 
   let visibilityState: DocumentVisibilityState
 

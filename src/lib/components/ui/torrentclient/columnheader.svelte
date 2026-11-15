@@ -2,9 +2,9 @@
   import ArrowDown from 'svelte-radix/ArrowDown.svelte'
   import ArrowUp from 'svelte-radix/ArrowUp.svelte'
 
-  import { Button } from '$lib/components/ui/button'
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
-  import { cn } from '$lib/utils'
+  import { Button } from '#lib/components/ui/button'
+  import * as DropdownMenu from '#lib/components/ui/dropdown-menu'
+  import { cn } from '#lib/utils'
 
   let className: string | undefined | null = ''
   export { className as class }

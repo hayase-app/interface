@@ -1,8 +1,8 @@
 import type { Native } from 'native'
 
-import native from '$lib/modules/native'
-import { on, once } from '$lib/modules/target'
-import { assert } from '$lib/utils'
+import native from '#lib/modules/native'
+import { on, once } from '#lib/modules/target'
+import { assert } from '#lib/utils'
 
 const clientId = Math.trunc(1000000000000000 * Math.random()).toString()
 

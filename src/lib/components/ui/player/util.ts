@@ -1,6 +1,6 @@
 import { toast } from 'svelte-sonner'
 
-import type { Media } from '$lib/modules/anilist'
+import type { Media } from '#lib/modules/anilist'
 import type { ResolvedFile } from './resolver'
 import type Subtitles from './subtitles'
 import type { Track } from '../../../../app'

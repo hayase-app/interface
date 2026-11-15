@@ -1,8 +1,8 @@
 <script lang='ts'>
-  import Download from 'lucide-svelte/icons/download'
-  import Upload from 'lucide-svelte/icons/upload'
+  import Download from '@lucide/svelte/icons/download'
+  import Upload from '@lucide/svelte/icons/upload'
 
-  import { fastPrettyBits } from '$lib/utils'
+  import { fastPrettyBits } from '#lib/utils'
 
   export let value: number
   export let type: 'upload' | 'download'
