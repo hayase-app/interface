@@ -40,6 +40,22 @@ indexedDB.deleteDatabase('anilist-cache-v1') // old version
 debug('Loading urql client')
 storagePromise.promise.finally(() => debug('Graphcache storage initialized'))
 
+let purgeScheduled = false
+function purgeStaleEntries () {
+  if (purgeScheduled) return
+  purgeScheduled = true
+
+  const run = () => {
+    if (navigator.onLine) storage.purgeStaleEntries().catch(error => debug('Failed to purge stale cache entries', error))
+  }
+
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(run, { timeout: 120_000 })
+  } else {
+    setTimeout(run, 5_000)
+  }
+}
+
 export default new class URQLClient extends Client {
   // limiter = new Bottleneck({
   //   reservoir: Infinity,
@@ -302,8 +318,9 @@ export default new class URQLClient extends Client {
         ({ forward }) => ops$ => pipe(
           ops$,
           forward,
-          tap(({ data, error }) => {
-            if (data && !error) storage.purgeStaleEntries()
+          tap(({ data, error, stale }) => {
+            // only a fresh, successful response proves the API can give the data back, an offline session must keep the entries it cannot download again
+            if (data && !error && !stale && navigator.onLine) purgeStaleEntries()
 
             this.error.set(error)
           })

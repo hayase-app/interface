@@ -161,7 +161,7 @@ export const makeDefaultStorage = (opts: StorageOptions = {}): DefaultStorage =>
         .then(database => {
           const transaction = database.transaction(
             ENTRIES_STORE_NAME,
-            'readwrite'
+            'readonly'
           )
 
           const store = transaction.objectStore(ENTRIES_STORE_NAME)
