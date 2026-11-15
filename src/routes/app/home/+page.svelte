@@ -108,7 +108,7 @@
       <div class='font-semibold text-lg leading-none select:text-foreground' use:click={() => search(variables)}>{title}</div>
       <div class='ml-auto text-xs select:text-foreground' use:click={() => search(variables)}>View More</div>
     </div>
-    <div class='flex overflow-x-scroll select:-ml-14 select:pl-14 select:-mt-40 select:pt-40 -mb-5 pb-5 relative group [content-visibility:auto] [contain-intrinsic-block-size:auto_323px] select:[content-visibility:visible] focus-within:[content-visibility:visible]' use:dragScroll>
+    <div class='flex overflow-x-scroll select:-ml-14 select:pl-14 select:-mt-40 select:pt-40 -mb-5 pb-5 relative group [overflow-anchor:none] [content-visibility:auto] [contain-intrinsic-block-size:auto_323px] select:[content-visibility:visible] focus-within:[content-visibility:visible]' use:dragScroll>
       <QueryCard {query} />
     </div>
   {/each}
