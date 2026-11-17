@@ -1,68 +1,16 @@
-<script lang='ts'>
-  import VolumeX from '@lucide/svelte/icons/volume-x'
-  import { createEventDispatcher, onDestroy, tick } from 'svelte'
+<script lang='ts' context='module'>
+  import { get, writable } from 'svelte/store'
 
-  import Volume2 from '#lib/components/icons/Volume2.svelte'
-  import { click } from '#lib/modules/navigate'
+  const ORIGIN = 'https://www.youtube-nocookie.com'
+  // a parked player still costs ~10% of a core, even when it holds an unplayable video, so don't keep it forever
+  const PARKED_LIFETIME = 30_000
+  const ENDED = 0
+  const PLAYING = 1
+  const CUED = 5
 
-  export let id: string
+  // moveBefore keeps an iframe loaded when it changes parent, every other DOM move reloads it
+  const canMove = 'moveBefore' in Element.prototype
 
-  const dispatch = createEventDispatcher<{hide: boolean}>()
-
-  async function ytMessage (e: MessageEvent) {
-    if (e.origin !== 'https://www.youtube-nocookie.com') return
-    clearInterval(timeout)
-    const json = JSON.parse(e.data as string) as { event: string, info: {videoData: {isPlayable: boolean}, playerState?: number} }
-    if (json.event === 'onReady') ytCall('setVolume', '[30]')
-
-    if (json.event === 'initialDelivery' && !json.info.videoData.isPlayable) {
-      dispatch('hide', true)
-    }
-
-    if (json.event === 'infoDelivery') {
-      if (json.info.playerState === 1) {
-        hide = false
-        dispatch('hide', false)
-      } else if (json.info.playerState === 0) {
-        // youtube started being annoying with buttons, playlist is required for loop to work, but it force shows extra buttons
-        // so we loop the video manually
-        const last = id
-        id = ''
-        await tick()
-        id = last
-      }
-    }
-  }
-
-  let muted = true
-  function toggleMute () {
-    if (muted) {
-      ytCall('unMute')
-    } else {
-      ytCall('mute')
-    }
-    muted = !muted
-  }
-
-  let hide = true
-
-  let frame: HTMLIFrameElement
-  function ytCall (action: string, arg: string | null = null) {
-    frame.contentWindow?.postMessage('{"event":"command", "func":"' + action + '", "args":' + arg + '}', '*')
-  }
-
-  let timeout: ReturnType<typeof setInterval>
-
-  function initFrame () {
-    timeout = setInterval(() => {
-      frame.contentWindow?.postMessage('{"event":"listening","id":1,"channel":"widget"}', '*')
-    }, 100)
-    frame.contentWindow?.postMessage('{"event":"listening","id":1,"channel":"widget"}', '*')
-  }
-
-  onDestroy(() => {
-    clearInterval(timeout)
-  })
   const params = new URLSearchParams({
     autoplay: '1',
     controls: '0',
@@ -71,11 +19,130 @@
     rel: '0',
     playsinline: '1',
     fs: '0',
-    mute: muted ? '1' : '0'
+    mute: '1',
+    enablejsapi: '1'
   })
+
+  interface PlayerMessage {
+    event: string
+    info: { playerState?: number, videoData?: { video_id: string, isPlayable: boolean } } | null
+  }
+
+  const frame = document.createElement('iframe')
+  frame.setAttribute('credentialless', '')
+  frame.className = 'w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none'
+  frame.title = 'trailer'
+  frame.allow = 'autoplay'
+
+  const ready = writable(false)
+  const playerState = writable(-1)
+  const videoId = writable('')
+  const playable = writable(true)
+
+  function send (func: string, args: unknown[] | null = null) {
+    frame.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*')
+  }
+
+  function unload () {
+    frame.remove()
+    ready.set(false)
+    playerState.set(-1)
+    videoId.set('')
+  }
+
+  let listenInterval: ReturnType<typeof setInterval> | undefined
+  frame.addEventListener('load', () => {
+    ready.set(false)
+    playerState.set(-1)
+    // the player ignores the listening request until its scripts run, so repeat it until the player answers
+    clearInterval(listenInterval)
+    listenInterval = setInterval(() => frame.contentWindow?.postMessage('{"event":"listening","id":1,"channel":"widget"}', '*'), 100)
+  })
+
+  addEventListener('message', ({ origin, source, data }) => {
+    if (origin !== ORIGIN || source !== frame.contentWindow) return
+    clearInterval(listenInterval)
+    const { event, info } = JSON.parse(data as string) as PlayerMessage
+    if (event === 'onReady') {
+      send('setVolume', [30])
+      ready.set(true)
+    }
+    if (info?.playerState !== undefined) playerState.set(info.playerState)
+    if (info?.videoData) {
+      videoId.set(info.videoData.video_id)
+      playable.set(info.videoData.isPlayable)
+    }
+  })
+
+  let unloadTimeout: ReturnType<typeof setTimeout> | undefined
+
+  function attach (host: HTMLElement, id: string) {
+    clearTimeout(unloadTimeout)
+    frame.hidden = false
+    if (canMove && frame.isConnected) {
+      host.moveBefore(frame, null)
+    } else {
+      frame.src = `${ORIGIN}/embed/${id}?${params}`
+      host.append(frame)
+    }
+  }
+
+  // Svelte removes the DOM before it runs onDestroy and action cleanups, and a removed iframe unloads.
+  // An outro runs before the removal, so it can still move the shared player out of this card.
+  function park (host: HTMLElement) {
+    if (frame.parentElement !== host) return {}
+    // a player that isn't ready yet ignores commands, so it would keep playing while parked
+    if (!canMove || !get(ready)) {
+      unload()
+      return {}
+    }
+    send('stopVideo')
+    send('mute')
+    frame.hidden = true
+    // a plain append would reload the iframe, moveBefore keeps the player loaded
+    document.body.moveBefore(frame, null)
+    unloadTimeout = setTimeout(unload, PARKED_LIFETIME)
+    return {}
+  }
 </script>
 
-<svelte:window on:message={ytMessage} />
+<script lang='ts'>
+  import VolumeX from '@lucide/svelte/icons/volume-x'
+  import { createEventDispatcher, onDestroy } from 'svelte'
+
+  import Volume2 from '#lib/components/icons/Volume2.svelte'
+  import { click } from '#lib/modules/navigate'
+
+  export let id: string
+
+  const dispatch = createEventDispatcher<{hide: boolean}>()
+
+  // a player boot costs more than a second of CPU across the renderer and GPU processes, so don't start one for a pointer that only passes over the card
+  let mounted = false
+  const mountTimeout = setTimeout(() => { mounted = true }, 500)
+
+  let hide = true
+
+  $: current = mounted && $videoId === id
+  // after parking the player is stopped, and it can still hold the video of another card
+  $: if (mounted && $ready && (!current || $playerState === CUED)) send('loadVideoById', [id])
+  $: if (current && !$playable) dispatch('hide', true)
+  $: if (current && $playerState === PLAYING) {
+    hide = false
+    dispatch('hide', false)
+  }
+  // youtube started being annoying with buttons, playlist is required for loop to work, but it force shows extra buttons
+  // so we loop the video manually
+  $: if (current && $playerState === ENDED) send('seekTo', [0, true])
+
+  let muted = true
+  function toggleMute () {
+    send(muted ? 'unMute' : 'mute')
+    muted = !muted
+  }
+
+  onDestroy(() => clearTimeout(mountTimeout))
+</script>
 
 <!-- indivious is nice because its faster, but not reliable -->
 <!-- <video src={`https://inv.tux.pizza/latest_version?id=${media.trailer.id}&itag=18`}
@@ -97,21 +164,12 @@
       <Volume2 size='1rem' fill='currentColor' class='pointer-events-none' />
     {/if}
   </div>
-  <div class='absolute -inset-28 z-0 pointer-events-none will-change-[opacity]'>
-    <div class='absolute inset-28 overflow-hidden rounded-t'>
-      <iframe
-        credentialless
-        class='w-full border-0 absolute left-0 h-[calc(100%+200px)] top-1/2 transform-gpu -translate-y-1/2 pointer-events-none transition-opacity duration-300'
-        class:opacity-0={hide}
-        title='trailer'
-        allow='autoplay'
-        bind:this={frame}
-        on:load={initFrame}
-        src='https://www.youtube-nocookie.com/embed/{id}?{params}&enablejsapi=1'
-      />
+  {#if mounted}
+    <div class='absolute -inset-28 z-0 pointer-events-none will-change-[opacity]'>
+      <div class='absolute inset-28 overflow-hidden rounded-t transition-opacity duration-300' class:opacity-0={hide} use:attach={id} out:park|global />
+      <div class='glow-ring absolute inset-0 backdrop-blur-[35px] backdrop-saturate-200' />
     </div>
-    <div class='glow-ring absolute inset-0 backdrop-blur-[35px] backdrop-saturate-200' />
-  </div>
+  {/if}
 </div>
 
 <style>
