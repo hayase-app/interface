@@ -37,8 +37,7 @@
 
 {#each columnIds as columnId (columnId)}
   <Table.Cell class={cn(
-    'px-4 last:pr-6 text-nowrap text-muted-foreground',
-    columnId === 'series' && 'max-w-96',
+    'px-4 last:pr-6 text-nowrap text-muted-foreground content-center',
     columnId === 'select' && 'p-0 relative [&>div]:absolute'
   )}>
     {#if columnId === 'series'}

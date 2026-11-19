@@ -225,18 +225,19 @@
   {Object.keys($selectedDataIds).length} of {$rows.length} row(s) selected.
 </div>
 <div class='rounded-md border size-full overflow-clip contain-strict'>
-  <Table.Root {...$tableAttrs} class='max-h-full'>
-    <Table.Header class='px-5'>
+  <!-- containment does not apply to table rows. the rows use a grid layout. -->
+  <Table.Root {...$tableAttrs} class='block' style='--library-columns: minmax(0, 1fr) 6.5rem 8rem 12.5rem 11.5rem 5.5rem'>
+    <Table.Header class='block sticky top-0 z-[2] bg-background'>
       {#each $headerRows as headerRow, i (i)}
         <Subscribe rowAttrs={headerRow.attrs()}>
-          <Table.Row class='sticky top-0 bg-background z-[2]'>
+          <Table.Row class='grid grid-cols-[var(--library-columns)]'>
             {#each headerRow.cells as cell (cell.id)}
               <Subscribe
                 attrs={cell.attrs()}
                 props={cell.props()}
                 let:attrs
                 let:props>
-                <Table.Head {...attrs} class={cn('px-0 first:pl-4 h-12 last:pr-2')}>
+                <Table.Head {...attrs} class={cn('px-0 first:pl-4 h-12 last:pr-2 content-center')}>
                   <Columnheader {props}>
                     <Render of={cell.render()} />
                   </Columnheader>
@@ -247,28 +248,28 @@
         </Subscribe>
       {/each}
     </Table.Header>
-    <Table.Body {...$tableBodyAttrs} class='max-h-full overflow-y-scroll'>
+    <Table.Body {...$tableBodyAttrs} class='block'>
       {#if $pageRows.length}
         {#each $pageRows as row (row.id)}
           {@const group = groups.get(row)}
           {@const inGroup = group && group.length > 1}
           {#if inGroup && group[0] === row}
-            <Table.Row class='h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] contain-strict border-b-0 hover:bg-transparent'>
+            <Table.Row class='min-h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] border-b-0 hover:bg-transparent grid grid-cols-[var(--library-columns)]'>
               <SeriesRow rows={group} columnIds={row.cells.map(cell => cell.id)} {selectedDataIds} />
             </Table.Row>
           {/if}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
             <Table.Row {...rowAttrs} class={cn(
-              'h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] contain-strict',
+              'min-h-16 [content-visibility:auto]',
+              inGroup ? 'min-h-11 [contain-intrinsic-height:auto_48px]' : '[contain-intrinsic-height:auto_68px]',
               (row instanceof DataBodyRow) && row.original.mediaID ? 'cursor-pointer' : 'cursor-not-allowed',
-              inGroup && 'h-11 [contain-intrinsic-height:auto_44px]',
-              inGroup && group.at(-1) !== row && 'border-b-0'
+              inGroup && group.at(-1) !== row && 'border-b-0',
+              'grid grid-cols-[var(--library-columns)]'
             )} on:click={() => { if (row instanceof DataBodyRow) playEntry(row.original) }}>
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
                   <Table.Cell {...attrs} class={cn(
-                    'px-4 min-h-16 last:pr-6 text-nowrap',
-                    cell.id === 'series' && 'max-w-96',
+                    'px-4 last:pr-6 text-nowrap content-center',
                     cell.id === 'select' && 'p-0 relative [&>div]:absolute'
                   )}>
                     {#if inGroup && cell.id === 'series' && row instanceof DataBodyRow}
@@ -287,8 +288,8 @@
           </Subscribe>
         {/each}
       {:else}
-        <Table.Row>
-          <Table.Cell colspan={columns.length} class='h-40 text-center'>
+        <Table.Row class='grid grid-cols-[var(--library-columns)]'>
+          <Table.Cell colspan={columns.length} class='col-span-full h-40 text-center'>
             No torrents saved on your drive yet.
           </Table.Cell>
         </Table.Row>
