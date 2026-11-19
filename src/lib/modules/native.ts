@@ -33,6 +33,8 @@ const dummyFiles = [
 const dummyTorrents: TorrentInfo[] = dev
   ? [
       { name: 'Sousou no Frieren - 28.mkv', progress: 1, size: { total: 1_400_000_000, downloaded: 1_400_000_000, uploaded: 88_000_000 }, speed: { down: 0, up: 240_000 }, time: { remaining: 0, elapsed: 5_400_000 }, peers: { seeders: 41, leechers: 1, wires: 42 }, pieces: { total: 2100, size: 524_288 }, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5c' },
+      { name: 'Sousou no Frieren - 26.mkv', progress: 1, size: { total: 1_400_000_000, downloaded: 1_400_000_000, uploaded: 88_000_000 }, speed: { down: 0, up: 240_000 }, time: { remaining: 0, elapsed: 5_400_000 }, peers: { seeders: 41, leechers: 1, wires: 42 }, pieces: { total: 2100, size: 524_288 }, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5e' },
+      { name: 'Sousou no Frieren - 24.mkv', progress: 1, size: { total: 1_400_000_000, downloaded: 1_400_000_000, uploaded: 88_000_000 }, speed: { down: 0, up: 240_000 }, time: { remaining: 0, elapsed: 5_400_000 }, peers: { seeders: 41, leechers: 1, wires: 42 }, pieces: { total: 2100, size: 524_288 }, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5f' },
       { name: 'Ore dake Level Up na Ken - 01.mkv', progress: 0.42, size: { total: 2_600_000_000, downloaded: 1_092_000_000, uploaded: 120_000 }, speed: { down: 4_200_000, up: 120_000 }, time: { remaining: 360_000, elapsed: 900_000 }, peers: { seeders: 24, leechers: 3, wires: 27 }, pieces: { total: 4200, size: 524_288 }, hash: '6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e' },
       { name: 'Dandadan - 07.mkv', progress: 0.08, size: { total: 1_900_000_000, downloaded: 152_000_000, uploaded: 0 }, speed: { down: 180_000, up: 0 }, time: { remaining: 9_600_000, elapsed: 60_000 }, peers: { seeders: 2, leechers: 9, wires: 11 }, pieces: { total: 3600, size: 524_288 }, hash: 'f0e1d2c3b4a5968778695a4b3c2d1e0f1a2b3c4d' }
     ]
@@ -41,6 +43,8 @@ const dummyTorrents: TorrentInfo[] = dev
 const dummyLibrary: LibraryEntry[] = dev
   ? [
       { mediaID: 154587, episode: 28, files: 1, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5c', progress: 1, date: Date.now(), size: 1_400_000_000, name: 'Sousou no Frieren - 28.mkv' },
+      { mediaID: 154587, episode: 26, files: 1, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5e', progress: 1, date: Date.now(), size: 1_400_000_000, name: 'Sousou no Frieren - 26.mkv' },
+      { mediaID: 154587, episode: 24, files: 1, hash: '2b3f7c1d9a4e5f6081b2c3d4e5f60718293a4b5f', progress: 1, date: Date.now(), size: 1_400_000_000, name: 'Sousou no Frieren - 24.mkv' },
       { mediaID: 151807, episode: 1, files: 3, hash: '6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e', progress: 0.42, date: Date.now(), size: 2_600_000_000, name: 'Ore dake Level Up na Ken - 01.mkv' },
       { mediaID: 171018, episode: 7, files: 2, hash: 'f0e1d2c3b4a5968778695a4b3c2d1e0f1a2b3c4d', progress: 0.08, date: Date.now(), size: 1_900_000_000, name: 'Dandadan - 07.mkv' }
     ]

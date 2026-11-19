@@ -1,4 +1,5 @@
 export { default as StatusCell } from './status.svelte'
 export { default as MediaCell } from './media.svelte'
+export { default as SeriesRow } from './seriesrow.svelte'
 export { default as DateCell } from './date.svelte'
 export { default as CheckboxCell } from './checkboxcell.svelte'

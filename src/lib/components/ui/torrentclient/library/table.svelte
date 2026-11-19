@@ -7,21 +7,32 @@
   import { Button } from '../../button'
   import Columnheader from '../columnheader.svelte'
 
-  import { MediaCell, StatusCell, DateCell, CheckboxCell } from './cells'
+  import { MediaCell, SeriesRow, StatusCell, DateCell, CheckboxCell } from './cells'
 
   import type { LibraryEntry } from 'native'
+  import type { BodyRow } from 'svelte-headless-table'
 
   import { Download, FolderSync, Trash } from '#lib/components/icons/animated'
   import * as Dialog from '#lib/components/ui/dialog'
   import { Input } from '#lib/components/ui/input'
   import * as Table from '#lib/components/ui/table'
   import { client } from '#lib/modules/anilist'
+  import { IDCard, IDCards } from '#lib/modules/anilist/queries'
   import native from '#lib/modules/native'
   import { server } from '#lib/modules/torrent'
   import { cn, fastPrettyBytes } from '#lib/utils'
   import { goto } from '$app/navigation'
 
   const lib = server.library
+
+  async function loadCards (entries: LibraryEntry[]) {
+    const missing = [...new Set(entries.map(({ mediaID }) => mediaID))].filter((id): id is number => !!id && !client.client.readQuery(IDCard, { id })?.data?.Media)
+    for (let i = 0; i < missing.length; i += 50) {
+      await client.client.query(IDCards, { ids: missing.slice(i, i + 50) })
+    }
+  }
+
+  $: loadCards($lib)
 
   const table = createTable(lib, {
     select: addSelectedRows(),
@@ -37,7 +48,7 @@
       header: 'Series',
       id: 'series',
       plugins: {
-        sort: { disable: true },
+        sort: { getSortValue: (entry: LibraryEntry) => entry.mediaID ?? 0 },
         filter: { getFilterValue: entry => entry.name ?? entry.hash }
       },
       cell: ({ value }) => createRender(MediaCell, { mediaID: value.mediaID, episode: value.episode, name: value.name })
@@ -93,6 +104,22 @@
 
   const { headerRows, pageRows, rows, tableAttrs, tableBodyAttrs, pluginStates } = tableModel
 
+  const { sortKeys } = pluginStates.sort
+
+  function seriesGroups (rows: Array<BodyRow<LibraryEntry>>) {
+    const groups = new Map<BodyRow<LibraryEntry>, Array<DataBodyRow<LibraryEntry>>>()
+    let group: Array<DataBodyRow<LibraryEntry>> = []
+    for (const row of rows) {
+      if (!(row instanceof DataBodyRow) || !row.original.mediaID) continue
+      if (group[0]?.original.mediaID !== row.original.mediaID) group = []
+      group.push(row)
+      groups.set(row, group)
+    }
+    return groups
+  }
+
+  $: groups = $sortKeys[0]?.id === 'series' ? seriesGroups($pageRows) : new Map()
+
   async function playEntry ({ mediaID, episode, hash }: LibraryEntry) {
     if (!mediaID || !hash) return
     const media = await client.single(mediaID)
@@ -122,7 +149,7 @@
 
   function downloadTorrents () {
     toast.promise(
-      Promise.all(getSelected().map(({ hash, mediaID, episode }) => server.backgroundDownload(hash, mediaID, episode))), {
+      Promise.all(getSelected().filter((entry): entry is LibraryEntry & { mediaID: number } => !!entry.mediaID).map(({ hash, mediaID, episode }) => server.backgroundDownload(hash, mediaID, episode))), {
         loading: 'Adding to background downloads...',
         success: 'Added to background downloads',
         error: e => {
@@ -223,8 +250,20 @@
     <Table.Body {...$tableBodyAttrs} class='max-h-full overflow-y-scroll'>
       {#if $pageRows.length}
         {#each $pageRows as row (row.id)}
+          {@const group = groups.get(row)}
+          {@const inGroup = group && group.length > 1}
+          {#if inGroup && group[0] === row}
+            <Table.Row class='h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] contain-strict border-b-0 hover:bg-transparent'>
+              <SeriesRow rows={group} columnIds={row.cells.map(cell => cell.id)} {selectedDataIds} />
+            </Table.Row>
+          {/if}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            <Table.Row {...rowAttrs} class={cn('h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] contain-strict', (row instanceof DataBodyRow) && row.original.mediaID ? 'cursor-pointer' : 'cursor-not-allowed')} on:click={() => { if (row instanceof DataBodyRow) playEntry(row.original) }}>
+            <Table.Row {...rowAttrs} class={cn(
+              'h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] contain-strict',
+              (row instanceof DataBodyRow) && row.original.mediaID ? 'cursor-pointer' : 'cursor-not-allowed',
+              inGroup && 'h-11 [contain-intrinsic-height:auto_44px]',
+              inGroup && group.at(-1) !== row && 'border-b-0'
+            )} on:click={() => { if (row instanceof DataBodyRow) playEntry(row.original) }}>
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
                   <Table.Cell {...attrs} class={cn(
@@ -232,7 +271,15 @@
                     cell.id === 'series' && 'max-w-96',
                     cell.id === 'select' && 'p-0 relative [&>div]:absolute'
                   )}>
-                    <Render of={cell.render()} />
+                    {#if inGroup && cell.id === 'series' && row instanceof DataBodyRow}
+                      <!-- the series header row above the group shows the cover and the title -->
+                      <div class='min-w-0'>
+                        <div class='text-xs'>Episode {row.original.episode ?? '?'}</div>
+                        <div class='truncate text-xs text-muted-foreground/70' title={row.original.name}>{row.original.name}</div>
+                      </div>
+                    {:else}
+                      <Render of={cell.render()} />
+                    {/if}
                   </Table.Cell>
                 </Subscribe>
               {/each}

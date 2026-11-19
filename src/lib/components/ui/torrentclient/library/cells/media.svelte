@@ -1,14 +1,14 @@
 <script lang='ts'>
   import { client } from '#lib/modules/anilist'
 
-  export let mediaID: number
+  export let mediaID: number | undefined
   export let episode: number | undefined
   export let name: string
 
-  $: query = client.singleCard(mediaID)
+  $: query = mediaID ? client.singleCard(mediaID, 'cache-only') : undefined
 </script>
 
-{#if $query.fetching && !$query.data}
+{#if $query && !$query.data?.Media}
   <div class='flex items-center gap-3 min-w-0 w-full'>
     <div class='h-12 w-8 shrink-0 rounded bg-muted animate-pulse' />
     <div class='flex flex-col gap-1.5 min-w-0'>
@@ -16,7 +16,7 @@
       <div class='h-3 w-24 bg-muted animate-pulse rounded' />
     </div>
   </div>
-{:else if $query.data?.Media}
+{:else if $query?.data?.Media}
   <div class='flex items-center gap-3 min-w-0 w-full'>
     {#if $query.data.Media.coverImage?.medium}
       <img src={$query.data.Media.coverImage.medium} alt='' class='h-12 w-8 shrink-0 rounded object-cover' decoding='async' loading='lazy' />

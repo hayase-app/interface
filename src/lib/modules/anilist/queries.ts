@@ -223,6 +223,18 @@ export const IDCard = gql(`
     }
   `)
 
+export const IDCards = gql(`
+  query IDCards($ids: [Int]!) {
+    Page(perPage: 50) {
+      media(id_in: $ids, type: ANIME) {
+        id,
+        title { userPreferred },
+        coverImage { medium }
+      }
+    }
+  }
+`)
+
 export const User = gql(`
   query User($id: Int!) {
     User(id: $id) {
