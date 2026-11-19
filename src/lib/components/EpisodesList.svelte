@@ -45,7 +45,7 @@
   $: rewatching = $status === 'REPEATING'
   $: _progress = completed ? 0 : $progressStore ?? 0
 
-  $: currentPage = Math.floor((!completed ? _progress : 0) / perPage) + 1
+  $: currentPage = media && Math.floor((!completed ? _progress : 0) / perPage) + 1
 
   function play (episode: number) {
     $playEp(media, episode)
