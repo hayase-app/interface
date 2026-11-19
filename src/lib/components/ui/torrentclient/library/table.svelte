@@ -120,6 +120,16 @@
 
   $: groups = $sortKeys[0]?.id === 'series' ? seriesGroups($pageRows) : new Map()
 
+  // the data columns shrink to their content before the series column shrinks
+  const columnWidths: Record<string, string> = {
+    series: 'basis-[28rem] grow shrink min-w-[16rem]',
+    files: 'basis-[6.5rem] grow-0 shrink-[999] min-w-14',
+    size: 'basis-[8rem] grow-0 shrink-[999] min-w-[5.75rem]',
+    completed: 'basis-[12.5rem] grow-0 shrink-[999] min-w-[8.25rem]',
+    date: 'basis-[11.5rem] grow-0 shrink-[999] min-w-[7.75rem]',
+    select: 'basis-[5.5rem] grow-0 shrink-[999] min-w-12'
+  }
+
   async function playEntry ({ mediaID, episode, hash }: LibraryEntry) {
     if (!mediaID || !hash) return
     const media = await client.single(mediaID)
@@ -225,20 +235,20 @@
   {Object.keys($selectedDataIds).length} of {$rows.length} row(s) selected.
 </div>
 <div class='rounded-md border size-full overflow-clip contain-strict'>
-  <!-- containment does not apply to table rows. the rows use a grid layout. -->
-  <Table.Root {...$tableAttrs} class='block' style='--library-columns: minmax(0, 1fr) 6.5rem 8rem 12.5rem 11.5rem 5.5rem'>
+  <!-- containment does not apply to table rows. the rows use a flex layout. -->
+  <Table.Root {...$tableAttrs} class='block'>
     <Table.Header class='block sticky top-0 z-[2] bg-background'>
       {#each $headerRows as headerRow, i (i)}
         <Subscribe rowAttrs={headerRow.attrs()}>
-          <Table.Row class='grid grid-cols-[var(--library-columns)]'>
+          <Table.Row class='flex'>
             {#each headerRow.cells as cell (cell.id)}
               <Subscribe
                 attrs={cell.attrs()}
                 props={cell.props()}
                 let:attrs
                 let:props>
-                <Table.Head {...attrs} class={cn('px-0 first:pl-4 h-12 last:pr-2 content-center')}>
-                  <Columnheader {props}>
+                <Table.Head {...attrs} class={cn('px-4 h-12 last:pr-6 content-center', columnWidths[cell.id], cell.id === 'select' && 'p-0')}>
+                  <Columnheader class='[&_button]:px-0' {props}>
                     <Render of={cell.render()} />
                   </Columnheader>
                 </Table.Head>
@@ -254,22 +264,22 @@
           {@const group = groups.get(row)}
           {@const inGroup = group && group.length > 1}
           {#if inGroup && group[0] === row}
-            <Table.Row class='min-h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] border-b-0 hover:bg-transparent grid grid-cols-[var(--library-columns)]'>
-              <SeriesRow rows={group} columnIds={row.cells.map(cell => cell.id)} {selectedDataIds} />
+            <Table.Row class='flex min-h-16 [content-visibility:auto] [contain-intrinsic-height:auto_64px] border-b-0 hover:bg-transparent'>
+              <SeriesRow rows={group} columnIds={row.cells.map(cell => cell.id)} columnWidths={columnWidths} {selectedDataIds} />
             </Table.Row>
           {/if}
           <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
             <Table.Row {...rowAttrs} class={cn(
-              'min-h-16 [content-visibility:auto]',
+              'flex min-h-16 [content-visibility:auto]',
               inGroup ? 'min-h-11 [contain-intrinsic-height:auto_48px]' : '[contain-intrinsic-height:auto_68px]',
               (row instanceof DataBodyRow) && row.original.mediaID ? 'cursor-pointer' : 'cursor-not-allowed',
-              inGroup && group.at(-1) !== row && 'border-b-0',
-              'grid grid-cols-[var(--library-columns)]'
+              inGroup && group.at(-1) !== row && 'border-b-0'
             )} on:click={() => { if (row instanceof DataBodyRow) playEntry(row.original) }}>
               {#each row.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs>
                   <Table.Cell {...attrs} class={cn(
                     'px-4 last:pr-6 text-nowrap content-center',
+                    columnWidths[cell.id],
                     cell.id === 'select' && 'p-0 relative [&>div]:absolute'
                   )}>
                     {#if inGroup && cell.id === 'series' && row instanceof DataBodyRow}
@@ -288,8 +298,8 @@
           </Subscribe>
         {/each}
       {:else}
-        <Table.Row class='grid grid-cols-[var(--library-columns)]'>
-          <Table.Cell colspan={columns.length} class='col-span-full h-40 text-center'>
+        <Table.Row class='flex'>
+          <Table.Cell colspan={columns.length} class='h-40 w-full content-center text-center'>
             No torrents saved on your drive yet.
           </Table.Cell>
         </Table.Row>

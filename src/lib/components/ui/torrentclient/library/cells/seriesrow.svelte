@@ -15,6 +15,7 @@
 
   export let rows: Array<DataBodyRow<LibraryEntry>>
   export let columnIds: string[]
+  export let columnWidths: Record<string, string>
   export let selectedDataIds: SelectedRowsState<LibraryEntry>['selectedDataIds']
 
   $: entries = rows.map(row => row.original)
@@ -38,6 +39,7 @@
 {#each columnIds as columnId (columnId)}
   <Table.Cell class={cn(
     'px-4 last:pr-6 text-nowrap text-muted-foreground content-center',
+    columnWidths[columnId],
     columnId === 'select' && 'p-0 relative [&>div]:absolute'
   )}>
     {#if columnId === 'series'}
