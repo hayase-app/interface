@@ -26,7 +26,7 @@
   const lib = server.library
 
   async function loadCards (entries: LibraryEntry[]) {
-    const missing = [...new Set(entries.map(({ mediaID }) => mediaID))].filter((id): id is number => !!id && !client.client.readQuery(IDCard, { id })?.data?.Media)
+    const missing = [...new Set(entries.map(({ mediaID }) => mediaID))].filter((id): id is number => !!id && !client.client.readQuery(IDCard, { id }, { requestPolicy: 'cache-only' })?.data?.Media)
     for (let i = 0; i < missing.length; i += 50) {
       await client.client.query(IDCards, { ids: missing.slice(i, i + 50) })
     }
