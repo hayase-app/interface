@@ -236,7 +236,8 @@
 </div>
 <div class='rounded-md border size-full overflow-clip contain-strict'>
   <!-- containment does not apply to table rows. the rows use a flex layout. -->
-  <Table.Root {...$tableAttrs} class='block'>
+  <!-- the table keeps the sum of the column minimum widths (44.25rem). below this width the rows clip their content, so the scroll wrapper cannot show the overflow. -->
+  <Table.Root {...$tableAttrs} class='block min-w-[44.25rem]'>
     <Table.Header class='block sticky top-0 z-[2] bg-background'>
       {#each $headerRows as headerRow, i (i)}
         <Subscribe rowAttrs={headerRow.attrs()}>
